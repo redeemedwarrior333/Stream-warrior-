@@ -61,9 +61,13 @@ class OverlayService : Service() {
         b.setContentTitle("Stream Warrior active")
             .setContentText("Mod menu floating — tap to open")
             .setSmallIcon(android.R.drawable.ic_media_play)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(1, b.build(), android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
-        } else {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(1, b.build(), android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+            } else {
+                startForeground(1, b.build())
+            }
+        } catch (e: Exception) {
             startForeground(1, b.build())
         }
     }
@@ -72,9 +76,13 @@ class OverlayService : Service() {
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), resources.displayMetrics).toInt()
 
     private fun params(x: Int, y: Int, w: Int = WindowManager.LayoutParams.WRAP_CONTENT): WindowManager.LayoutParams {
+        val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        else
+            @Suppress("DEPRECATION") WindowManager.LayoutParams.TYPE_PHONE
         return WindowManager.LayoutParams(
             w, WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+            type,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
             PixelFormat.TRANSLUCENT
@@ -215,6 +223,7 @@ class OverlayService : Service() {
     }
 
     private fun nextContent() {
+        if (!::contentText.isInitialized) return
         val text = when (category) {
             "Joke" -> pick("Joke", Content.JOKES)
             "Fact" -> pick("Fact", Content.FACTS)

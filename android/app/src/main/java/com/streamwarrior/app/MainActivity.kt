@@ -1,6 +1,8 @@
 package com.streamwarrior.app
 
 import android.Manifest
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -15,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 
 /**
  * Setup screen: grant overlay permission, start/stop the floating mod menu.
@@ -103,6 +106,30 @@ class MainActivity : AppCompatActivity() {
         ))
 
         col.addView(text("Not legal advice: weird laws are for entertainment.", 12f, color = "#55556F"))
+
+        showCrashReport(col, pad)
+    }
+
+    private fun showCrashReport(col: LinearLayout, pad: Int) {
+        val f = File(filesDir, "crash.log")
+        if (!f.exists()) return
+        val trace = try { f.readText() } catch (e: Exception) { return }
+        val firstLines = trace.lineSequence().take(6).joinToString("\n")
+        col.addView(TextView(this).apply {
+            text = "LAST ERROR (tap to copy — send this to the developer)\n\n$firstLines"
+            textSize = 12f
+            setTextColor(Color.parseColor("#EF4444"))
+            setPadding(0, pad, 0, pad / 2)
+            setOnClickListener {
+                val cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                cm.setPrimaryClip(ClipData.newPlainText("crash", trace))
+                android.widget.Toast.makeText(this@MainActivity, "Crash report copied", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        })
+        col.addView(Button(this).apply {
+            text = "Clear error"; isAllCaps = false
+            setOnClickListener { f.delete(); recreate() }
+        })
     }
 
     override fun onResume() { super.onResume(); refresh() }
