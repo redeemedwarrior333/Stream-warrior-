@@ -3,7 +3,7 @@
 
 const App = {
   modules: {},
-  order: ["tarot", "twentyq", "trivia", "soundboard", "madlibs", "jokes", "lines", "facts", "wyr"],
+  order: ["tarot", "twentyq", "trivia", "soundboard", "madlibs", "jokes", "lines", "facts", "wyr", "laws"],
   meta: {
     tarot:      { icon: "🔮", label: "Tarot" },
     twentyq:    { icon: "❓", label: "20 Q's" },
@@ -13,13 +13,14 @@ const App = {
     jokes:      { icon: "😂", label: "Jokes" },
     lines:      { icon: "💘", label: "Lines" },
     facts:      { icon: "💡", label: "Facts" },
-    wyr:        { icon: "⚔️", label: "WYR" }
+    wyr:        { icon: "⚔️", label: "WYR" },
+    laws:       { icon: "⚖️", label: "Laws" }
   },
   current: null,
   barHidden: false,
 
   init() {
-    this.modules = { tarot: Tarot, twentyq: TwentyQ, trivia: Trivia, madlibs: MadLibs, jokes: Jokes, lines: Lines, facts: Facts, wyr: WYR, soundboard: SoundboardUI, wheel: Wheel };
+    this.modules = { tarot: Tarot, twentyq: TwentyQ, trivia: Trivia, madlibs: MadLibs, jokes: Jokes, lines: Lines, facts: Facts, wyr: WYR, laws: WeirdLaws, soundboard: SoundboardUI, wheel: Wheel };
     AI.load();
     this.buildBar();
     this.bindChrome();

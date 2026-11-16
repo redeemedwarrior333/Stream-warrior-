@@ -351,5 +351,6 @@ const WHEEL_SEGMENTS = [
   {label:"💡 Fun Fact", module:"facts"},
   {label:"📝 Mad Libs", module:"madlibs"},
   {label:"⚔️ Would You Rather", module:"wyr"},
-  {label:"🔊 Soundboard", module:"soundboard"}
+  {label:"🔊 Soundboard", module:"soundboard"},
+  {label:"⚖️ Weird Law", module:"laws"}
 ];
