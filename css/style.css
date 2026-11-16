@@ -224,6 +224,11 @@ body {
 .set-group input { width: 100%; margin-top: 4px; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
 
+/* ---------- help ---------- */
+.help-block { border-top: 1px solid var(--line); padding: 12px 0; }
+.help-block h3 { font-size: 14px; margin-bottom: 6px; }
+.help-block p { font-size: 13px; line-height: 1.6; margin-bottom: 6px; }
+
 /* ---------- toast ---------- */
 #toast {
   position: fixed; top: 64px; left: 50%; transform: translateX(-50%) translateY(-20px);

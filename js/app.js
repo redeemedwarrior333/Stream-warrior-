@@ -50,6 +50,7 @@ const App = {
   },
 
   bindChrome() {
+    document.getElementById("btn-help").addEventListener("click", () => this.openHelp());
     document.getElementById("btn-settings").addEventListener("click", () => this.openSettings());
     document.getElementById("btn-settings-close").addEventListener("click", () => document.getElementById("settings-modal").classList.add("hidden"));
     document.getElementById("ai-dot").addEventListener("click", () => this.openSettings());
@@ -130,6 +131,39 @@ const App = {
     t.classList.add("show");
     clearTimeout(this._tt);
     this._tt = setTimeout(() => t.classList.remove("show"), ms);
+  },
+
+  /* ---------- help / works-with guide ---------- */
+  openHelp() {
+    const name = localStorage.getItem("sa_name") || "You";
+    this.modal(`
+      <h2>📺 Works With — How to stream with Stream Warrior</h2>
+      <div class="help-block">
+        <h3>✅ Apps with screen share (best experience)</h3>
+        <p><b>TikTok Live</b> (needs 1,000 followers + 18+), <b>BIGO Live</b> (no follower gate), <b>Twitch</b> mobile, <b>Tango</b>, <b>Mico</b>.</p>
+        <p class="hint">Flow: set up your scene BEFORE sharing → go live → tap the screen-share option in the live app → pick Stream Warrior (Chrome tab = viewers see only the scene) → drive it with the mod bar.</p>
+      </div>
+      <div class="help-block">
+        <h3>📱 Camera-only apps (MeetMe, Instagram, etc.)</h3>
+        <p><b>Two-device trick:</b> run Stream Warrior on a tablet, old phone or laptop and point your live camera at it for game moments. Prop it on a stand for tarot pulls.</p>
+        <p><b>Soundboard anywhere:</b> play sounds out loud on a second device near your streaming phone's mic — instant production value, no screen share needed.</p>
+        <p><b>No-screen games:</b> jokes, facts, pickup lines, 20 Questions and weird laws work with zero screen share — just read and narrate.</p>
+      </div>
+      <div class="help-block">
+        <h3>💻 Desktop / OBS</h3>
+        <p>Open Stream Warrior in your browser, press <b>Ctrl+F</b> for fullscreen, and share that window. Pro move: two windows — one fullscreen scene for viewers, one for controls.</p>
+      </div>
+      <div class="help-block">
+        <h3>🔊 Audio notes</h3>
+        <p><b>Android:</b> screen share can capture soundboard audio directly. <b>iPhone:</b> iOS blocks that — sounds play through the speaker and your mic picks them up.</p>
+      </div>
+      <div class="help-block">
+        <h3>💡 Streamer tips</h3>
+        <p>• Hide the mod bar (👁️ button) while shared — tap the top edge to bring it back.<br>
+        • Wheel of Chaos kills dead air in one tap.<br>
+        • ${name === "You" ? "Set your streamer name in ⚙️ settings" : "Good luck tonight, " + name + "!"}</p>
+      </div>
+    `);
   },
 
   /* ---------- settings ---------- */
