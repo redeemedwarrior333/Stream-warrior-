@@ -33,6 +33,7 @@ class OverlayService : Service() {
     private lateinit var wm: WindowManager
     private var bubble: View? = null
     private var panel: View? = null
+    private lateinit var contentText: TextView
     private var expanded = false
     private var category: String = "Joke"
     private var deckLove = false

@@ -116,6 +116,7 @@ object SoundSynth {
                 val thump = if (t > 0.35) sine(180.0 - (t - 0.35) * 300.0, t - 0.35) * 0.7 * env(t - 0.35, 0.3, 0.002) else 0.0
                 click + thump
             }
+            else -> Unit
         }
     } catch (e: Exception) {
         // audio is best-effort; never crash the overlay
