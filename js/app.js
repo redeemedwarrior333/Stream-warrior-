@@ -1,4 +1,4 @@
-/* ============ Stream Aid app shell ============ */
+/* ============ Stream Warrior app shell ============ */
 "use strict";
 
 const App = {

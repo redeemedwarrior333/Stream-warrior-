@@ -19,7 +19,7 @@ const TwentyQ = {
         <div class="module-head"><h2>❓ 20 Questions</h2>
           <span class="q-count ${this.count >= 15 ? "danger" : ""}">${this.over ? "GAME OVER" : "Question " + (this.count + 1) + "/20"}</span>
         </div>
-        <p class="hint center">Chat asks questions out loud — you type them in, Stream Aid answers. Chat guesses the thing; you type the guess to check it.</p>
+        <p class="hint center">Chat asks questions out loud — you type them in, Stream Warrior answers. Chat guesses the thing; you type the guess to check it.</p>
         <div class="q-log" id="tq-log">${this.log.map(l => `<div class="q-entry"><span class="q-q">${l.q}</span><span class="q-a ${l.a === "YES" ? "yes" : l.a === "NOPE" ? "no" : "maybe"}">${l.a}</span></div>`).join("") || '<div class="hint center">No questions yet.</div>'}</div>
         <div class="row gap">
           <input id="tq-input" class="text-input grow" type="text" placeholder="Type chat's question or guess…" autocomplete="off">

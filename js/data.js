@@ -1,4 +1,4 @@
-/* ============ Stream Aid content packs ============ */
+/* ============ Stream Warrior content packs ============ */
 "use strict";
 
 /* ---------- TAROT: Major Arcana, 2 decks ---------- */
