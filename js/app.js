@@ -18,14 +18,15 @@ const App = {
   },
   current: null,
   barHidden: false,
+  home: null,
 
   init() {
-    this.modules = { tarot: Tarot, twentyq: TwentyQ, trivia: Trivia, madlibs: MadLibs, jokes: Jokes, lines: Lines, facts: Facts, wyr: WYR, laws: WeirdLaws, soundboard: SoundboardUI, wheel: Wheel };
+    this.modules = { home: Home, tarot: Tarot, twentyq: TwentyQ, trivia: Trivia, madlibs: MadLibs, jokes: Jokes, lines: Lines, facts: Facts, wyr: WYR, laws: WeirdLaws, soundboard: SoundboardUI, wheel: Wheel };
     AI.load();
     this.buildBar();
     this.bindChrome();
     this.updateAIDot();
-    this.openModule("tarot");
+    this.openModule("home");
     document.addEventListener("keydown", e => {
       if (e.key === "Escape") { this.closeModal(); }
       if (e.ctrlKey && e.key === "f") { e.preventDefault(); this.toggleFullscreen(); }
@@ -37,6 +38,12 @@ const App = {
     const wheel = document.getElementById("btn-wheel");
     const hide = document.getElementById("btn-hidebar");
     bar.querySelectorAll(".mod-btn:not(.wheel):not(.hide)").forEach(b => b.remove());
+    const homeBtn = document.createElement("button");
+    homeBtn.className = "mod-btn home-btn";
+    homeBtn.dataset.module = "home";
+    homeBtn.innerHTML = '🏠<span>Home</span>';
+    homeBtn.addEventListener("click", () => this.openModule("home"));
+    bar.insertBefore(homeBtn, wheel);
     this.order.forEach(id => {
       const b = document.createElement("button");
       b.className = "mod-btn";
@@ -214,6 +221,44 @@ const App = {
     list.innerHTML = Sound.custom.map((s, i) => `<div class="custom-sound-row"><button class="btn tiny" data-play="${i}">▶</button><span>${s.name}</span><button class="btn tiny danger" data-del="${i}">✕</button></div>`).join("") || '<p class="hint">No custom sounds yet.</p>';
     list.querySelectorAll("[data-play]").forEach(b => b.addEventListener("click", () => Sound.playCustom(parseInt(b.dataset.play))));
     list.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", () => { Sound.removeCustom(parseInt(b.dataset.del)); this.renderCustomSounds(); SoundboardUI.render(); }));
+  }
+};
+
+/* ---------- Main page / home ---------- */
+const Home = {
+  el() { return document.getElementById("m-home"); },
+
+  render() {
+    const name = localStorage.getItem("sa_name");
+    App.scene(`
+      <div class="module" id="m-home">
+        <div class="home-hero">
+          <img src="icon.svg" alt="" class="home-logo">
+          <h1>Stream<span>Warrior</span></h1>
+          <p class="hint">Your streamer mod menu — ${name ? "welcome back, <b>" + name + "</b>" : "set your name in ⚙️ settings"}.</p>
+        </div>
+        <div class="home-grid">
+          ${App.order.map(id => `
+            <button class="home-card" data-open="${id}">
+              <span class="home-ico">${App.meta[id].icon}</span>
+              <span class="home-label">${App.meta[id].label}</span>
+            </button>
+          `).join("")}
+          <button class="home-card" data-open="wheel">
+            <span class="home-ico">🎡</span><span class="home-label">Chaos</span>
+          </button>
+        </div>
+        <div class="row center gap">
+          <button class="btn small ghost" id="home-help">📺 How to use on stream</button>
+          <button class="btn small ghost" id="home-full">⛶ Fullscreen</button>
+        </div>
+        <p class="hint center" style="margin-top:14px">Set up your scene before you share. Hide the bar with 👁️. Tap the top edge to get it back.</p>
+      </div>
+    `, () => {
+      document.querySelectorAll("[data-open]").forEach(b => b.addEventListener("click", () => App.openModule(b.dataset.open)));
+      document.getElementById("home-help").addEventListener("click", () => App.openHelp());
+      document.getElementById("home-full").addEventListener("click", () => App.toggleFullscreen());
+    });
   }
 };
 
