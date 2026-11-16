@@ -2,6 +2,7 @@
 "use strict";
 
 const App = {
+  VERSION: "v5",
   modules: {},
   order: ["tarot", "twentyq", "trivia", "soundboard", "madlibs", "jokes", "lines", "facts", "wyr", "laws"],
   meta: {
@@ -236,6 +237,7 @@ const Home = {
           <img src="icon.svg" alt="" class="home-logo">
           <h1>Stream<span>Warrior</span></h1>
           <p class="hint">Your streamer mod menu — ${name ? "welcome back, <b>" + name + "</b>" : "set your name in ⚙️ settings"}.</p>
+          <span class="version-badge">${App.VERSION}</span>
         </div>
         <div class="home-grid">
           ${App.order.map(id => `
