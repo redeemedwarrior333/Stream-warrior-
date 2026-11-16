@@ -1,0 +1,22 @@
+name: Web App Test
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["index.html", "css/**", "js/**", "test/**", ".github/workflows/web-test.yml"]
+  workflow_dispatch:
+
+jobs:
+  headless:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install jsdom
+        working-directory: test
+        run: npm install --no-audit --no-fund
+      - name: Run headless app test
+        working-directory: test
+        run: node headless.js

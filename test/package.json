@@ -1,0 +1,6 @@
+{
+  "name": "streamwarrior-headless-test",
+  "private": true,
+  "scripts": { "test": "node headless.js" },
+  "dependencies": { "jsdom": "^24.0.0" }
+}

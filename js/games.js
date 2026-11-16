@@ -262,7 +262,7 @@ function makeListModule(cfg) {
 const Jokes = makeListModule({ id: "jokes", icon: "😂", title: "Jokes", data: JOKES, sfx: "rimshot", nextLabel: "Another 😂" });
 const Lines = makeListModule({ id: "lines", icon: "💘", title: "Pickup Lines", data: PICKUPLINES, sfx: "boing", nextLabel: "Another 💘" });
 const Facts = makeListModule({ id: "facts", icon: "💡", title: "Fun Facts", data: FACTS, sfx: "ding", nextLabel: "Another 💡" });
-const WYR  = makeListModule({ id: "wyr", icon: "⚔️", title: "Would You Rather", data: WYR, sfx: "whoosh", nextLabel: "Another ⚔️" });
+const WYR  = makeListModule({ id: "wyr", icon: "⚔️", title: "Would You Rather", data: WYR_DATA, sfx: "whoosh", nextLabel: "Another ⚔️" });
 
 /* ---------- WHEEL OF CHAOS ---------- */
 const Wheel = {

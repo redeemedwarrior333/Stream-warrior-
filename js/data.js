@@ -308,7 +308,7 @@ const FACTS = [
   "The average cloud weighs about 1.1 million pounds.",
   "Peanuts are an ingredient in dynamite."
 ];
-const WYR = [
+const WYR_DATA = [
   "Have unlimited money but no friends — or a tight friend group but you're always broke?",
   "Be able to fly but only 2 feet off the ground — or teleport but only once a day?",
   "Read minds but never be able to turn it off — or never be able to lie again?",
