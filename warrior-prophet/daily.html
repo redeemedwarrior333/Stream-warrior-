@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Daily Blessing — Warrior Prophet</title>
+<meta name="description" content="A fresh blessing, Bible verse and prayer for today. Free, no signup.">
+<meta name="theme-color" content="#0e0b1d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230e0b1d'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle'%3E%F0%9F%99%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/site.css?v=1">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><a href="index.html">⚔️ WARRIOR PROPHET</a></div>
+    <h1>Daily Blessing</h1>
+    <div class="tag" id="todayline"></div>
+    <div class="stars">· ˚ ✝ ˚ ·</div>
+  </header>
+
+  <div class="panel">
+    <div class="msg" id="blessing"></div>
+    <div class="row">
+      <button class="btn2" id="praybtn">🙏 Prayer of the Day</button>
+      <button class="btn2" id="sharebtn">📤 Share</button>
+    </div>
+    <div class="msg" id="prayer" hidden></div>
+  </div>
+
+  <div class="panel">
+    <h2>Keep receiving</h2>
+    <div class="hint">Come back tomorrow for a new blessing — same link, always free. Or go <b><a href="premium.html" style="color:var(--gold)">👑 Premium</a></b> for the Angel Watch deck and more.</div>
+  </div>
+
+  <footer>
+    <div><a href="index.html">⚔️ Warrior Prophet</a> · part of the <a href="https://redeemedwarrior333.github.io/Stream-warrior-/">Warrior family</a></div>
+    <div class="forfun">A devotional encouragement tool. Always test every word against Scripture — Acts 17:11.</div>
+  </footer>
+</div>
+
+<script src="js/engine.js?v=1"></script>
+<script>
+"use strict";
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var b = WP.dailyBlessing();
+  var lastText = "🌅 Warrior Prophet — " + b.date + "\n\n" + b.blessing.m +
+    "\n\n\"" + b.blessing.v + "\"\n— " + b.blessing.r;
+  $("todayline").textContent = b.date;
+  $("blessing").innerHTML =
+    '<span class="line">' + b.blessing.m + '</span>' +
+    '<span class="verse">"' + b.blessing.v + '"<b>— ' + b.blessing.r + '</b></span>';
+  $("praybtn").addEventListener("click", function () {
+    var p = $("prayer");
+    if (!p.hidden) { p.hidden = true; return; }
+    p.innerHTML = '<span class="line">' + b.prayer + '</span>';
+    p.hidden = false;
+    if (p.scrollIntoView) p.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+  $("sharebtn").addEventListener("click", function () {
+    if (navigator.share) navigator.share({ title: "Daily Blessing — Warrior Prophet", text: lastText, url: location.href }).catch(function () {});
+    else if (navigator.clipboard) navigator.clipboard.writeText(lastText + " " + location.href).then(function () {
+      $("sharebtn").textContent = "✅ Copied!";
+      setTimeout(function () { $("sharebtn").textContent = "📤 Share"; }, 1600);
+    });
+  });
+})();
+</script>
+</body>
+</html>
