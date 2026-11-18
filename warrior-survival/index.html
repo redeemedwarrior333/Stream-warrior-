@@ -43,6 +43,19 @@
   .keyrow input { flex: 1; }
   .subjects { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
   .subj { background: var(--panel2); border: 1px solid var(--edge); color: var(--sub); border-radius: 999px; padding: 5px 11px; font-size: 12px; cursor: pointer; }
+  .tabs { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .tabbtn { background: var(--panel2); color: var(--sub); border: 1px solid var(--edge); border-radius: 10px; padding: 9px 14px; font-size: 13px; font-weight: 800; cursor: pointer; }
+  .tabbtn.on { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+  .tabpane { display: none; }
+  .tabpane.on { display: block; }
+  textarea#their_msg { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--edge); border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit; min-height: 90px; resize: vertical; line-height: 1.5; }
+  textarea#their_msg:focus { outline: none; border-color: var(--gold); }
+  .replybox { margin-top: 10px; background: var(--panel2); border: 1px solid var(--good); border-radius: 12px; padding: 12px; display: none; }
+  .replybox .rline { white-space: pre-wrap; word-break: break-word; font-size: 13px; line-height: 1.6; color: var(--text); }
+  .replybox .til { font-weight: 800; color: var(--good); font-size: 12px; letter-spacing: .5px; margin-bottom: 6px; }
+  .replybox .an { color: var(--muted); border-top: 1px dashed var(--edge); margin-top: 8px; padding-top: 8px; font-size: 12px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+  .replybox.warn { border-color: var(--red); }
+  .replybox.warn .til { color: var(--red); }
   footer { margin-top: 40px; border-top: 1px solid var(--edge); padding-top: 18px; font-size: 14px; color: var(--muted); }
   footer a { color: var(--gold); text-decoration: none; }
   a.home-btn { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
@@ -58,7 +71,12 @@
   <p class="sub">Advanced narcissist &amp; bully survival support: emotionally strategic, psychologically informed. Describe what's happening — get validation, reality checks, boundary scripts, and grounded strategy. <strong>Works with no key</strong>; a free Mistral key unlocks the full AI voice.</p>
 
   <div class="panel">
-    <h2>⚔️ WHAT ARE YOU FACING?</h2>
+    <div class="tabs">
+      <button class="tabbtn on" id="tab_strategy" type="button">⚔️ STRATEGY (talk to me)</button>
+      <button class="tabbtn" id="tab_reply" type="button">✉️ DRAFT A REPLY (they texted…)</button>
+      <button class="tabbtn" id="tab_mic" type="button">🎙️ LIVE LISTEN (calm meter)</button>
+    </div>
+    <div class="tabpane on" id="pane_strategy">
     <div class="subjects" id="subjects"></div>
     <div id="chat"></div>
     <div class="chatsend">
@@ -69,6 +87,39 @@
       <input id="akey" type="password" placeholder="Optional: free Mistral key (console.mistral.ai) — stays in your browser">
       <button class="mini ghost" id="ks">Set</button>
     </div>
+    <p class="hint">⚔️ How The Warrior drafts in REPLY mode: BIFF — Brief, Informative, Friendly, Firm. No explaining, no defending, no feeding.</p>
+    </div><!-- /pane_strategy -->
+
+    <div class="tabpane" id="pane_reply">
+      <label>THEIR MESSAGE — paste EXACTLY what they sent you (text, email, DM):</label>
+      <textarea id="their_msg" placeholder="Paste their words here — guilt trips, threats, 'come back', demands, love-bombing…"></textarea>
+      <div class="row">
+        <button id="draft">✉️ DRAFT MY REPLY</button>
+        <button id="copyreply" class="ghost" style="display:none">COPY THE REPLY</button>
+      </div>
+      <div class="replybox" id="reply_out">
+        <div class="til" id="reply_til"></div>
+        <div class="rline" id="reply_text"></div>
+        <div class="an" id="reply_analysis"></div>
+      </div>
+      <p class="hint">The strongest reply is often the shortest one — or none at all. Silence stays on the menu.</p>
+    </div><!-- /pane_reply -->
+
+    <div class="tabpane" id="pane_mic">
+      <p class="hint" style="margin-top:8px">🎙️ <b>Volume only</b> — it never records his words, never saves anything, never sends anything anywhere. Lawful everywhere: it measures loudness and forgets instantly. (Recording another person's VOICE without consent is illegal in some states — that's why The Warrior is a calm meter, not a bug.)</p>
+      <div class="row">
+        <button id="mic_start">🎙️ START LISTENING</button>
+        <button id="mic_stop" class="ghost" style="display:none">STOP</button>
+      </div>
+      <div style="height:14px;border:1px solid var(--edge);border-radius:999px;background:var(--bg);margin-top:14px;overflow:hidden">
+        <div id="mic_meterfill" style="height:100%;width:0;background:linear-gradient(90deg,var(--good),var(--gold),var(--red));transition:width .1s linear"></div>
+      </div>
+      <div id="mic_status" class="hint">Not listening yet. Tap START LISTENING — your browser asks for mic permission; it stays on this page, and the sound never leaves your device.</div>
+      <div class="safety" id="mic_prompt" style="display:none;border-color:var(--red);margin-top:10px"><b>He's yelling right now.</b> Field call: don't argue the content — content is noise during a yell. Gray rock, out loud: "I see you're upset. I'm going to step to the other room." Leave the room as strategy, not defeat. 5-4-3-2-1 grounding while you breathe. If fear spikes past yelling: <b>911</b> · DV Hotline <b>1-800-799-7233</b> · text START to <b>88788</b>.</div>
+      <div id="mic_log" class="hint" style="margin-top:10px"></div>
+      <p class="hint">The log lives in memory only — close the page and it's gone. Nothing is stored, recorded, or transmitted. Ever.</p>
+    </div><!-- /pane_mic -->
+
     <div class="safety">
       <b>NOT A REPLACEMENT FOR PROFESSIONALS.</b> The Warrior offers strategy and support — never therapy, medical, or legal advice.<br>
       <b>In danger now: call 911.</b> Emotional crisis: <b>988</b> (Suicide &amp; Crisis Lifeline). Domestic abuse: <b>1-800-799-7233</b> (National DV Hotline) or text START to <b>88788</b>. In immediate or escalating danger, contact local emergency services first.<br>
@@ -204,6 +255,154 @@ SUBJECTS.forEach(function(s){
   b.onclick = function(){ $("say").value = (s in LOW) ? LOW[s] : s; $("say").focus(); };
   $("subjects").appendChild(b);
 });
+
+/* ---- tabs (STRATEGY / DRAFT A REPLY / LIVE LISTEN) ---- */
+var TABS = ["strategy", "reply", "mic"];
+function showTab(which){
+  TABS.forEach(function(k){
+    var p = $("pane_" + k); if (p) p.className = "tabpane" + (k === which ? " on" : "");
+    var b = $("tab_" + k); if (b) b.className = "tabbtn" + (k === which ? " on" : "");
+  });
+}
+$("tab_strategy").onclick = function(){ showTab("strategy"); };
+$("tab_reply").onclick = function(){ showTab("reply"); };
+$("tab_mic").onclick = function(){ showTab("mic"); };
+
+/* ---- DRAFT A REPLY: keyword scorer + BIFF reply bank ---- */
+var REPLY_PLAYS = [
+  { k:["guilt", "selfish", "after everything i did", "you owe", "how could you", "ungrateful", "i sacrificed", "you made me look"],
+    tactic:"GUILT CAMPAIGN", note:"Classic guilt-leverage \u2014 the debt resets every day, and somehow you are always the debtor. Guilt is a hook, not a fact.",
+    reply:"I hear that you're upset. My decision stands, and I'm not going to keep debating it." },
+  { k:["threat", "threaten", "you'll regret", "you'll be sorry", "ruin you", "make you pay", "hurt you", "watch your back"],
+    tactic:"THREAT / INTIMIDATION", warn:true,
+    note:"A threat is evidence, not conversation. Your only jobs right now are safety and records \u2014 not answers.",
+    reply:"" },
+  { k:["come back", "miss you", "another chance", "i've changed", "i can change", "give us", "new person", "second chance"],
+    tactic:"HOOVERING", note:"The cycle spinning back around. Judge words by recipes, not plates of food \u2014 has anything CONCRETE changed, or just the weather?",
+    reply:"No. I'm not reopening this. Please don't contact me again." },
+  { k:["i need you to", "you have to", "delete that", "your password", "text me back", "answer me", "right now", "why aren't you"],
+    tactic:"DEMAND / CONTROL", note:"Control is a budget \u2014 it decides your minutes, your phone, your replies. Every instant answer renews the contract.",
+    reply:"That doesn't work for me." },
+  { k:["your fault", "you made me", "if you hadn't", "because you", "look what you", "you started", "you always"],
+    tactic:"BLAME-SHIFT / DARVO", note:"Deny, Attack, Reverse Victim and Offender \u2014 they swung first and handed you the bill. Do not accept a bill that isn't yours.",
+    reply:"I see it differently, and I'm not going to debate it." },
+  { k:["pickup", "drop-off", "custody", "school", "doctor", "soccer", "weekend", "child support", "schedule", "exchange"],
+    tactic:"CO-PARENT LOGISTICS", note:"Keep logistics surgical and written \u2014 this is the thread that lives in the binder someday. Facts only, no feelings on the record.",
+    reply:"Noted. If anything about the schedule changes, put it in writing and I'll confirm." },
+  { k:["i'm sorry", "i was wrong", "forgive me", "won't happen again", "i love you", "let me make it up"],
+    tactic:"APOLOGY BAIT", note:"An apology without a change of recipe is an opening bid, not a conclusion. Judge it in a month, not a minute.",
+    reply:"That's a start. What counts is what happens from here \u2014 concrete, steady, different. Nothing changes tonight." },
+  { k:["everyone thinks", "your family", "your friends", "tell them", "post about", "expose", "look crazy", "who's going to believe"],
+    tactic:"SMEAR THREAT", note:"They are negotiating with your reputation to keep leverage. You don't have to win a story \u2014 your steady behavior writes the ending.",
+    reply:"Do what you feel you have to do. The people who know me, know me." }
+];
+function draftReply(their){
+  var low = their.toLowerCase();
+  var best = null, bestScore = 0;
+  REPLY_PLAYS.forEach(function(p){
+    var s = 0;
+    p.k.forEach(function(w){ if (low.indexOf(w) !== -1) s++; });
+    if (s > bestScore){ bestScore = s; best = p; }
+  });
+  if (!best) best = { tactic:"FUZZY PROVOCATION", note:"Vague disorder is a tactic too \u2014 they want a reaction, any direction, from ANY answer. Don't give the show an audience.",
+    reply:"Noted." };
+  return best;
+}
+var lastReplyText = "";
+$("draft").onclick = function(){
+  var their = $("their_msg").value.trim();
+  var out = $("reply_out");
+  if (!their){
+    out.style.display = "block"; out.className = "replybox";
+    $("reply_til").textContent = "\u270d\ufe0f Paste what they sent first \u2014 then tap DRAFT MY REPLY.";
+    $("reply_text").textContent = "";
+    $("reply_analysis").textContent = "";
+    $("copyreply").style.display = "none";
+    return;
+  }
+  var p = draftReply(their);
+  if (p.warn){
+    out.style.display = "block"; out.className = "replybox warn";
+    $("reply_til").textContent = "\ud83d\udea8 " + p.tactic;
+    $("reply_text").textContent = "SEND NOTHING.\n\nA reply answers a threat \u2014 silence does not. Do this instead:\n1. Screenshot this message NOW, with the date visible.\n2. Do not delete anything \u2014 their words are evidence; yours are your shield.\n3. If the threat touches your body, your kids, or your home: 911.\n4. Free, 24/7 DV hotline: 1-800-799-7233, or text START to 88788.\n5. Stay near people tonight. Locks, lights, routines.";
+    $("reply_analysis").textContent = "\ud83d\udd0e WHY: " + p.note + CRISIS;
+    lastReplyText = "";
+    $("copyreply").style.display = "none";
+    return;
+  }
+  out.style.display = "block"; out.className = "replybox";
+  $("reply_til").textContent = "\u270d\ufe0f " + p.tactic;
+  $("reply_text").textContent = p.reply;
+  $("reply_analysis").textContent = "\ud83d\udd0e WHY: " + p.note + "\n\n\ud83d\udcda BIFF check \u2014 Brief \u2713  Informative \u2713  Friendly \u2713  Firm \u2713  \u2014 no explaining, no defending, no feeding. Sent is sent: one message, then let silence do the work.";
+  lastReplyText = p.reply;
+  $("copyreply").style.display = "";
+};
+$("copyreply").onclick = function(){
+  if (!lastReplyText) return;
+  var done = function(){ $("copyreply").textContent = "\u2713 COPIED"; setTimeout(function(){ $("copyreply").textContent = "COPY THE REPLY"; }, 1500); };
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(lastReplyText).then(done, function(){ legacyCopy(done); });
+  } else { legacyCopy(done); }
+};
+function legacyCopy(done){
+  try {
+    var t = document.createElement("textarea");
+    t.value = lastReplyText;
+    document.body.appendChild(t); t.select();
+    document.execCommand("copy"); document.body.removeChild(t);
+    if (done) done();
+  } catch(e){ $("reply_analysis").textContent += "\n(Copy failed \u2014 hold to select the reply text manually.)"; }
+}
+
+/* ---- LIVE LISTEN: volume-only calm meter (nothing recorded or sent) ---- */
+var micStream = null, micRaf = 0, loudRun = 0, cooldown = 0;
+function fmtT(){
+  var d = new Date(); function p(n){ return (n < 10 ? "0" : "") + n; }
+  return p(d.getHours()) + ":" + p(d.getMinutes());
+}
+$("mic_start").onclick = function(){
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    $("mic_status").textContent = "This browser can't reach a microphone. Try Chrome or Safari on your phone.";
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream){
+    micStream = stream; loudRun = 0; cooldown = 0;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    var ctx = new AC();
+    var src = ctx.createMediaStreamSource(stream);
+    var an = ctx.createAnalyser(); an.fftSize = 1024;
+    src.connect(an);
+    var buf = new Float32Array(an.fftSize);
+    $("mic_status").textContent = "Listening \u2014 volume only, right here on this page. Nothing is recorded, nothing is saved, nothing leaves your device.";
+    $("mic_start").style.display = "none"; $("mic_stop").style.display = "";
+    (function tick(){
+      micRaf = requestAnimationFrame(tick);
+      an.getFloatTimeDomainData(buf);
+      var sum = 0;
+      for (var i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+      var pct = Math.min(100, Math.round(Math.sqrt(sum / buf.length) * 420));
+      $("mic_meterfill").style.width = pct + "%";
+      if (pct >= 55) loudRun++; else loudRun = 0;
+      if (loudRun === 14 && cooldown === 0){
+        cooldown = 240;
+        $("mic_log").textContent = "\ud83d\udd0a Yelling spike \u2014 " + pct + "% \u2014 " + fmtT() + "\n" + $("mic_log").textContent;
+        $("mic_prompt").style.display = "";
+      }
+      if (cooldown > 0) cooldown--;
+    })();
+  }).catch(function(){
+    $("mic_status").textContent = "Mic permission was denied or unavailable. Nothing was accessed.";
+  });
+};
+$("mic_stop").onclick = function(){
+  if (micRaf) cancelAnimationFrame(micRaf); micRaf = 0;
+  if (micStream) micStream.getTracks().forEach(function(t){ t.stop(); });
+  micStream = null;
+  $("mic_meterfill").style.width = "0";
+  $("mic_prompt").style.display = "none";
+  $("mic_start").style.display = ""; $("mic_stop").style.display = "none";
+  $("mic_status").textContent = "Stopped. Nothing was saved \u2014 the meter only looked at volume, and that's all it ever looks at.";
+};
 
 /* ---- boot ---- */
 addMsg("sys", "THE WARRIOR \u2014 standing with you. Tap a situation or describe what's happening. No key needed; add one for the full AI strategist.");
