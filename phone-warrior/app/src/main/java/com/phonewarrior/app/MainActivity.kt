@@ -1,5 +1,6 @@
 package com.phonewarrior.app
 
+import android.Manifest
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -32,8 +33,11 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import java.io.ByteArrayOutputStream
 import java.io.File
+import android.media.MediaPlayer
+import android.media.MediaRecorder
 import java.security.MessageDigest
 import java.security.SecureRandom
 import java.text.DateFormat
@@ -73,6 +77,10 @@ class MainActivity : AppCompatActivity() {
     private var vaultPinStage = ""
     private var vaultOpenKey: SecretKeySpec? = null
     private var vaultMsg = ""
+    private var manualRec: MediaRecorder? = null
+    private var manualFile: File? = null
+    private var manualStart = 0L
+    private var playing: MediaPlayer? = null
     private lateinit var scanBtn: Button
     private lateinit var scanStatus: TextView
     private lateinit var resultsBox: LinearLayout
@@ -1089,6 +1097,119 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun startManualRec() {
+        if (manualRec != null) return
+        try {
+            @Suppress("DEPRECATION") val mr = MediaRecorder()
+            mr.setAudioSource(MediaRecorder.AudioSource.MIC)
+            mr.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+            mr.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            mr.setAudioEncodingBitRate(64000)
+            mr.setAudioSamplingRate(22050)
+            val f = File(cacheDir, "pwr-" + System.currentTimeMillis() + ".m4a")
+            mr.setOutputFile(f.absolutePath)
+            mr.prepare()
+            mr.start()
+            manualRec = mr
+            manualFile = f
+            manualStart = System.currentTimeMillis()
+            autoStopManual()
+            renderVault()
+        } catch (e: Exception) {
+            vaultMsg = "Recording failed to start: " + e.message
+            renderVault()
+        }
+    }
+
+    private fun autoStopManual() {
+        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+            if (manualRec != null) stopManualRec()
+        }, 60000)
+    }
+
+    private fun stopManualRec() {
+        val mr = manualRec ?: return
+        val f = manualFile
+        val elapsed = (System.currentTimeMillis() - manualStart) / 1000
+        try { mr.stop() } catch (e: Exception) {}
+        try { mr.release() } catch (e: Exception) {}
+        manualRec = null
+        manualFile = null
+        if (f != null && f.exists()) {
+            try {
+                val b64 = Base64.encodeToString(f.readBytes(), Base64.NO_WRAP)
+                if (b64.length > 1200000) {
+                    vaultMsg = "That recording was too large to store."
+                } else {
+                    val obj = JSONObject()
+                    obj.put("type", "aud")
+                    obj.put("fmt", "m4a")
+                    obj.put("t", System.currentTimeMillis())
+                    obj.put("s", "Voice recording \u2014 " + elapsed + "s")
+                    obj.put("d", b64)
+                    saveVaultObject(obj)
+                }
+            } catch (e: Exception) {
+                vaultMsg = "Couldn't store recording: " + e.message
+            }
+            try { f.delete() } catch (e: Exception) {}
+        }
+        if (vaultPinStage == "open") renderVault()
+    }
+
+    private fun startGuard() {
+        val key = vaultOpenKey
+        if (key == null) { vaultMsg = "Unlock the vault first."; renderVault(); return }
+        try {
+            val i = Intent(this, GuardService::class.java)
+            i.putExtra("key", key.encoded)
+            if (Build.VERSION.SDK_INT >= 26) startForegroundService(i) else startService(i)
+            vaultMsg = ""
+            renderVault()
+        } catch (e: Exception) {
+            vaultMsg = "Guard failed to start: " + e.message
+            renderVault()
+        }
+    }
+
+    private fun hasMicPermission(): Boolean =
+        ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
+            PackageManager.PERMISSION_GRANTED
+
+    private fun playVaultAudio(obj: JSONObject) {
+        try {
+            val b = Base64.decode(obj.optString("d"), Base64.NO_WRAP)
+            val ext = if (obj.optString("fmt") == "wav") "wav" else "m4a"
+            val f = File(cacheDir, "pwrplay." + ext)
+            f.writeBytes(b)
+            playing?.release()
+            val mp = MediaPlayer()
+            mp.setDataSource(f.absolutePath)
+            mp.prepare()
+            mp.start()
+            playing = mp
+            mp.setOnCompletionListener {
+                try { it.release() } catch (e: Exception) {}
+                try { f.delete() } catch (e: Exception) {}
+            }
+        } catch (e: Exception) {
+            vaultMsg = "Couldn't play recording: " + e.message
+            renderVault()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 7001) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startGuard()
+            } else {
+                vaultMsg = "Guard mode needs the microphone permission. (It's only used while guard is on.)"
+                renderVault()
+            }
+        }
+    }
+
     private fun vaultContents(pad: LinearLayout.LayoutParams) {
         val key = vaultOpenKey
         if (key == null) {
@@ -1156,6 +1277,35 @@ class MainActivity : AppCompatActivity() {
         row2.addView(addApp, half)
         vaultBox.addView(row1, pad.also { it.setMargins(0, dp(8), 0, 0) })
         vaultBox.addView(row2, pad.also { it.setMargins(0, dp(6), 0, 0) })
+
+        val row3 = LinearLayout(this)
+        row3.orientation = LinearLayout.HORIZONTAL
+        val addAudio = vaultBtn(if (manualRec != null) "\u23f9 STOP VOICE REC" else "\ud83c\udf99 VOICE REC", gold, gold)
+        addAudio.setOnClickListener {
+            if (manualRec != null) stopManualRec() else startManualRec()
+        }
+        val guard = vaultBtn(if (GuardService.active) "\u23f9 STOP GUARD" else "\ud83d\udee1 SET GUARD", gold, gold)
+        guard.setOnClickListener {
+            if (GuardService.active) {
+                val st = Intent(this, GuardService::class.java)
+                st.action = GuardService.ACTION_STOP
+                try { startService(st) } catch (e: Exception) {}
+                renderVault()
+            } else if (hasMicPermission()) {
+                startGuard()
+            } else {
+                requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), 7001)
+            }
+        }
+        row3.addView(addAudio, half)
+        row3.addView(guard, half)
+        vaultBox.addView(row3, pad.also { it.setMargins(0, dp(6), 0, 0) })
+
+        vaultBox.addView(card(
+            "\ud83c\udf99 VOICE EVIDENCE \u2014 THE TRUTH",
+            "\ud83d\udee1 SET GUARD: keeps listening while on; if it hears LOUD audio (yelling) it records \u2014 including the 30 seconds BEFORE \u2014 and stores it encrypted in this vault. You get a toast when it saves. One truth: while guard runs, Android shows its \u2018microphone in use\u2019 indicator. Evidence over stealth.\n\n\ud83c\udf99 VOICE REC: manual up-to-60s memo (press to start, press to stop).\n\n\ud83d\udcde Phone CALLS: modern Android (9+) BLOCKS third-party apps from recording call audio \u2014 every call-recorder app was killed by this. If a call must be documented: use VOICE REC on speakerphone, and note date/time/parts after.\n\n\u2696\ufe0f CONSENT: whether recording people without saying so is legal depends on your state (\u2018one-party\u2019 vs \u2018all-party\u2019 consent). In all-party states, courts have still often accepted such recordings in protective-order cases \u2014 but ask your advocate or the hotline (1-800-799-7233) FIRST so your evidence protects you instead of exposing you.",
+            amber, amber
+        ).also { it.setPadding(dp(14), dp(12), dp(14), dp(12)) }, pad.also { it.setMargins(0, dp(8), 0, 0) })
 
         val items = (0 until arr.length()).map { arr.getJSONObject(it) }.sortedByDescending { it.optLong("t") }
         if (items.isEmpty()) {
@@ -1229,6 +1379,19 @@ class MainActivity : AppCompatActivity() {
                                 .setNegativeButton("Keep", null)
                                 .show()
                         }
+                    }
+                    vaultBox.addView(c, pad.also { it.setMargins(0, dp(8), 0, 0) })
+                }
+                "aud" -> {
+                    val c = card("Recording \u00b7 " + df.format(Date(obj.optLong("t"))), obj.optString("s"), edgeC)
+                    c.setOnClickListener {
+                        AlertDialog.Builder(this)
+                            .setTitle("Recording")
+                            .setItems(arrayOf("\u25b6 Play", "Delete")) { _, which ->
+                                if (which == 0) playVaultAudio(obj) else deleteVaultObject(obj, "Delete this recording?")
+                            }
+                            .setNegativeButton("Cancel", null)
+                            .show()
                     }
                     vaultBox.addView(c, pad.also { it.setMargins(0, dp(8), 0, 0) })
                 }
