@@ -55,7 +55,7 @@ object ThreatDb {
 
     fun hasSoftWord(s: String): Boolean = SOFT_LABEL_WORDS.any { s.contains(it) }
 
-    fun prettyPerm(perm: String): String = when {
+    fun prettyPerm(perm: String): String? = when {
         perm.endsWith("ACCESS_FINE_LOCATION") || perm.endsWith("ACCESS_COARSE_LOCATION") -> "Sees your location"
         perm.endsWith("RECORD_AUDIO") -> "Uses the microphone"
         perm.endsWith("CAMERA") -> "Uses the camera"
