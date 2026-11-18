@@ -108,11 +108,23 @@
 
 <script>
 "use strict";
+/* ---- visible crash banner: if anything breaks, show WHY instead of dead buttons ---- */
+function forgeBanner(msg){
+  try {
+    var b = document.createElement("div");
+    b.style.cssText = "background:#FF5A6E;color:#fff;padding:10px 14px;border-radius:10px;margin:0 0 14px;font:12px/1.5 system-ui;word-break:break-word;";
+    b.textContent = "\u26a0 Tool error: " + msg + " \u2014 screenshot this and tell Redeemed Warrior.";
+    var w = document.querySelector(".wrap");
+    if (w && w.firstChild) w.insertBefore(b, w.firstChild); else document.body.insertBefore(b, document.body.firstChild);
+  } catch(e){}
+}
+window.addEventListener("error", function(ev){ forgeBanner((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ forgeBanner("network/async: " + ((ev && ev.reason && ev.reason.message) ? ev.reason.message : String(ev && ev.reason || "unknown"))); });
 /* ---- state ---- */
 var LS_TOOLS = "forge_tools", LS_KEY = "forge_key";
 var tools = [];
 try { tools = JSON.parse(localStorage.getItem(LS_TOOLS) || "[]"); } catch (e) { tools = []; }
-var history = [];   // {role, content}
+var chatHistory = [];   // {role, content}  (renamed from `history` — a browser-protected name that crashed the page in strict mode)
 var persona = null;
 
 function $(id){ return document.getElementById(id); }
@@ -180,14 +192,14 @@ $("new").onclick = function(){
   if (!confirm("Clear the workbench?")) return;
   $("t_name").value = ""; $("t_icon").value = "🔥"; $("t_desc").value = ""; $("t_prompt").value = "";
   $("t_temp").value = "0.7"; $("tempval").textContent = "0.7"; saveDraft();
-  persona = null; history = []; startChat();
+  persona = null; chatHistory = []; startChat();
 };
 function openTool(i){
   var t = tools[i];
   $("t_name").value = t.name; $("t_icon").value = t.icon; $("t_desc").value = t.desc;
   $("t_prompt").value = t.prompt; $("t_temp").value = String(t.temp); $("tempval").textContent = String(t.temp);
   saveDraft();
-  persona = t; history = []; startChat();
+  persona = t; chatHistory = []; startChat();
 }
 
 /* ---- chat ---- */
@@ -201,7 +213,7 @@ function addMsg(cls, safeHtml){
 }
 function startChat(){
   $("chat").innerHTML = "";
-  history = [];
+  chatHistory = [];
   if (!persona) {
     var t = currentTool();
     persona = t.prompt ? t : null;
@@ -233,16 +245,16 @@ function callAI(q, key){
       model: "mistral-small-latest",
       temperature: t.temp || 0.7,
       max_tokens: 500,
-      messages: [{ role: "system", content: t.prompt }].concat(history, [{ role: "user", content: q }])
+      messages: [{ role: "system", content: t.prompt }].concat(chatHistory, [{ role: "user", content: q }])
     })
   }).then(function(r){ return r.json(); }).then(function(j){
     var out = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "";
     if (!out) out = "(No answer — check your key or the provider status.)";
     if (think && think.parentNode) think.remove();
     addMsg("ai", esc(out));
-    history.push({ role: "user", content: q });
-    history.push({ role: "assistant", content: out });
-    if (history.length > 12) history = history.slice(-12);
+    chatHistory.push({ role: "user", content: q });
+    chatHistory.push({ role: "assistant", content: out });
+    if (chatHistory.length > 12) chatHistory = chatHistory.slice(-12);
   }).catch(function(e){
     if (think && think.parentNode) think.remove();
     addMsg("ai", esc("Couldn't reach the AI provider: " + (e && e.message ? e.message : "network error")));
@@ -323,8 +335,7 @@ $("export").onclick = function(){
   addMsg("sys", "⬇ Exported! Save the file as index.html inside a folder and send it to Redeemed Warrior — it goes live on the site.");
 };
 
-renderSaved();
-startChat();
+try { renderSaved(); startChat(); } catch (e) { forgeBanner((e && e.message) ? e.message : String(e)); }
 </script>
 </body>
 </html>
