@@ -10,6 +10,8 @@ import android.content.SharedPreferences
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -30,6 +32,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -963,6 +966,129 @@ class MainActivity : AppCompatActivity() {
         vaultBox.addView(go, pad.also { it.setMargins(0, dp(8), 0, 0) })
     }
 
+    private fun saveVaultObject(obj: JSONObject): Boolean {
+        val key = vaultOpenKey ?: return false
+        val plain = vaultDec(key, prefs.getString("vault_data", "") ?: "[]") ?: "[]"
+        val arr = try { JSONArray(plain) } catch (e: Exception) { JSONArray() }
+        arr.put(obj)
+        prefs.edit().putString("vault_data", vaultEnc(key, arr.toString())).apply()
+        return true
+    }
+
+    private fun rebuildVaultObjects(key: SecretKeySpec, keep: JSONArray) {
+        prefs.edit().putString("vault_data", vaultEnc(key, keep.toString())).apply()
+    }
+
+    private fun deleteVaultObject(obj: JSONObject, title: String) {
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setMessage("It cannot be recovered.")
+            .setPositiveButton("Delete") { _, _ ->
+                val key = vaultOpenKey ?: return@setPositiveButton
+                val t = obj.optLong("t")
+                val sv = obj.optString("s")
+                val ty = obj.optString("type")
+                val fresh = try { JSONArray(vaultDec(key, prefs.getString("vault_data", "") ?: "[]") ?: "[]") } catch (e: Exception) { JSONArray() }
+                val out = JSONArray()
+                for (j in 0 until fresh.length()) {
+                    val o = fresh.getJSONObject(j)
+                    if (!(o.optLong("t") == t && o.optString("s") == sv && o.optString("type") == ty)) out.put(o)
+                }
+                rebuildVaultObjects(key, out)
+                renderVault()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun vaultContactDialog() {
+        val wrap = LinearLayout(this)
+        wrap.orientation = LinearLayout.VERTICAL
+        wrap.setPadding(dp(8), dp(4), dp(8), 0)
+        val name = EditText(this); name.hint = "Name (only you will read it)"
+        val phone = EditText(this); phone.hint = "Phone number (optional)"
+        val email = EditText(this); email.hint = "Email (optional)"
+        wrap.addView(name); wrap.addView(phone); wrap.addView(email)
+        AlertDialog.Builder(this)
+            .setTitle("New secret contact")
+            .setView(wrap)
+            .setPositiveButton("Save") { _, _ ->
+                val n = name.text.toString().trim()
+                if (n.isNotEmpty()) {
+                    val obj = JSONObject()
+                    obj.put("type", "contact")
+                    obj.put("t", System.currentTimeMillis())
+                    obj.put("s", n)
+                    obj.put("p", phone.text.toString().trim())
+                    obj.put("e", email.text.toString().trim())
+                    if (saveVaultObject(obj)) renderVault()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun vaultAppDialog() {
+        try {
+            val pm = packageManager
+            val li = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
+            val acts = pm.queryIntentActivities(li, 0)
+                .filter { it.activityInfo.packageName != packageName }
+                .sortedBy { it.loadLabel(pm).toString().lowercase() }
+            if (acts.isEmpty()) { vaultMsg = "No launchable apps found."; renderVault(); return }
+            val names = acts.map { it.loadLabel(pm).toString() }.toTypedArray()
+            AlertDialog.Builder(this)
+                .setTitle("Pick an app to hide a shortcut to")
+                .setItems(names) { _, which ->
+                    val ai = acts[which]
+                    val obj = JSONObject()
+                    obj.put("type", "app")
+                    obj.put("t", System.currentTimeMillis())
+                    obj.put("s", ai.loadLabel(pm).toString())
+                    obj.put("p", ai.activityInfo.packageName)
+                    if (saveVaultObject(obj)) renderVault()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        } catch (e: Exception) {
+            vaultMsg = "Couldn't list apps: " + e.message
+            renderVault()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode != 9001 || resultCode != RESULT_OK) return
+        val uri = data?.data ?: return
+        try {
+            val opts = BitmapFactory.Options()
+            opts.inJustDecodeBounds = true
+            contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, opts) }
+            if (opts.outWidth <= 0) { vaultMsg = "Couldn't read that image."; vaultPinStage = "open"; renderVault(); return }
+            var sample = 1
+            while (opts.outWidth / sample > 1024 || opts.outHeight / sample > 1024) sample *= 2
+            val bOpts = BitmapFactory.Options()
+            bOpts.inSampleSize = sample
+            val bmp = contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bOpts) }
+            if (bmp == null) { vaultMsg = "Couldn't read that image."; vaultPinStage = "open"; renderVault(); return }
+            val baos = ByteArrayOutputStream()
+            bmp.compress(Bitmap.CompressFormat.JPEG, 72, baos)
+            val b64 = Base64.encodeToString(baos.toByteArray(), Base64.NO_WRAP)
+            if (b64.length > 900000) { vaultMsg = "That photo is too large for the vault — try a smaller one."; vaultPinStage = "open"; renderVault(); return }
+            val obj = JSONObject()
+            obj.put("type", "img")
+            obj.put("t", System.currentTimeMillis())
+            obj.put("d", b64)
+            if (!saveVaultObject(obj)) vaultMsg = "Vault was locked — unlock and try again."
+            vaultPinStage = "open"
+            renderVault()
+        } catch (e: Exception) {
+            vaultMsg = "Photo save failed: " + e.message
+            vaultPinStage = "open"
+            renderVault()
+        }
+    }
+
     private fun vaultContents(pad: LinearLayout.LayoutParams) {
         val key = vaultOpenKey
         if (key == null) {
@@ -973,8 +1099,27 @@ class MainActivity : AppCompatActivity() {
         val plain = vaultDec(key, prefs.getString("vault_data", "") ?: "[]") ?: "[]"
         val arr = try { JSONArray(plain) } catch (e: Exception) { JSONArray() }
 
-        val add = vaultBtn("ADD A SECRET NOTE", gold, gold)
-        add.setOnClickListener {
+        vaultBox.addView(card(
+            "\ud83d\udcf1 THE SECOND PHONE",
+            "Contacts, notes, photos and app shortcuts — all of it encrypted with your PIN and visible only here. To anyone holding this phone it looks like an empty wallet screen.",
+            edgeC
+        ).also { it.setPadding(dp(14), dp(12), dp(14), dp(12)) }, pad.also { it.setMargins(0, dp(8), 0, 0) })
+
+        vaultBox.addView(card(
+            "\u26a0\ufe0f THE TRUTH ABOUT TRACES",
+            "Everything typed in HERE is encrypted — no app, no search, no snooper can reach it. But be honest with yourself: we CANNOT reach into your phone's real Messages app or other apps — anything typed THERE leaves traces.\n\nFor conversations that must leave NO trace anywhere: agree with your safe people on disappearing-message apps (Signal, or Session — no phone number needed), then keep only what you must keep, here, in the vault.\n\nApp shortcuts open the real apps — the vault hides the shortcut, not the app itself.",
+            amber, amber
+        ).also { it.setPadding(dp(14), dp(12), dp(14), dp(12)) }, pad.also { it.setMargins(0, dp(8), 0, 0) })
+
+        val row1 = LinearLayout(this)
+        row1.orientation = LinearLayout.HORIZONTAL
+        val row2 = LinearLayout(this)
+        row2.orientation = LinearLayout.HORIZONTAL
+        val half = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+        half.setMargins(dp(3), 0, dp(3), 0)
+
+        val addNote = vaultBtn("+ NOTE", gold, gold)
+        addNote.setOnClickListener {
             val boxIn = EditText(this)
             boxIn.hint = "What do you need to keep safe?"
             AlertDialog.Builder(this)
@@ -984,15 +1129,115 @@ class MainActivity : AppCompatActivity() {
                     val text = boxIn.text.toString().trim()
                     if (text.isNotEmpty()) {
                         val obj = JSONObject()
+                        obj.put("type", "note")
                         obj.put("t", System.currentTimeMillis())
                         obj.put("s", text)
-                        arr.put(obj)
-                        prefs.edit().putString("vault_data", vaultEnc(key, arr.toString())).apply()
-                        renderVault()
+                        if (saveVaultObject(obj)) renderVault()
                     }
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
+        }
+        val addContact = vaultBtn("+ CONTACT", gold, gold)
+        addContact.setOnClickListener { vaultContactDialog() }
+        val addPhoto = vaultBtn("+ PHOTO", gold, gold)
+        addPhoto.setOnClickListener {
+            try {
+                val i = Intent(Intent.ACTION_GET_CONTENT)
+                i.type = "image/*"
+                startActivityForResult(i, 9001)
+            } catch (e: Exception) { vaultMsg = "No photo picker found on this phone."; renderVault() }
+        }
+        val addApp = vaultBtn("+ APP", gold, gold)
+        addApp.setOnClickListener { vaultAppDialog() }
+        row1.addView(addNote, half)
+        row1.addView(addContact, half)
+        row2.addView(addPhoto, half)
+        row2.addView(addApp, half)
+        vaultBox.addView(row1, pad.also { it.setMargins(0, dp(8), 0, 0) })
+        vaultBox.addView(row2, pad.also { it.setMargins(0, dp(6), 0, 0) })
+
+        val items = (0 until arr.length()).map { arr.getJSONObject(it) }.sortedByDescending { it.optLong("t") }
+        if (items.isEmpty()) {
+            vaultBox.addView(tv("Empty (and invisible) for now. Add your safe contacts, the email addresses from the Safety tab, photos that must stay hidden, and shortcuts to the apps that are NONE of his business.", 13, muted)
+                .also { it.setPadding(dp(6), dp(10), dp(6), 0) }, pad.also { it.setMargins(0, dp(8), 0, 0) })
+        }
+        val df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
+        for (obj in items) {
+            val ty = obj.optString("type", "note")
+            when (ty) {
+                "contact" -> {
+                    val bodyBits = ArrayList<String>()
+                    if (obj.optString("p").isNotEmpty()) bodyBits.add("phone: " + obj.optString("p"))
+                    if (obj.optString("e").isNotEmpty()) bodyBits.add("email: " + obj.optString("e"))
+                    val c = card("Contact \u00b7 " + obj.optString("s"), bodyBits.joinToString("\n"), edgeC)
+                    c.setOnClickListener {
+                        val opts = mutableListOf<String>()
+                        if (obj.optString("p").isNotEmpty()) opts.add("Call " + obj.optString("s"))
+                        if (obj.optString("p").isNotEmpty()) opts.add("Text " + obj.optString("s") + " (leaves an SMS trace)")
+                        if (obj.optString("e").isNotEmpty()) opts.add("Email " + obj.optString("s"))
+                        opts.add("Delete")
+                        AlertDialog.Builder(this)
+                            .setTitle(obj.optString("s"))
+                            .setItems(opts.toTypedArray()) { _, which ->
+                                val choice = opts[which]
+                                try {
+                                    if (choice.startsWith("Call ")) {
+                                        startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + obj.optString("p").replace(" ", "").replace("-", ""))))
+                                    } else if (choice.startsWith("Text ")) {
+                                        startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + obj.optString("p").replace(" ", "").replace("-", ""))))
+                                    } else if (choice.startsWith("Email ")) {
+                                        startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + obj.optString("e"))))
+                                    } else {
+                                        deleteVaultObject(obj, "Delete this contact?")
+                                    }
+                                } catch (e: Exception) {}
+                            }
+                            .setNegativeButton("Cancel", null)
+                            .show()
+                    }
+                    vaultBox.addView(c, pad.also { it.setMargins(0, dp(8), 0, 0) })
+                }
+                "img" -> {
+                    try {
+                        val bytes = Base64.decode(obj.optString("d"), Base64.NO_WRAP)
+                        val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                        val iv = android.widget.ImageView(this)
+                        iv.setImageBitmap(bmp)
+                        iv.adjustViewBounds = true
+                        iv.setPadding(dp(4), dp(4), dp(4), dp(4))
+                        iv.background = panelBg(edgeC)
+                        iv.setOnClickListener { deleteVaultObject(obj, "Delete this photo?") }
+                        vaultBox.addView(iv, pad.also { it.setMargins(0, dp(8), 0, 0) })
+                    } catch (e: Exception) {
+                        val c = card("Photo \u00b7 " + df.format(Date(obj.optLong("t"))), "Couldn't display this photo.", red, red)
+                        c.setOnClickListener { deleteVaultObject(obj, "Delete this broken photo?") }
+                        vaultBox.addView(c, pad.also { it.setMargins(0, dp(8), 0, 0) })
+                    }
+                }
+                "app" -> {
+                    val c = card("App \u00b7 " + obj.optString("s"), "Tap to open (leaves normal app records — the vault only hides the shortcut).")
+                    c.setOnClickListener {
+                        val li = try { packageManager.getLaunchIntentForPackage(obj.optString("p")) } catch (e: Exception) { null }
+                        if (li != null) {
+                            startActivity(li)
+                        } else {
+                            AlertDialog.Builder(this)
+                                .setTitle(obj.optString("s"))
+                                .setMessage("That app isn't installed on this phone anymore. Keep the shortcut or delete it?")
+                                .setPositiveButton("Delete shortcut") { _, _ -> deleteVaultObject(obj, "Delete this shortcut?") }
+                                .setNegativeButton("Keep", null)
+                                .show()
+                        }
+                    }
+                    vaultBox.addView(c, pad.also { it.setMargins(0, dp(8), 0, 0) })
+                }
+                else -> {
+                    val c = card("Note \u00b7 " + df.format(Date(obj.optLong("t"))), obj.optString("s"), edgeC)
+                    c.setOnClickListener { deleteVaultObject(obj, "Delete this note?") }
+                    vaultBox.addView(c, pad.also { it.setMargins(0, dp(8), 0, 0) })
+                }
+            }
         }
 
         val call = vaultBtn("\ud83d\udcde CALL DV HOTLINE \u2014 1-800-799-7233", red, red, ink)
@@ -1013,43 +1258,6 @@ class MainActivity : AppCompatActivity() {
             vaultPinBuffer = ""
             vaultOpenKey = null
             renderVault()
-        }
-
-        vaultBox.addView(card(
-            "\ud83d\udd13 VAULT OPEN",
-            "Newest first. Tap a note to delete it. There is NO erase-everything button on purpose — the worst that can happen is lockdown, never losing your information.",
-            edgeC
-        ).also { it.setPadding(dp(14), dp(12), dp(14), dp(12)) }, pad.also { it.setMargins(0, dp(8), 0, 0) })
-        vaultBox.addView(add, pad.also { it.setMargins(0, dp(8), 0, 0) })
-
-        val items = (0 until arr.length()).map { arr.getJSONObject(it) }.sortedByDescending { it.optLong("t") }
-        if (items.isEmpty()) {
-            vaultBox.addView(tv("Nothing in here yet. Ideas: the new secret email addresses from the Safety tab, hotline case numbers, copies of protective-order paperwork lists, the address of a safe place.", 13, muted)
-                .also { it.setPadding(dp(6), dp(4), dp(6), 0) }, pad.also { it.setMargins(0, dp(4), 0, 0) })
-        }
-        for (obj in items) {
-            val whenStr = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date(obj.optLong("t")))
-            val row = card(whenStr, obj.optString("s"), edgeC)
-            row.setOnClickListener {
-                AlertDialog.Builder(this)
-                    .setTitle("Delete this note?")
-                    .setMessage("It cannot be recovered.")
-                    .setPositiveButton("Delete") { _, _ ->
-                        val t = obj.optLong("t")
-                        val s = obj.optString("s")
-                        val fresh = try { JSONArray(vaultDec(key, prefs.getString("vault_data", "") ?: "[]") ?: "[]") } catch (e: Exception) { JSONArray() }
-                        val keep = JSONArray()
-                        for (j in 0 until fresh.length()) {
-                            val o = fresh.getJSONObject(j)
-                            if (!(o.optLong("t") == t && o.optString("s") == s)) keep.put(o)
-                        }
-                        prefs.edit().putString("vault_data", vaultEnc(key, keep.toString())).apply()
-                        renderVault()
-                    }
-                    .setNegativeButton("Cancel", null)
-                    .show()
-            }
-            vaultBox.addView(row, pad.also { it.setMargins(0, dp(8), 0, 0) })
         }
 
         vaultBox.addView(call, pad.also { it.setMargins(0, dp(12), 0, 0) })
