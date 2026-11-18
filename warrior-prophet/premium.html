@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Go Premium — Warrior Prophet</title>
+<meta name="description" content="Warrior Prophet Premium: the Angel Watch deck, extended messages, and more.">
+<meta name="theme-color" content="#0e0b1d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230e0b1d'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle'%3E%F0%9F%99%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/site.css?v=1">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><a href="index.html">⚔️ WARRIOR PROPHET</a></div>
+    <h1>👑 Go Premium</h1>
+    <div class="tag">Everything stays free. Premium goes deeper.</div>
+    <div class="stars">· ˚ ✝ ˚ ·</div>
+  </header>
+
+  <div id="status" class="panel" hidden>
+    <h2>👑 Premium is active</h2>
+    <div class="hint">The Angel Watch deck is unlocked in <b><a href="cards.html" style="color:var(--gold)">Message Cards</a></b>. Thank you for supporting the Warrior family.</div>
+    <div class="row"><button class="btn2" id="lockbtn">Sign out of Premium (this device)</button></div>
+  </div>
+
+  <div class="tiers" id="tiers">
+    <div class="tier best">
+      <h3>👑 Prophet Premium</h3>
+      <div class="price">$4.99 <small>/ month · cancel anytime</small></div>
+      <ul>
+        <li>👼 Angel Watch deck — messages from the angels who guard you</li>
+        <li>🕯️ Extended messages — deeper words in every draw</li>
+        <li>🌅 Morning Blessing+ — verse, prayer and a faith action step</li>
+        <li>✨ All future decks and features, included as they launch</li>
+      </ul>
+      <a class="cta" id="ctaMonthly" href="https://buy.stripe.com/REPLACE_WITH_YOUR_MONTHLY_LINK">Subscribe — $4.99/mo</a>
+    </div>
+    <div class="tier">
+      <h3>💎 Lifetime Warrior</h3>
+      <div class="price">$29.99 <small>one time · yours forever</small></div>
+      <ul>
+        <li>Everything in Prophet Premium</li>
+        <li>Never billed again — one payment, forever access</li>
+        <li>Founding member badge in the Warrior family</li>
+      </ul>
+      <a class="cta" id="ctaLifetime" href="https://buy.stripe.com/REPLACE_WITH_YOUR_LIFETIME_LINK" style="background:var(--panel2);color:var(--gold);border:1px solid var(--gold-dim);">Buy Lifetime — $29.99</a>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>🎟️ Have an unlock code?</h2>
+    <div class="hint">Paid by CashApp, Venmo, or received a gift code? Enter it here to unlock Premium on this device.</div>
+    <input type="text" id="code" placeholder="e.g. ANGEL-1111" autocapitalize="characters">
+    <button class="btn" id="unlockbtn">👑 Unlock Premium</button>
+    <div class="hint" id="codeStatus"></div>
+  </div>
+
+  <footer>
+    <div><a href="index.html">⚔️ Warrior Prophet</a> · part of the <a href="https://redeemedwarrior333.github.io/Stream-warrior-/">Warrior family</a></div>
+    <div class="forfun">The free tools stay free, always. Premium keeps the family building.</div>
+  </footer>
+</div>
+
+<script src="js/premium.js?v=1"></script>
+<script>
+"use strict";
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  function refresh() {
+    var on = MW_PREMIUM.isPremium();
+    $("status").hidden = !on;
+    $("tiers").style.display = on ? "none" : "grid";
+  }
+
+  $("unlockbtn").addEventListener("click", function () {
+    var ok = MW_PREMIUM.unlock($("code").value);
+    $("codeStatus").textContent = ok ? "👑 Unlocked! Premium is now active on this device." : "That code isn't valid — check the spelling or reply to your receipt email.";
+    $("codeStatus").style.color = ok ? "var(--good)" : "var(--bad)";
+    if (ok) refresh();
+  });
+
+  $("lockbtn").addEventListener("click", function () {
+    MW_PREMIUM.lock();
+    refresh();
+  });
+
+  refresh();
+})();
+</script>
+</body>
+</html>

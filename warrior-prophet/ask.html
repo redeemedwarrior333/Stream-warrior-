@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Ask the Prophet — Warrior Prophet</title>
+<meta name="description" content="Bring your question. Receive scripture, encouragement and a prayer. Free, faith-based.">
+<meta name="theme-color" content="#0e0b1d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230e0b1d'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle'%3E%F0%9F%99%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/site.css?v=1">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><a href="index.html">⚔️ WARRIOR PROPHET</a></div>
+    <h1>Ask the Prophet</h1>
+    <div class="tag">Bring the real question. Receive the Word.</div>
+    <div class="stars">· ˚ 🙏 ˚ ·</div>
+  </header>
+
+  <div class="panel">
+    <label class="fld">What's on your heart?</label>
+    <textarea id="q" rows="3" maxlength="300" placeholder="I'm scared about… / I need wisdom about… / I'm tired of…"></textarea>
+    <button class="btn" id="askbtn">🙏 Seek the Word</button>
+  </div>
+
+  <div class="msg" id="answer" hidden></div>
+
+  <div class="row" id="actions" hidden>
+    <button class="btn2" id="again">🔄 Ask Again</button>
+    <button class="btn2" id="sharebtn">📤 Share</button>
+  </div>
+
+  <details>
+    <summary>⚡ Power up with AI (optional, free)</summary>
+    <div class="hint">Without a key, the Prophet answers from a built-in scripture library — <b>always free</b>. Add an API key and the Prophet writes a personal, scripture-grounded answer to your exact question.</div>
+    <div class="airow">
+      <input type="text" id="aikey" placeholder="API key (stored on your device only)">
+      <button class="save" id="aisave">Save</button>
+    </div>
+    <div class="hint" id="aistatus"></div>
+  </details>
+
+  <footer>
+    <div><a href="index.html">⚔️ Warrior Prophet</a> · part of the <a href="https://redeemedwarrior333.github.io/Stream-warrior-/">Warrior family</a></div>
+    <div class="forfun">A devotional encouragement tool — not a substitute for your pastor, counselor or doctor. Always test every word against Scripture — Acts 17:11.</div>
+  </footer>
+</div>
+
+<script src="js/engine.js?v=1"></script>
+<script>
+"use strict";
+var ASK_PAGE = (function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var TOPICS = [
+    { k:/fear|afraid|scared|anx|worry|panic|stress/, t:"Fear & Anxiety",
+      w:["Do not be afraid — the Lord your God goes with you; He will never leave you.", "Cast all your anxiety on Him because He cares for you.", "Peace I leave with you; My peace I give you. Not as the world gives."],
+      r:["Deuteronomy 31:6","1 Peter 5:7","John 14:27"],
+      note:"Fear shrinks when you name it out loud to God. Try praying the exact sentence you're afraid of — then hand it over." },
+    { k:/money|broke|debt|job|work|career|fired|bills|rent|pay/, t:"Provision & Work",
+      w:["My God will meet all your needs according to the riches of His glory.", "Commit to the Lord whatever you do, and He will establish your plans.", "Let us not become weary in doing good, for at the proper time we will reap a harvest."],
+      r:["Philippians 4:19","Proverbs 16:3","Galatians 6:9"],
+      note:"Provision usually arrives as strength, opportunity and favor — watch for all three this week, not just a check." },
+    { k:/love|marry|marriage|boyfriend|girlfriend|relationship|crush|divorce|lonely|loneliness/, t:"Love & Relationships",
+      w:["Love is patient, love is kind. It does not envy, it does not boast, it is not proud.", "Above all else, guard your heart, for everything you do flows from it.", "Two are better than one... a cord of three strands is not quickly broken."],
+      r:["1 Corinthians 13:4","Proverbs 4:23","Ecclesiastes 4:9-12"],
+      note:"The right love makes you more brave, not less yourself. Ask God to write the story — He's better at it." },
+    { k:/forgive|guilt|shame|regret|sin|past/, t:"Forgiveness & Grace",
+      w:["As far as the east is from the west, so far has He removed our transgressions from us.", "If we confess our sins, He is faithful and just and will forgive us.", "There is now no condemnation for those who are in Christ Jesus."],
+      r:["Psalm 103:12","1 John 1:9","Romans 8:1"],
+      note:"Grace is not a one-time door — it is the house you live in. Confess it once, then leave it there." },
+    { k:/grief|died|death|loss|lost (him|her|them|my)|funeral|mourn|sad/, t:"Grief & Comfort",
+      w:["Blessed are those who mourn, for they will be comforted.", "He heals the brokenhearted and binds up their wounds.", "Weeping may stay for the night, but rejoicing comes in the morning."],
+      r:["Matthew 5:4","Psalm 147:3","Psalm 30:5"],
+      note:"Grief is love with nowhere to go — but morning is real, and comfort has your address." },
+    { k:/purpose|direction|calling|decide|decision|which|should i|path|future/, t:"Direction & Purpose",
+      w:["Trust in the Lord with all your heart and lean not on your own understanding.", "Whether you turn to the right or to the left, your ears will hear a voice behind you.", "For I know the plans I have for you, plans to give you hope and a future."],
+      r:["Proverbs 3:5","Isaiah 30:21","Jeremiah 29:11"],
+      note:"God guides moving feet more than parked ones. Take the next faithful step and let Him steer mid-walk." },
+    { k:/wait|waiting|patien|when|timing|slow/, t:"Waiting & Timing",
+      w:["Wait for the Lord; be strong and take heart and wait for the Lord.", "But those who hope in the Lord will renew their strength.", "There is a time for everything, and a season for every activity under the heavens."],
+      r:["Psalm 27:14","Isaiah 40:31","Ecclesiastes 3:1"],
+      note:"Waiting is not wasted time — it is the greenhouse where God grows what would break if He rushed it." },
+    { k:/tired|exhaust|weak|burnout|give up|quit|can't|cant/, t:"Strength & Renewal",
+      w:["Come to me, all you who are weary and burdened, and I will give you rest.", "My power is made perfect in weakness.", "He gives strength to the weary and increases the power of the weak."],
+      r:["Matthew 11:28","2 Corinthians 12:9","Isaiah 40:29"],
+      note:"Rest is not failure; it is faith. Even God rested — and He was just getting started." },
+    { k:/sick|heal|pain|hospital|diagnos|cancer|illness|body/, t:"Healing",
+      w:["By His wounds you have been healed.", "He heals the brokenhearted and binds up their wounds.", "Is anyone sick among you? Let them call the elders of the church to pray over them."],
+      r:["1 Peter 2:24","Psalm 147:3","James 5:14"],
+      note:"Bring the whole truth to God in prayer — and let the doctors He trained do their work too. Both are faith." },
+    { k:/doubt|faith|believe|god real|why god|where is god|angry at god/, t:"Doubt & Faith",
+      w:["I do believe; help me overcome my unbelief!", "Seek and you will find; knock and the door will be opened to you.", "Now faith is confidence in what we hope for and assurance about what we do not see."],
+      r:["Mark 9:24","Matthew 7:7","Hebrews 11:1"],
+      note:"Honest doubt prayed out loud is closer to faith than fake certainty. God can handle your questions — He wrote them." },
+    { k:/thank|grateful|praise|joy|good news|blessed/, t:"Thanksgiving & Joy",
+      w:["Give thanks in all circumstances; for this is God's will for you.", "The joy of the Lord is your strength.", "Shout for joy to the Lord, all the earth."],
+      r:["1 Thessalonians 5:18","Nehemiah 8:10","Psalm 100:1"],
+      note:"Gratitude is the fastest way to change a mood and the slowest way to lose a blessing. Write down three today." },
+    { k:/protect|enemy|attack|bully|unfair|justice|angry/, t:"Protection & Justice",
+      w:["The Lord will fight for you; you need only to be still.", "Do not take revenge... leave room for God's wrath.", "The angel of the Lord encamps around those who fear Him."],
+      r:["Exodus 14:14","Romans 12:19","Psalm 34:7"],
+      note:"Vengeance off your plate is not weakness — it is delegation to a perfect Judge. Keep your hands clean and your peace." }
+  ];
+
+  var lastText = "";
+
+  function freeAnswer(q) {
+    var s = (q || "").toLowerCase();
+    var topic = null;
+    for (var i = 0; i < TOPICS.length; i++) {
+      if (TOPICS[i].k.test(s)) { topic = TOPICS[i]; break; }
+    }
+    if (!topic) topic = {
+      t:"Your Question",
+      w:["Call to Me and I will answer you and tell you great and unsearchable things you do not know.",
+         "If any of you lacks wisdom, you should ask God, who gives generously to all without finding fault.",
+         "The Lord will guide you always; He will satisfy your needs."],
+      r:["Jeremiah 33:3","James 1:5","Isaiah 58:11"],
+      note:"Bring the question back to God in your own words tonight — then leave the door open for three days and watch what moves."
+    };
+    var idx = Math.floor(Math.random() * topic.w.length);
+    return {
+      title: topic.t,
+      word: topic.w[idx],
+      ref: topic.r[idx],
+      note: topic.note
+    };
+  }
+
+  function aiAnswer(q) {
+    var system = "You are Warrior Prophet: a warm, faith-filled Christian encouragement writer. " +
+      "Answer the user's question in max 150 words: one opening sentence of empathy, one paraphrased or short-quoted Bible verse with its reference, " +
+      "two or three sentences of practical hope grounded in faith, then one short closing prayer (1-2 sentences). " +
+      "Never claim to BE God or speak new revelation on His authority; offer encouragement rooted in Scripture. " +
+      "Never give medical, legal or financial directives; gently encourage wise counsel, prayer and community. " +
+      "Tone: hopeful, humble, strong. No disclaimers beyond what is specified.";
+    return WP.aiChat(system, q, 380);
+  }
+
+  function ask() {
+    var q = $("q").value.trim();
+    if (!q) { $("q").focus(); return; }
+    var btn = $("askbtn");
+    btn.disabled = true; btn.textContent = "🕯️ Seeking…";
+    $("answer").hidden = true; $("actions").hidden = true;
+
+    aiAnswer(q).then(function (ai) {
+      var box = $("answer");
+      box.innerHTML = "";
+      if (ai) {
+        lastText = "🙏 Ask the Prophet — Warrior Prophet\n\nQ: " + q + "\n\n" + ai;
+        ai.split(/\n\n+/).forEach(function (p) {
+          var s = document.createElement("span");
+          s.className = "line";
+          s.textContent = p;
+          box.appendChild(s);
+        });
+      } else {
+        var a = freeAnswer(q);
+        lastText = "🙏 Ask the Prophet — Warrior Prophet\n\nQ: " + q + "\n\n" + a.t + "\n\n" + a.word +
+          "\n\n\"" + a.v + "\" — " + a.ref + "\n\n" + a.note;
+        box.innerHTML =
+          '<span class="line"><b style="color:var(--gold)">' + a.title + '</b></span>' +
+          '<span class="line">' + a.word + '</span>' +
+          '<span class="verse">"' + a.v + '"<b>— ' + a.ref + '</b></span>' +
+          '<span class="line">' + a.note + '</span>';
+      }
+      box.hidden = false;
+      $("actions").hidden = false;
+      btn.disabled = false; btn.textContent = "🙏 Seek the Word";
+      if (box.scrollIntoView) box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  }
+
+  function share() {
+    if (!lastText) return;
+    if (navigator.share) navigator.share({ title: "Ask the Prophet — Warrior Prophet", text: lastText, url: location.href }).catch(function () {});
+    else if (navigator.clipboard) navigator.clipboard.writeText(lastText + "\n\n" + location.href).then(function () {
+      $("sharebtn").textContent = "✅ Copied!";
+      setTimeout(function () { $("sharebtn").textContent = "📤 Share"; }, 1600);
+    });
+  }
+
+  function initAI() {
+    var saved = WP.aiKey();
+    $("aikey").value = saved;
+    $("aistatus").textContent = saved ? "✅ AI mode is ON — the Prophet writes personal answers." : "Built-in scripture library active. Add a key for AI-written answers.";
+    $("aisave").addEventListener("click", function () {
+      var v = $("aikey").value.trim();
+      if (v) localStorage.setItem("wp_key", v); else localStorage.removeItem("wp_key");
+      $("aistatus").textContent = v ? "✅ AI mode is ON — the Prophet writes personal answers." : "Built-in scripture library active.";
+    });
+  }
+
+  return { ask: ask, share: share, initAI: initAI, freeAnswer: freeAnswer };
+})();
+
+ASK_PAGE.initAI();
+document.getElementById("askbtn").addEventListener("click", ASK_PAGE.ask);
+document.getElementById("q").addEventListener("keydown", function (e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") ASK_PAGE.ask();
+});
+document.getElementById("again").addEventListener("click", function () {
+  document.getElementById("q").value = "";
+  document.getElementById("answer").hidden = true;
+  document.getElementById("actions").hidden = true;
+  document.getElementById("q").focus();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+document.getElementById("sharebtn").addEventListener("click", ASK_PAGE.share);
+</script>
+</body>
+</html>

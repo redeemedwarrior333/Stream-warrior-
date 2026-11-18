@@ -2,7 +2,7 @@
 "use strict";
 
 const App = {
-  VERSION: "v5",
+  VERSION: "v6",
   modules: {},
   order: ["tarot", "twentyq", "trivia", "soundboard", "madlibs", "jokes", "lines", "facts", "wyr", "laws"],
   meta: {
@@ -249,6 +249,9 @@ const Home = {
           <button class="home-card" data-open="wheel">
             <span class="home-ico">🎡</span><span class="home-label">Chaos</span>
           </button>
+          <a class="home-card" href="warrior-prophet/" style="text-decoration:none">
+            <span class="home-ico">🙏</span><span class="home-label">Warrior Prophet</span>
+          </a>
         </div>
         <div class="row center gap">
           <button class="btn small ghost" id="home-help">📺 How to use on stream</button>

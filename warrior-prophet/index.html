@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Warrior Prophet — Messages from God, Angel Numbers & Daily Blessings</title>
+<meta name="description" content="Free daily blessings, spiritual message decks from God and Jesus, angel number meanings, and Ask the Prophet. Faith-based encouragement. No signup.">
+<meta name="theme-color" content="#0e0b1d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230e0b1d'/%3E%3Ctext x='50' y='70' font-size='50' text-anchor='middle'%3E%F0%9F%99%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/site.css?v=1">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">⚔️ THE WARRIOR FAMILY</div>
+    <h1>Warrior Prophet</h1>
+    <div class="tag">Messages from God · Angel Numbers · Daily Blessings</div>
+    <div class="stars">· ˚ ✝ ˚ ·</div>
+  </header>
+
+  <div class="navgrid">
+    <a class="navcard" href="daily.html">
+      <div class="ic">🌅</div>
+      <div class="t">Daily Blessing</div>
+      <div class="d">A fresh word, verse and prayer for today</div>
+    </a>
+    <a class="navcard" href="cards.html">
+      <div class="ic">🕯️</div>
+      <div class="t">Message Cards</div>
+      <div class="d">Spiritual decks — God's Promises & Words of Jesus</div>
+    </a>
+    <a class="navcard" href="angels.html">
+      <div class="ic">👼</div>
+      <div class="t">Angel Numbers</div>
+      <div class="d">Keep seeing 1111, 444, 777? Decode the message</div>
+    </a>
+    <a class="navcard" href="ask.html">
+      <div class="ic">🙏</div>
+      <div class="t">Ask the Prophet</div>
+      <div class="d">Bring your question — receive scripture and hope</div>
+    </a>
+  </div>
+
+  <div class="panel">
+    <h2>✨ Today's word</h2>
+    <div class="msg" id="teaser"></div>
+    <a class="btn" href="daily.html" style="display:block;text-align:center;text-decoration:none;">Open Today's Blessing</a>
+  </div>
+
+  <footer>
+    <div><a href="premium.html">👑 Go Premium</a> · part of the <a href="https://redeemedwarrior333.github.io/Stream-warrior-/">Warrior family</a></div>
+    <div class="forfun">A devotional encouragement tool. Always test every word against Scripture — Acts 17:11.</div>
+  </footer>
+</div>
+
+<script src="js/engine.js?v=1"></script>
+<script>
+"use strict";
+(function () {
+  var b = WP.dailyBlessing();
+  var el = document.getElementById("teaser");
+  el.innerHTML = '<span class="line">' + b.blessing.m + '</span>' +
+    '<span class="verse">"' + b.blessing.v + '"<b>— ' + b.blessing.r + '</b></span>';
+})();
+</script>
+</body>
+</html>

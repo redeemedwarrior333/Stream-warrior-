@@ -3,7 +3,7 @@ name: Web App Test
 on:
   push:
     branches: ["**"]
-    paths: ["index.html", "css/**", "js/**", "test/**", ".github/workflows/web-test.yml"]
+    paths: ["index.html", "css/**", "js/**", "warrior-prophet/**", "test/**", ".github/workflows/web-test.yml"]
   workflow_dispatch:
 
 jobs:
@@ -20,3 +20,6 @@ jobs:
       - name: Run headless app test
         working-directory: test
         run: node headless.js
+      - name: Run Warrior Prophet smoke tests
+        working-directory: test
+        run: node prophet-smoke.js
