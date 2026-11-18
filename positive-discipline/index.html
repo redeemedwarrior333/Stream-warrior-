@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🚸 Positive Discipline Coach — Warrior Family Center, by Redeemed Warrior</title>
+<meta name="description" content="Positive Discipline Coach: a sophisticated AI discipline mentor inside the Warrior Family & Parenting Center by Redeemed Warrior. Connection-first tools: mistaken goals, encouragement, family meetings, consequences that teach. Works with no key.">
+<style>
+  :root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  .brand { color: var(--gold); letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+  h1 { font-size: 30px; margin: 4px 0 8px; }
+  h1 .gold { color: var(--gold); }
+  .sub { color: var(--sub); font-size: 15px; margin-bottom: 18px; max-width: 640px; }
+  .panel { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; padding: 18px; }
+  .panel h2 { color: var(--gold); font-size: 15px; margin-bottom: 10px; letter-spacing: .5px; }
+  input {
+    width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--edge);
+    border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit;
+  }
+  input:focus { outline: none; border-color: var(--gold); }
+  button {
+    background: var(--gold); color: var(--ink); font-weight: 800; border: none; border-radius: 10px;
+    padding: 11px 16px; font-size: 14px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
+  .mini { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
+  #chat { background: var(--panel2); border: 1px solid var(--edge); border-radius: 12px; height: 380px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .msg { max-width: 88%; padding: 9px 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .msg.user { align-self: flex-end; background: var(--gold); color: var(--ink); border-bottom-right-radius: 4px; }
+  .msg.ai { align-self: flex-start; background: var(--panel); border: 1px solid var(--edge); border-bottom-left-radius: 4px; }
+  .msg.sys { align-self: center; color: var(--muted); font-size: 12px; background: none; }
+  .chatsend { display: flex; gap: 8px; margin-top: 10px; }
+  .chatsend input { flex: 1; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.5; }
+  .hint a { color: var(--gold); }
+  .keyrow { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+  .keyrow input { flex: 1; }
+  .subjects { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .subj { background: var(--panel2); border: 1px solid var(--edge); color: var(--sub); border-radius: 999px; padding: 5px 11px; font-size: 12px; cursor: pointer; }
+  footer { margin-top: 40px; border-top: 1px solid var(--edge); padding-top: 18px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--gold); text-decoration: none; }
+  a.home-btn { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-btn" href="../">← More Warrior tools</a>
+  <div class="brand">🚸🚸 Warrior Family Center — Discipline Department</div>
+  <div class="byline">by Redeemed Warrior</div>
+
+  <h1>🚸🚸 Positive <span class="gold">Discipline Coach</span></h1>
+  <p class="sub">A sophisticated discipline coach for the Warrior Family &amp; Parenting Center. Discipline that TEACHES instead of punishes: decode the misbehavior, build the connection, use tools that work long-term. <strong>Works with no key</strong>; a free Mistral key unlocks the full AI coach.</p>
+
+  <div class="panel">
+    <h2>🚸🚸 WHAT'S THE BEHAVIOR SITUATION?</h2>
+    <div class="subjects" id="subjects"></div>
+    <div id="chat"></div>
+    <div class="chatsend">
+      <input id="say" placeholder="e.g. my 6-year-old acts out the second I'm on the phone">
+      <button id="send">▶</button>
+    </div>
+    <div class="keyrow">
+      <input id="akey" type="password" placeholder="Optional: free Mistral key (console.mistral.ai) — stays in your browser">
+      <button class="mini ghost" id="ks">Set</button>
+    </div>
+    <p class="hint">Positive discipline in one law: <strong>a misbehaving child is a discouraged child.</strong> We treat the discouragement, and the behavior follows. Related tool: the full <a href="../family-center/?v=20">Warrior Family &amp; Parenting Center</a>.</p>
+  </div>
+
+  <footer>
+    <p><strong>The Warrior family</strong> — 🛡️ <a href="../">Stream Warrior</a> · 🙏 <a href="../warrior-prophet/">Warrior Prophet</a> · 🛡️ <a href="../phone-warrior/">Phone Warrior</a> · ⚔️ <a href="../warrior-survival/?v=15">The Warrior — Survival AI</a> · 📣 <a href="../ads-manager/?v=15">Warrior Ads AI</a> · 🪖 <a href="../life-coach/?v=16">Life Coach Warrior</a> · 💰 <a href="../wealth-builder/?v=17">Wealth Builder AI</a> · 📸 <a href="../viral-creator/?v=18">Viral Creator AI</a> · 📚 <a href="../academy/?v=19">Warrior Academy</a> · 🚸 <a href="../family-center/?v=20">Family Center</a> · 🔴 <a href="../den/">Warrior's Den</a> · 🔥 <a href="../ai-builder/?v=10">Warrior Forge</a> (this tool was forged there) · 📖 <a href="../flamekeeper/">Bible Flamekeeper</a> · ⚖️ <a href="../weirdlaw/">Weird Law or Fake?</a></p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ---- visible crash banner: if anything breaks, show WHY instead of dead buttons ---- */
+function pdBanner(msg){
+  try {
+    var b = document.createElement("div");
+    b.style.cssText = "background:var(--red);color:#fff;padding:10px 14px;border-radius:10px;margin:0 0 14px;font:12px/1.5 system-ui;word-break:break-word;";
+    b.textContent = "\u26a0 Tool error: " + msg + " \u2014 screenshot this and tell Redeemed Warrior.";
+    var w = document.querySelector(".wrap");
+    if (w && w.firstChild) w.insertBefore(b, w.firstChild); else document.body.insertBefore(b, document.body.firstChild);
+  } catch(e){}
+}
+window.addEventListener("error", function(ev){ pdBanner((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ pdBanner("network/async: " + ((ev && ev.reason && ev.reason.message) ? ev.reason.message : String(ev && ev.reason || "unknown"))); });
+
+var LS_KEY = "forge_key"; // same key slot as every Warrior chat tool
+function $(id){ return document.getElementById(id); }
+function esc(s){ var d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
+
+/* ---- built-in positive discipline engine (no key needed) ---- */
+var PLAYS = [
+  { k:["misbehave","acting out","acts out","won't listen","defiant","talks back","bad behavior","naughty"],
+    t:"DECODE THE MISBEHAVIOR \u2014 positive discipline's core teaching: a misbehaving child is a DISCOURAGED child. Behavior is a message in a messy envelope; we decode before we answer.\n\n\u2694\ufe0f The four mistaken goals + your counter-move:\n1. ATTENTION ('Watch me, even if it's negative'): you feel ANNOYED. Fix: give attention on YOUR terms BEFORE trouble \u2014 10 minutes of child-led time. Attention-starved kids invent negative bills.\n2. POWER ('You can't make me'): you feel ANGRY/provoked. Fix: don't wrestle \u2014 offer two acceptable choices and a job. Power-hungry kids become doers when handed real authority.\n3. REVENGE ('I'll hurt back'): you feel HURT. Fix: connection before correction \u2014 name their wound ('Something's really upset you'), then deal with behavior later. Revenge rests when the hurt's addressed.\n4. AVOIDANCE ('I can't, so why try'): you feel DESPAIR. Fix: shrink the task, praise the attempt, never the result. Discouraged kids need small wins VISIBLE.\n\n\ud83c\udfaf Your one next action: next misbehavior, notice YOUR feeling first \u2014 annoyed/angry/hurt/despair \u2014 it tells you the goal. Then run the matching move." },
+  { k:["praise","good job","encourag","self-esteem","confidence at home"],
+    t:"ENCOURAGEMENT vs PRAISE \u2014 praise judges ('good boy'); encouragement NOTICES ('you persevered through the hard part'). Praise breeds approval-addicts; encouragement breeds self-talkers.\n\n\u2694\ufe0f The framework:\n1. Describe, don't judge: 'You built that tower to your shoulders!' beats 'Good job!' \u2014 descriptions teach kids to evaluate THEMSELVES.\n2. Effort + strategy focus: 'You kept trying a third way' \u2014 that's the muscle that survives hard things.\n3. Ask instead of tell: 'How did YOU feel about it?' \u2014 their answer matters more than yours.\n4. Encourage the mid-game, not just the finish: kids live in the middle; that's where they need witnesses.\n5. Cut the 'BUT': 'You tried so hard, BUT\u2026' erases everything before it. Let one thing be enough for one sentence.\n\n\ud83c\udfaf Your one next action: today, catch your child doing one thing RIGHT and describe it back \u2014 no 'good job,' just the description + one question about how it felt." },
+  { k:["family meeting","chores","responsibility","job chart","contribute","allowance"],
+    t:"FAMILY MEETINGS + CONTRIBUTION \u2014 the ADHD of most households is that kids are receivers instead of contributors. Flip the flow and kids grow roots.\n\n\u2694\ufe0f The framework:\n1. Weekly family meeting (15 min, same time): compliments round (everyone names something good a family member did) \u2192 calendar \u2192 one problem brainstorm \u2192 ONE fun thing planned together. Consistency over drama; keep it SHORT.\n2. Chores as MEMBERSHIP, not punishment: 'Families take care of our home together' \u2014 jobs are how you belong, not a penalty. 4-year-olds set tables; 10-year-olds own whole routines.\n3. Let them CHOOSE their job from a list \u2014 chosen jobs get done; assigned jobs get policed.\n4. Don't REDO their work in front of them \u2014 nothing kills contribution faster than a parent disassembling the folded towel and refolding it.\n5. Allowance (if used) stays separate from chores: contribution is love, allowance is the math lesson. Merged, both messages die.\n\n\ud83c\udfaf Your one next action: schedule this week's 15-minute family meeting \u2014 on the calendar \u2014 and open with the compliments round." },
+  { k:["consequence","punishment grounded","grounded","take away","took away the tablet","reward chart"],
+    t:"CONSEQUENCES THAT TEACH \u2014 punishments make kids better at not getting CAUGHT; consequences teach kids how LIFE WORKS. That difference is the whole discipline game.\n\n\u2694\ufe0f The framework (a teaching consequence is Related / Respectful / Reasonable):\n1. RELATED: bike left in the rain = bike goes dry-out for a day. NOT: bike in the rain = no TV. Unrelated punishments don't teach the lesson; they teach resentment.\n2. Respectful & announced: choose the consequence WITH the child ahead of time ('What happens if the dishes aren't done by 8? You decide \u2014 we agree tonight.'). Kids who write the rule police themselves.\n3. Follow through with empathy, not anger: 'Oh man, the rule we agreed on hit \u2014 I bet you're bummed. You've got this tomorrow.' Calm delivery keeps the lesson; anger replaces it with the fight.\n4. Skip the lecture every time \u2014 ONE sentence and the consequence carries the rest. Lectures landing on consequences dilute them into background noise.\n\n\ud83c\udfaf Your one next action: pick this week's most repetitive misbehavior and co-write its R-R-R consequence with your child at a calm moment." },
+  { k:["special time","one on one","quality time","bond","connection first","reconnect"],
+    t:"SPECIAL TIME \u2014 the discipline tool that looks like no discipline at all: 10\u201320 minutes, child-led, one-on-one, named and protected. Connection is the currency misbehavior spends; special time is the refill.\n\n\u2694\ufe0f The framework:\n1. NAME it and SCHEDULE it: 'Rock Time' after school Tuesdays \u2014 scheduled beats occasional; promised-and-delivered builds trust physics.\n2. They lead, you follow: no fixing, no teaching, no screens, no quizzing. Full presence, small presence: the phone in another room.\n3. Protect it even in war weeks \u2014 ESPECIALLY in war weeks. The weeks you least have time are the weeks the connection account is emptiest.\n4. When behavior spikes, DOUBLE the special time before adding consequences. Most 'acting out' is a bid for connection that only speaks in behavior.\n\n\ud83c\udfaf Your one next action: this week \u2014 15 minutes, each kid, their choice of activity, phone in the other room. Put it on the calendar tonight." },
+  { k:["time out","calm down corner","cool off","regulation","big feelings","emotions"],
+    t:"CALM-DOWN TOOLS \u2014 classic time-out exiles kids alone with a storm; positive time-out teaches them to NAVIGATE the storm. Same corner, opposite curriculum.\n\n\u2694\ufe0f The framework:\n1. Build the calm-down space WITH your child (pillow, books, glitter jar) and frame it as a TOOL, not a jail: 'That corner helps you feel better, not worse.'\n2. Model it first: when YOU'RE flooded \u2014 'I need my calm-down minute' \u2014 and actually use it. Kids adopt tools they've WITNESSED working, never tools assigned to them alone.\n3. Offer, don't order: 'Would the calm corner help?' A forced candle isn't calm \u2014 co-regulate until the wave passes (stay close, quiet voice), THEN the corner sticks.\n4. Name feelings the moment they land: 'You're furious. Big feeling.' Kids who can NAME a feeling handle it; kids who can't act it out.\n5. Practice when calm: pretend-play the storm at a peaceful time \u2014 skills rehearsed in peace exist at 7pm too.\n\n\ud83c\udfaf Your one next action: build the calm-down corner together this week \u2014 they design it \u2014 and you make the first public visit to it." },
+  { k:[" yell","yelling","screaming at my","losing my temper","spank","hit my kid","shame","guilt"],
+    t:"WHEN YOU'VE LOST IT \u2014 every discipline system on earth assumes a regulated adult. Yours is human. Repair is the positive-discipline superpower.\n\n\u2694\ufe0f The framework:\n1. The 6-second fuse: anger rises and crests in about six seconds \u2014 feet planted, one breath, then speak. Most bad parenting moments die in that gap.\n2. The repair script, verbatim: 'I yelled. That wasn't okay. I'm sorry. I love you. Here's what I'll try next time.' Repair models EXACTLY the accountability you're trying to grow in them.\n3. No shame spiral after: one repair, then move. Disgrace doesn't build a better parent today; it builds a quieter one tomorrow.\n4. Track your storm times: what time / which trigger does the fuse break? Hungry-hour? Homework hour? Pre-armor those with snack/activity changes.\n5. Keep the no-physical-punishment line drawn: it's not a style debate; the outcomes research is settled \u2014 hitting parents trade short-term compliance for long-term aggression and distance.\n\n\ud83c\udfaf Your one next action: write your top 2 fuse-breaking triggers tonight and design ONE environment change for each \u2014 that's pre-loading your wins." },
+  { k:["tantrum","meltdown","eat","dinner time","picky at the table","table manners","吃东西"],
+    t:"MEALTIME PEACE \u2014 dinner is where power struggles go to multiply. The discipline move here is STRUCTURE, not battle lines.\n\n\u2694\ufe0f The framework:\n1. Family dinner non-negotiables (few, iron, and known): we sit together, screens off, we eat what's served OR bread from the shared basket, and dinner lasts about 20 pleasant minutes.\n2. Drop the bite-negotiation ENTIRELY: pressure cultures form taste habits; a neutral plate builds a curious eater. Your job: WHAT/WHERE/WHEN. Theirs: WHETHER/HOW MUCH. Both departments, respected, daily.\n3. No dessert leverage: 'clean plate \u2192 cake' teaches 'veggies are the toll, cake is the prize.' Serve dessert with dinner occasionally \u2014 taxes dissolve when there's no auction.\n4. Table joy protocol: one high, one low (best/worst of the day) \u2014 gives the meal a REASON beyond eating, and a boring dinner beats a battlefield dinner for digestion too.\n\n\ud83c\udfaf Your one next action: write your 3 dinner non-negotiables on a card tonight and introduce them as the FAMILY'S new rules (not yours \u2014 the family's)." }
+];
+var GENERAL = [
+  "Welcome to the Discipline Department \u2014 here are the Center's standing orders for behavior work:\n\n\u2694\ufe0f The positive discipline ladder (bottom to top):\n1. CONNECT \u2014 the relationship is the lever; correction without connection meets resistance.\n2. DECODE \u2014 every behavior is one of four messages: attention, power, revenge, or avoidance. Your gut feeling names it.\n3. TEACH \u2014 skill for the moment they lack ('show me how we wait') beats punishing the moment they lacked it.\n4. FOLLOW THROUGH \u2014 few rules, kind tone, steel consistency. Kind + firm, always in that pairing.\n5. REPAIR \u2014 every rupture gets an honest fix; repair is the lesson.\n\n\ud83c\udfaf Tell me the age + the specific behavior, and I'll decode it and hand you ONE next action.",
+  "Remember the department's keystone: advance connection, withdrawal correction. Behavior work that skips connection is just noise with extra steps.\n\n\u2694\ufe0f Quick triage for this week:\n1. When's the last REAL one-on-one moment? If it's foggy \u2014 special time first, behavior second.\n2. Which rule was announced, then unenforced? Dead rules train chaos; revive or retire it.\n3. What got caught GOOD this week? If nothing \u2014 the encouragement account is overdrawn and behavior is your statement.\n\n\ud83c\udfaf Pick ONE of those three answers and give it your next move today \u2014 connection work pays off faster than consequence work, every week of the year."
+];
+function builtinAnswer(q){
+  var low = q.toLowerCase();
+  var best = null, bestScore = 0;
+  PLAYS.forEach(function(v){
+    var score = 0;
+    v.k.forEach(function(word){ if (low.indexOf(word) !== -1) score++; });
+    if (score > bestScore) { bestScore = score; best = v; }
+  });
+  if (best) return best.t;
+  return GENERAL[Math.floor(Math.random() * GENERAL.length)];
+}
+
+/* ---- chat ---- */
+var HIST = [];
+function addMsg(cls, safeHtml){
+  var m = document.createElement("div");
+  m.className = "msg " + cls;
+  m.innerHTML = safeHtml;
+  $("chat").appendChild(m);
+  $("chat").scrollTop = $("chat").scrollHeight;
+  return m;
+}
+
+function answer(q){
+  var key = "";
+  try { key = localStorage.getItem(LS_KEY) || ""; } catch(e){}
+  if (!key) { addMsg("ai", esc(builtinAnswer(q))); return; }
+  var think = addMsg("ai", "\u2026");
+  var prompt = "You are the Positive Discipline Coach inside the Warrior Family & Parenting Center, created by Redeemed Warrior \u2014 a sophisticated discipline coach grounded in positive discipline principles: kind AND firm, connection before correction, and the teaching that a misbehaving child is a discouraged child. The user brings a behavior situation. Respond with: (1) judgment-free acknowledgment, (2) a decode of the behavior's message using the four mistaken goals (attention, power, revenge, avoidance) where relevant, (3) a concrete positive-discipline tool set for THIS week with exact word-for-word scripts, (4) end with exactly ONE next action phrased as 'Your one next action:' \u2014 small and doable. Rules: under 170 words. Ask the child's AGE if unknown \u2014 age-tailor everything. NEVER endorse physical punishment, shaming, or fear-based control \u2014 if the user mentions hitting, redirect with respect to tools that work better and last longer (they are worn out, not bad parent material \u2014 say that). NEVER diagnose (mention of ADHD/autism \u2192 suggest behavioral observations to share with the pediatrician). If abuse of a child is mentioned: 911 / Childhelp 1-800-422-4453. Match their energy: frustrated gets quick decode + scripts, guilty gets repair scripts, curious gets the why behind the tool.";
+  fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+    body: JSON.stringify({ model: "mistral-small-latest", temperature: 0.6, max_tokens: 480,
+      messages: [{ role: "system", content: prompt }].concat(HIST, [{ role: "user", content: q }]) })
+  }).then(function(r){ return r.json(); }).then(function(j){
+    var out = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "";
+    if (!out) out = "(No answer \u2014 check your key or provider status.)";
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc(out));
+    HIST.push({ role: "user", content: q });
+    HIST.push({ role: "assistant", content: out });
+    if (HIST.length > 12) HIST = HIST.slice(-12);
+  }).catch(function(e){
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc("Couldn't reach the AI \u2014 here's the built-in discipline playbook instead:\n\n" + builtinAnswer(q)));
+  });
+}
+
+function go(){
+  var q = $("say").value.trim();
+  if (!q) return;
+  $("say").value = "";
+  addMsg("user", esc(q));
+  answer(q);
+}
+$("send").onclick = go;
+$("say").addEventListener("keydown", function(e){ if (e.key === "Enter") go(); });
+
+$("ks").onclick = function(){
+  var v = $("akey").value.trim();
+  try {
+    if (v) { localStorage.setItem(LS_KEY, v); addMsg("sys", "Key saved \u2014 the full AI discipline coach is on."); }
+    else { localStorage.removeItem(LS_KEY); addMsg("sys", "Key removed \u2014 back to the built-in playbook."); }
+  } catch(e){ addMsg("sys", "Couldn't save key in this browser."); }
+  $("akey").value = "";
+};
+try { if (localStorage.getItem(LS_KEY)) $("akey").placeholder = "Key is saved \u2713 (type to replace)"; } catch(e){}
+
+/* ---- quick subjects ---- */
+var SUBJECTS = ["decode why my kid misbehaves", "encouragement vs 'good job' praise", "start family meetings and chore systems", "consequences that actually teach", "special time / one-on-one refill", "time out alternatives that work", "I yelled / lost my temper", "mealtime and dinner table battles"];
+var LOW = {
+  "decode why my kid misbehaves": "my kid keeps misbehaving and acting out, why, and what do I do instead of punishing",
+  "encouragement vs 'good job' praise": "how is encouragement different from praise like 'good job'",
+  "start family meetings and chore systems": "how do we start a family meeting and get my kid to do chores",
+  "consequences that actually teach": "what are consequences that teach instead of punish, like taking the tablet away",
+  "special time / one-on-one refill": "how do special time and one-on-one connection fix behavior",
+  "time out alternatives that work": "time out isn't working, what are calm down corner alternatives",
+  "I yelled / lost my temper": "I yelled and lost my temper with my kid, how do I repair it",
+  "mealtime and dinner table battles": "dinner time is a battle, picky eater at the table"
+};
+SUBJECTS.forEach(function(s){
+  var b = document.createElement("button");
+  b.type = "button"; b.className = "subj"; b.textContent = s;
+  b.onclick = function(){ $("say").value = (s in LOW) ? LOW[s] : s; $("say").focus(); };
+  $("subjects").appendChild(b);
+});
+
+/* ---- boot ---- */
+addMsg("sys", "Positive Discipline Coach \u2014 on duty. Bring the age, the behavior, and how YOU felt. No key needed; add one for the full AI coach. Discouraged kids, not bad kids.");
+</script>
+</body>
+</html>
