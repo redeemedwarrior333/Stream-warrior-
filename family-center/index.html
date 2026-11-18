@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🚸 Warrior Family & Parenting Center — by Redeemed Warrior</title>
+<meta name="description" content="Warrior Family & Parenting Center: AI family support, parenting education, and child development guidance by Redeemed Warrior. Tantrums, discipline, sleep, siblings, screen time — works with no key.">
+<style>
+  :root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  .brand { color: var(--gold); letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+  h1 { font-size: 30px; margin: 4px 0 8px; }
+  h1 .gold { color: var(--gold); }
+  .sub { color: var(--sub); font-size: 15px; margin-bottom: 18px; max-width: 640px; }
+  .panel { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; padding: 18px; }
+  .panel h2 { color: var(--gold); font-size: 15px; margin-bottom: 10px; letter-spacing: .5px; }
+  input {
+    width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--edge);
+    border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit;
+  }
+  input:focus { outline: none; border-color: var(--gold); }
+  button {
+    background: var(--gold); color: var(--ink); font-weight: 800; border: none; border-radius: 10px;
+    padding: 11px 16px; font-size: 14px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
+  button.danger { background: var(--red); color: #fff; }
+  .mini { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
+  #chat { background: var(--panel2); border: 1px solid var(--edge); border-radius: 12px; height: 380px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .msg { max-width: 88%; padding: 9px 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .msg.user { align-self: flex-end; background: var(--gold); color: var(--ink); border-bottom-right-radius: 4px; }
+  .msg.ai { align-self: flex-start; background: var(--panel); border: 1px solid var(--edge); border-bottom-left-radius: 4px; }
+  .msg.sys { align-self: center; color: var(--muted); font-size: 12px; background: none; }
+  .chatsend { display: flex; gap: 8px; margin-top: 10px; }
+  .chatsend input { flex: 1; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.5; }
+  .hint a { color: var(--gold); }
+  .keyrow { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+  .keyrow input { flex: 1; }
+  .subjects { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .subj { background: var(--panel2); border: 1px solid var(--edge); color: var(--sub); border-radius: 999px; padding: 5px 11px; font-size: 12px; cursor: pointer; }
+  .safety { background: var(--panel2); border: 2px solid var(--red); border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 12px; line-height: 1.6; color: var(--sub); }
+  footer { margin-top: 40px; border-top: 1px solid var(--edge); padding-top: 18px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--gold); text-decoration: none; }
+  a.home-btn { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-btn" href="../">← More Warrior tools</a>
+  <div class="brand">🔥 Warrior Forge tool</div>
+  <div class="byline">by Redeemed Warrior</div>
+
+  <h1>🚸 Warrior <span class="gold">Family & Parenting Center</span></h1>
+  <p class="sub">AI family support, parenting education, and child development guidance. Tantrums, discipline, sleep, siblings, school, screen time — real-world frameworks for real-world kids. <strong>Works with no key</strong>; a free Mistral key unlocks the full AI family mentor.</p>
+
+  <div class="panel">
+    <h2>🚸 WHAT'S HAPPENING AT HOME?</h2>
+    <div class="subjects" id="subjects"></div>
+    <div id="chat"></div>
+    <div class="chatsend">
+      <input id="say" placeholder="e.g. my 3-year-old's tantrums are eating every afternoon">
+      <button id="send">▶</button>
+    </div>
+    <div class="keyrow">
+      <input id="akey" type="password" placeholder="Optional: free Mistral key (console.mistral.ai) — stays in your browser">
+      <button class="mini ghost" id="ks">Set</button>
+    </div>
+    <p class="hint">We teach developmental strategy — we never diagnose your child. If your gut says something's off, your pediatrician is the right call; parents' guts earn their reputation.</p>
+    <div class="safety">
+      🚨 <strong>If a child is in danger right now: 911.</strong> To report suspected child abuse or neglect, the Childhelp National Child Abuse Hotline is <strong>1-800-422-4453</strong> (call or text, 24/7). Parent overwhelm support: <strong>1-833-4-CRISIS</strong> / National Parent & Youth Helpline <strong>1-855-427-2736</strong>. Please keep all family members — including YOU — under that roof of protection.<br>
+      <strong>This tool never endorses physical punishment</strong> — decades of child-development research connect it with worse outcomes, and calmer tools work better. We teach the calmer tools.
+    </div>
+  </div>
+
+  <footer>
+    <p><strong>The Warrior family</strong> — 🛡️ <a href="../">Stream Warrior</a> · 🙏 <a href="../warrior-prophet/">Warrior Prophet</a> · 🛡️ <a href="../phone-warrior/">Phone Warrior</a> · ⚔️ <a href="../warrior-survival/?v=15">The Warrior — Survival AI</a> · 📣 <a href="../ads-manager/?v=15">Warrior Ads AI</a> · 🪖 <a href="../life-coach/?v=16">Life Coach Warrior</a> · 💰 <a href="../wealth-builder/?v=17">Wealth Builder AI</a> · 📸 <a href="../viral-creator/?v=18">Viral Creator AI</a> · 📚 <a href="../academy/?v=19">Warrior Academy</a> · 🔴 <a href="../den/">Warrior's Den</a> · 🔥 <a href="../ai-builder/?v=10">Warrior Forge</a> (this tool was forged there) · 📖 <a href="../flamekeeper/">Bible Flamekeeper</a> · ⚖️ <a href="../weirdlaw/">Weird Law or Fake?</a></p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ---- visible crash banner: if anything breaks, show WHY instead of dead buttons ---- */
+function fcBanner(msg){
+  try {
+    var b = document.createElement("div");
+    b.style.cssText = "background:var(--red);color:#fff;padding:10px 14px;border-radius:10px;margin:0 0 14px;font:12px/1.5 system-ui;word-break:break-word;";
+    b.textContent = "\u26a0 Tool error: " + msg + " \u2014 screenshot this and tell Redeemed Warrior.";
+    var w = document.querySelector(".wrap");
+    if (w && w.firstChild) w.insertBefore(b, w.firstChild); else document.body.insertBefore(b, document.body.firstChild);
+  } catch(e){}
+}
+window.addEventListener("error", function(ev){ fcBanner((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ fcBanner("network/async: " + ((ev && ev.reason && ev.reason.message) ? ev.reason.message : String(ev && ev.reason || "unknown"))); });
+
+var LS_KEY = "forge_key"; // same key slot as every Warrior chat tool
+function $(id){ return document.getElementById(id); }
+function esc(s){ var d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
+
+/* ---- built-in family engine (no key needed) ---- */
+var PLAYS = [
+  { k:["tantrum","meltdown","screaming","throwing themselves","crying in the store","freaks out"],
+    t:"TANTRUMS \u2014 a tantrum is a storm with a brain behind it that can't steer yet. Under 4-ish, the emotional brain is addicted to hijacking the thinking brain; your job isn't to stop the storm fast \u2014 it's to be the harbor.\n\n\u2694\ufe0f The framework:\n1. DON'T reason mid-storm. Words don't land on a hijacked brain \u2014 volume drops BEFORE reasoning works.\n2. Stay low, stay boring, stay close: sit on the floor near them, calm voice, few words: 'I'm right here. You're safe.' Your calm is borrowed regulation \u2014 that's co-regulation, and it's the actual lesson.\n3. PRE-view storms: most tantrums strike at the same 3 places (hunger, transitions, power plays). Feed before stores, warn before changes ('two more minutes, then we leave'), and offer TWO acceptable choices ('red cup or blue cup?') \u2014 power with parameters melts most standoffs before they start.\n4. After the storm: one-line connection ('That was big. I love you. We're okay.') \u2014 then move on. No re-litigating with a 3-year-old.\n5. Watch YOUR battery: kids read your gauge before their own. Low-battery parenting gets more storms.\n\n\ud83c\udfaf Your one next action: tonight, write your child's top 3 storm triggers \u2014 the same three situations. Pre-beat those three this week." },
+  { k:["discipline","won't listen","doesn't listen","behavior","behaving","time out","spank","punish"],
+    t:"DISCIPLINE \u2014 the word means 'teach,' not 'punish.' Kids repeat what WORKS for them; our job is making the good behavior the thing that works.\n\n\u2694\ufe0f The framework:\n1. CONNECTION before correction: get on their level, name the feeling ('You're mad because we left the park') \u2014 a child who feels seen stops fighting to be noticed.\n2. Rules few and iron: 3\u20135 house rules, stated once, same consequences EVERY time. Inconsistency teaches kids to negotiate; consistency teaches them reality.\n3. Natural consequences, not random ones: toy not picked up = toy rests on the shelf tonight. The world teaching beats you lecturing.\n4. Praise the behavior you want to see AGAIN \u2014 specifically, in the moment ('You shared that without me asking \u2014 that's strength.'). Caught-good is stronger than caught-bad, at every age.\n5. No physical punishment ever in this playbook \u2014 the research is settled and the calmer tools outperform. Hitting teaches hitting.\n\n\ud83c\udfaf Your one next action: pick your ONE most annoying behavior, decide its single consistent consequence tonight, and run it identically for 7 days." },
+  { k:["milestone","development","developmental","normal","appropriate for","should my","walk","talk","speech"],
+    t:"CHILD DEVELOPMENT \u2014 milestones are RANGES, not deadlines. Kids build skills like popcorn: same pan, wildly different pop times \u2014 and the last kernel pops just fine.\n\n\u2694\ufe0f The framework:\n1. Compare your child to RANGES, never to cousins, neighbors' kids, or internet highlight reels.\n2. Ranges that matter roughly: walking ~9\u201318 months, first words ~12 months with 50+ words by 2, full sentences by 3, ABCs/speech clarity builds through 4\u20135. Ranges \u2014 wide ones.\n3. What the pros watch (and gently flag): loss of skills already gained, no response to name, no pointing/waving by 12\u201315 months, no two-word combos by 2, no pretend play by 4 \u2014 those specific signals earn an early-intervention conversation, and early is cheap and helpful.\n4. Trust your gut EARLIER than the 'wait and see': pediatricians respect a parent's instinct, and evaluations are free-or-low-cost in the US through early intervention programs.\n\n\ud83c\udfaf Your one next action: write down your one developmental worry in one sentence, and call your pediatrician's office with it this week \u2014 questions are free." },
+  { k:["screen","tablet","phone time","youtube kids","video games","too much tv"],
+    t:"SCREEN TIME \u2014 the fight isn't screens vs. no screens; it's WHO sets the boundaries. A family media plan beats whack-a-mole battles.\n\n\u2694\ufe0f The framework:\n1. CREATE the plan WITH the kids (5+): they protect rules they helped write. 'Screens after homework + outdoor time, 1 hour school nights, 2 weekend days.' Post it where the couch can see it.\n2. No screens in bedrooms overnight \u2014 that single rule fixes more sleep, mood, and grade problems than every app-monitoring app combined. Devices sleep in the kitchen.\n3. Protect the replacements: movement, face-to-face play, and sleep happen FIRST; screens only get what's left of the day.\n4. Co-view when possible: even 10 minutes of watching WITH them turns screens from a babysitter into a conversation.\n5. Model it: kids obey the media culture they SEE, not the rules they HEAR.\n\n\ud83c\udfaf Your one next action: tonight, draft your 5-line family media plan and introduce it at dinner like a team meeting \u2014 complete with their input." },
+  { k:["sibling","fight","hit their sister","screaming at each other","won't share","jealous of the baby"],
+    t:"SIBLING WARS \u2014 referees raise kids who fight; coaches raise kids who negotiate. Also: never be the judge \u2014 nobody believes the judge, and it trains a courtroom culture.\n\n\u2694\ufe0f The framework:\n1. Safety line only: hitting, throwing, breaking \u2014 separation and calm, immediately. Everything else, hands off at first ('I see two boys who both want the truck \u2014 what's your plan?').\n2. Teach ONE negotiation script until it's automatic: 'Can I have a turn when you're done, or want to trade?' 15 minutes now buys years.\n3. NO comparisons EVER \u2014 also no 'why can't you be like your sister' in EITHER direction. Comparison plants the seed of the rivalry you're policing.\n4. Solo time with each kid weekly (even 10 minutes) \u2014 half of sibling warfare is fighting for the same resource: YOU. Feed each one alone, and the war cools.\n5. New-baby jealousy: give the older one a ROLE ('big brother helper') and protected special time \u2014 a crown dissolves a grudge.\n\n\ud83c\udfaf Your one next action: teach the negotiation script at a calm moment this week \u2014 snack time, not fight time \u2014 and practice it twice through role-play." },
+  { k:["sleep","bedtime","won't stay in bed","night waking","keeps waking up","early rising","nap"],
+    t:"SLEEP \u2014 bedtime isn't when kids sleep; it's the ceremony that LEADS them there. Boring rhythms are the magic; rituals teach the brain what comes next.\n\n\u2694\ufe0f The framework:\n1. Fixed bedtime + fixed wake time, 7 days a week (weekend drift is jet lag for little brains)\n2. 20-minute wind-down, same order every night: bath \u2192 pajamas \u2192 2 books \u2192 song/prayer \u2192 lights out. Kids cooperate with the SCRIPT when they can predict it.\n3. The lantern-walk-back: for the keep-getting-out set \u2014 walk them back, minimal words, same boring sentence ('It's sleep time. See you in the morning.') Kids push the gimmick; parents win by NOT selling it. Night 3\u20135 is the hardest pass \u2014 hold through it.\n4. No screens for the hour before bed \u2014 that light straight-up delays the sleep hormones.\n5. Night wakings: same script, boring voice, lights stay low. Excitement (even happy) teaches their brain that 3am is a party slot.\n\n\ud83c\udfaf Your one next action: write your family's 20-minute wind-down script tonight and START it tomorrow at the same minute." },
+  { k:["school","homework time","grades slipped","hates school","reading together","learning at home"],
+    t:"SCHOOL SUPPORT \u2014 home sets up schoolwork success the same way the gym sets up the game: systems, then cheering.\n\n\u2694\ufe0f The framework:\n1. Homework same time + same place, every day \u2014 after a snack and movement (their brain focuses after motion, not before).\n2. Nearby but not hovering: be IN the room doing your own 'homework' (bills, reading). Presence without pressure is the coaching zone.\n3. Struggle first, then help: 'Show me what you tried' before giving anything. Rescuing fast creates dependence \u2014 slow-rescue creates a thinker.\n4. Reading daily \u2014 even 10 minutes, together, out loud \u2014 is the highest-return academic activity in childhood, period.\n5. If grades slide HARD or the hate-school started suddenly: look for the hidden cause first \u2014 friend trouble, vision, sleep, a scary change. Kids rarely 'just stop' trying.\n\n\ud83c\udfaf Your one next action: pick the homework spot + time tonight, and post the schedule on the fridge with your kid's help." },
+  { k:["picky eater","won't eat","food","only eats","vegetables","mealtime battles"],
+    t:"PICKY EATING \u2014 food fights are one war parents never win by force. Your job: WHAT is served, WHERE, and WHEN. Their job: WHETHER and HOW MUCH. Split the jurisdiction and peace returns.\n\n\u2694\ufe0f The framework:\n1. You control: what's offered, meal times, atmosphere. They control: eating it or not. No dessert bribes, no 'three bites' treaties \u2014 just boring repetition of both departments.\n2. One safe food EVERY meal (bread, fruit, whatever passes) so no kid ever attends a hostile dinner.\n3. Exposure, not pressure: new foods need 10\u201315 calm appearances \u2014 on the plate, neutral, until trial happens. Pressure makes the protein; patience builds the palate.\n4. They eat with the family, at the table, off screens \u2014 modeling is the weakest but cheapest strategy: it's how they learn 'everyone eats vegetables' without words.\n5. Growth charts, not gut panic: if the pediatrician says growth is fine, a 'small eater' phase IS small \u2014 feed trust, not force.\n\n\ud83c\udfaf Your one next action: plan this week's menu with one safe food guaranteed at every dinner - and serve one ignored veggie nightly without a word." },
+  { k:["overwhelmed parent","parent burnout","no patience","lost my temper","yelled","shouted","mom gu","dad guilt","guilty"],
+    t:"PARENT BURNOUT \u2014 you can't pour from an empty cup is a cliche because it's physics. A regulated parent is the whole treatment plan; this isn't selfishness, it's infrastructure.\n\n\u2694\ufe0f The framework:\n1. Oxygen-mask order: sleep, food, one real break protected weekly (guard it like a shift at work). Kids don't need a perfect parent \u2014 they need a PRESENT one, and present requires a pulse.\n2. Repair beats perfection: when you lose it \u2014 and every parent loses it \u2014 the recovery sentence is: 'I yelled. That wasn't okay. I'm sorry. I love you.' Model the apology you hope they'll someday give you. Repair, done honestly, beats never-failing.\n3. The 6-second reset: when the temperature rises, hand yourself a delay \u2014 drink of water, three breaths, feet planted \u2014 before you respond. Six seconds is where most bad parenting moments die.\n4. Lower the bar DURING hard seasons: paper plates, shorter baths, simpler dinners. A family that's calm in a messy house beats a miserable one in a clean one.\n5. If the dark feelings stay >2 weeks or get scary \u2014 postpartum or otherwise: tell your doctor. That's a medical conversation, not a moral one.\n\n\ud83c\udfaf Your one next action: book your one protected break this week \u2014 on the calendar, named, defended \u2014 even if it's an hour at a coffee shop." }
+];
+var GENERAL = [
+  "Family life is the hardest command you'll ever hold \u2014 no manual kids agree to follow. Here's the Center's standing orders:\n\n\u2694\ufe0f The 5 family laws (they cover 90% of situations):\n1. CONNECTION before correction \u2014 a child who feels seen stops fighting for attention.\n2. CONSISTENCY beats intensity \u2014 small rules, enforced every time, outperform big dramatic ones.\n3. MODEL the behavior \u2014 kids obey the culture they see, not the speeches they hear.\n4. REPAIR when you break \u2014 honest apologies teach more than perfect parenting ever could.\n5. PROTECT the relationship \u2014 the bond outlasts every battle; pick winning the relationship first.\n\n\ud83c\udfaf Tell me the ages of your kids and what's happening \u2014 I'll match the framework to the actual age and give you ONE next action.",
+  "Heard. Remember: you are the most qualified parent your kids will ever get \u2014 imperfect and showing up still beats everything else.\n\n\u2694\ufe0f The Center's pattern for any situation:\n1. Name the NEED under the behavior (attention? power? tiredness? hunger?).\n2. Meet the need when calm; address the behavior after.\n3. One consistent consequence OR one consistent routine \u2014 never improvised mid-storm.\n4. Connect again after every conflict \u2014 that's the deposit that makes the next correction cheap.\n\n\ud83c\udfaf Give me ages + the exact situation, and we'll build this week's plan with ONE next action."
+];
+function builtinAnswer(q){
+  var low = q.toLowerCase();
+  var best = null, bestScore = 0;
+  PLAYS.forEach(function(v){
+    var score = 0;
+    v.k.forEach(function(word){ if (low.indexOf(word) !== -1) score++; });
+    if (score > bestScore) { bestScore = score; best = v; }
+  });
+  if (best) return best.t;
+  return GENERAL[Math.floor(Math.random() * GENERAL.length)];
+}
+
+/* ---- chat ---- */
+var HIST = [];
+function addMsg(cls, safeHtml){
+  var m = document.createElement("div");
+  m.className = "msg " + cls;
+  m.innerHTML = safeHtml;
+  $("chat").appendChild(m);
+  $("chat").scrollTop = $("chat").scrollHeight;
+  return m;
+}
+
+function answer(q){
+  var key = "";
+  try { key = localStorage.getItem(LS_KEY) || ""; } catch(e){}
+  if (!key) { addMsg("ai", esc(builtinAnswer(q))); return; }
+  var think = addMsg("ai", "\u2026");
+  var prompt = "You are Warrior Family & Parenting Center, created by Redeemed Warrior \u2014 an AI family support, parenting education, and child development mentor. The user brings a parenting situation (tantrums, discipline, sleep, eating, siblings, screens, school, development questions, or their own parent burnout). Respond with: (1) warm, judgment-free acknowledgment \u2014 parenting is hard and they're clearly trying, (2) a sharp read of the CHILD'S need (or the parent's need) behind the situation, (3) a concrete numbered framework for THIS week with scripts they can literally say, (4) end with exactly ONE next action phrased as 'Your one next action:' \u2014 small and doable. Rules: under 170 words. Ask for the child's AGE when unknown and tailor advice to it \u2014 2-year-old strategies do not fit 12-year-olds. NEVER diagnose a child ('has ADHD/autism' \u2192 name behaviors instead and suggest the pediatrician conversation, noting early intervention is most effective early). NEVER endorse physical punishment \u2014 redirect to calmer, research-backed tools. If the user mentions a child in danger, abuse, neglect, or someone unsafe in the home: stop coaching and give 911 / Childhelp 1-800-422-4453 (call or text, 24/7). Parent burnout that mentions hopelessness or dark thoughts \u2192 treat kindly, suggest the National Parent & Youth Helpline 1-855-427-2736 and their doctor. Match their energy: exhausted gets gentleness, frustrated gets practical scripts, worried gets steady facts.";
+  fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+    body: JSON.stringify({ model: "mistral-small-latest", temperature: 0.6, max_tokens: 480,
+      messages: [{ role: "system", content: prompt }].concat(HIST, [{ role: "user", content: q }]) })
+  }).then(function(r){ return r.json(); }).then(function(j){
+    var out = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "";
+    if (!out) out = "(No answer \u2014 check your key or provider status.)";
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc(out));
+    HIST.push({ role: "user", content: q });
+    HIST.push({ role: "assistant", content: out });
+    if (HIST.length > 12) HIST = HIST.slice(-12);
+  }).catch(function(e){
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc("Couldn't reach the AI \u2014 here's the built-in family manual instead:\n\n" + builtinAnswer(q)));
+  });
+}
+
+function go(){
+  var q = $("say").value.trim();
+  if (!q) return;
+  $("say").value = "";
+  addMsg("user", esc(q));
+  answer(q);
+}
+$("send").onclick = go;
+$("say").addEventListener("keydown", function(e){ if (e.key === "Enter") go(); });
+
+$("ks").onclick = function(){
+  var v = $("akey").value.trim();
+  try {
+    if (v) { localStorage.setItem(LS_KEY, v); addMsg("sys", "Key saved \u2014 the full AI family mentor is on."); }
+    else { localStorage.removeItem(LS_KEY); addMsg("sys", "Key removed \u2014 back to the built-in family manual."); }
+  } catch(e){ addMsg("sys", "Couldn't save key in this browser."); }
+  $("akey").value = "";
+};
+try { if (localStorage.getItem(LS_KEY)) $("akey").placeholder = "Key is saved \u2713 (type to replace)"; } catch(e){}
+
+/* ---- quick subjects ---- */
+var SUBJECTS = ["my toddler's tantrums are constant", "my kid won't listen to me", "is my child's development on track", "how much screen time is okay", "my kids fight constantly", "bedtime is a war every night", "struggling with school and homework", "my kid is a picky eater", "I'm burned out and have no patience", "how do I discipline without yelling"];
+var LOW = {
+  "my toddler's tantrums are constant": "my 3-year-old has tantrums every day, constant meltdowns",
+  "my kid won't listen to me": "my child won't listen, discipline isn't working",
+  "is my child's development on track": "is my child's development normal for their age, milestones",
+  "how much screen time is okay": "how much screen time is okay for kids, tablets all day",
+  "my kids fight constantly": "my kids fight and hit each other constantly, siblings",
+  "bedtime is a war every night": "bedtime is a war, my kid won't stay in bed",
+  "struggling with school and homework": "my kid struggles with school and homework time",
+  "my kid is a picky eater": "my kid is a picky eater and won't eat anything",
+  "I'm burned out and have no patience": "I'm a burned out parent with no patience, I yelled at my kids",
+  "how do I discipline without yelling": "how do I discipline my child without yelling"
+};
+SUBJECTS.forEach(function(s){
+  var b = document.createElement("button");
+  b.type = "button"; b.className = "subj"; b.textContent = s;
+  b.onclick = function(){ $("say").value = (s in LOW) ? LOW[s] : s; $("say").focus(); };
+  $("subjects").appendChild(b);
+});
+
+/* ---- boot ---- */
+addMsg("sys", "Warrior Family Center \u2014 open. Bring the ages and the situation. No key needed; add one for the full AI family mentor. We're in your corner.");
+</script>
+</body>
+</html>
