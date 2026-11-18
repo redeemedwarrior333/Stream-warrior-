@@ -3,6 +3,12 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+def ksFile = file("../signing/pw-release.p12")
+
+def dailyVersionCode() {
+    return (int) (System.currentTimeMillis() / 86400000L)  // YYYY+ days-since-epoch: auto-bumps each day
+}
+
 android {
     namespace 'com.phonewarrior.app'
     compileSdk 34
@@ -11,13 +17,29 @@ android {
         applicationId "com.phonewarrior.app"
         minSdk 24
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        versionCode dailyVersionCode()
+        versionName "1.2"
+    }
+
+    signingConfigs {
+        stable {
+            if (ksFile.exists()) {
+                storeFile ksFile
+                storePassword "PWden2026!key"
+                keyAlias "phonewarrior"
+                keyPassword "PWden2026!key"
+            }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
+            if (ksFile.exists()) signingConfig signingConfigs.stable
+        }
+        debug {
+            // ONE stable key across all builds -> updates install over each other
+            if (ksFile.exists()) signingConfig signingConfigs.stable
         }
     }
 

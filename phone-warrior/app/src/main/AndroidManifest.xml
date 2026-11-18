@@ -7,6 +7,10 @@
       any data anywhere. What it sees stays on your phone.
     -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".PhoneWarriorApp"
@@ -33,6 +37,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
+
+        <!-- Guard mode: loud-audio trigger recorder (30s pre-buffer) -->
+        <service
+            android:name=".GuardService"
+            android:exported="false"
+            android:foregroundServiceType="microphone" />
 
         <!-- Disguise Mode: swaps the home-screen icon to a boring gray Notes app -->
         <activity-alias
