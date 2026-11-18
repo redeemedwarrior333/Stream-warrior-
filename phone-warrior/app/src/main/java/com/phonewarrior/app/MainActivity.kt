@@ -1,6 +1,8 @@
 package com.phonewarrior.app
 
 import android.accessibilityservice.AccessibilityServiceInfo
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -28,6 +30,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 import java.security.MessageDigest
 import java.security.SecureRandom
 import java.text.DateFormat
@@ -123,6 +126,38 @@ class MainActivity : AppCompatActivity() {
         col.setPadding(dp(18), dp(18), dp(18), dp(40))
         root.addView(col, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
 
+        // If the app crashed last time, show the saved report so it can be copied out
+        val crashFile = File(filesDir, "crash.log")
+        if (crashFile.exists()) {
+            val report = crashFile.readText().take(4000)
+            col.addView(card(
+                "\ud83d\udea8 LAST CRASH REPORT",
+                report,
+                red, red
+            ).also { it.setPadding(dp(14), dp(12), dp(14), dp(12)) },
+                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    .also { it.bottomMargin = dp(10) })
+            val copy = vaultBtn("COPY REPORT", gold, gold)
+            copy.setOnClickListener {
+                try {
+                    val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    cm.setPrimaryClip(ClipData.newPlainText("crash", crashFile.readText()))
+                    copy.text = "Copied!"
+                } catch (e: Exception) {
+                    copy.text = "Copy failed: " + e.message
+                }
+            }
+            col.addView(copy, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .also { it.bottomMargin = dp(8) })
+            val clear = vaultBtn("I'VE COPIED IT — CLEAR THIS BOX", panelC, edgeC, gold)
+            clear.setOnClickListener {
+                crashFile.delete()
+                recreate()
+            }
+            col.addView(clear, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                .also { it.bottomMargin = dp(10) })
+        }
+
         val brand = tv("🛡️ PHONE WARRIOR", 14, gold, true)
         brand.letterSpacing = 0.18f
         brand.gravity = Gravity.CENTER
@@ -146,6 +181,7 @@ class MainActivity : AppCompatActivity() {
         tabs.orientation = LinearLayout.HORIZONTAL
         btnScanTab = tabBtn("🔍 Scan")
         btnCleanTab = tabBtn("🧹 Clean")
+        btnVaultTab = tabBtn("🔒 Vault")
         btnSafetyTab = tabBtn("🛟 Safety")
         btnPhoneTab = tabBtn("📱 iPhone")
         val tp = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
