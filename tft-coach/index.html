@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔰 TFT Coach — Comps, Odds &amp; Gold, by Redeemed Warrior</title>
+<meta name="description" content="TFT Coach: comps method, shop odds, econ rules, item doctrine and positioning for Teamfight Tactics, by Redeemed Warrior. Works with no key.">
+<style>
+  :root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  .brand { color: var(--gold); letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+  h1 { font-size: 30px; margin: 4px 0 8px; }
+  h1 .gold { color: var(--gold); }
+  .sub { color: var(--sub); font-size: 15px; margin-bottom: 18px; max-width: 640px; }
+  .panel { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; padding: 18px; }
+  .panel h2 { color: var(--gold); font-size: 15px; margin-bottom: 10px; letter-spacing: .5px; }
+  input {
+    width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--edge);
+    border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit;
+  }
+  input:focus { outline: none; border-color: var(--gold); }
+  button {
+    background: var(--gold); color: var(--ink); font-weight: 800; border: none; border-radius: 10px;
+    padding: 11px 16px; font-size: 14px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
+  .mini { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
+  #chat { background: var(--panel2); border: 1px solid var(--edge); border-radius: 12px; height: 380px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .msg { max-width: 88%; padding: 9px 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .msg.user { align-self: flex-end; background: var(--gold); color: var(--ink); border-bottom-right-radius: 4px; }
+  .msg.ai { align-self: flex-start; background: var(--panel); border: 1px solid var(--edge); border-bottom-left-radius: 4px; }
+  .msg.sys { align-self: center; color: var(--muted); font-size: 12px; background: none; }
+  .chatsend { display: flex; gap: 8px; margin-top: 10px; }
+  .chatsend input { flex: 1; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.5; }
+  .hint a { color: var(--gold); }
+  .keyrow { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+  .keyrow input { flex: 1; }
+  .subjects { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .subj { background: var(--panel2); border: 1px solid var(--edge); color: var(--sub); border-radius: 999px; padding: 5px 11px; font-size: 12px; cursor: pointer; }
+  table.odds { border-collapse: collapse; margin-top: 10px; font-size: 12px; color: var(--sub); }
+  table.odds th, table.odds td { border: 1px solid var(--edge); padding: 4px 8px; text-align: center; }
+  table.odds th { color: var(--gold); }
+  .safety { background: var(--panel2); border: 2px solid var(--red); border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 12px; line-height: 1.6; color: var(--sub); }
+  footer { margin-top: 40px; border-top: 1px solid var(--edge); padding-top: 18px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--gold); text-decoration: none; }
+  a.home-btn { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-btn" href="../">← More Warrior tools</a>
+  <div class="brand">🔰 Stream Warrior — Game Department</div>
+  <div class="byline">by Redeemed Warrior</div>
+
+  <h1>🔰 TFT <span class="gold">Coach</span></h1>
+  <p class="sub">The companion coach for Teamfight Tactics. Comps method, shop-odds math, econ rules, item doctrine, positioning, tilt rescue — patch-smart, always-keyless. Exact metas shift every patch, so this coach teaches you to READ the game, not memorize one snapshot. <strong>Works with no key</strong>; a free Mistral key unlocks the full AI coach.</p>
+
+  <div class="panel">
+    <h2>🔰 WHAT'S THE BOARD LOOKING LIKE?</h2>
+    <div class="subjects" id="subjects"></div>
+    <div id="chat"></div>
+    <div class="chatsend">
+      <input id="say" placeholder="ask the coach — comps, odds, gold, items, tilt">
+      <button id="send">▶</button>
+    </div>
+    <div class="keyrow">
+      <input id="akey" type="password" placeholder="Optional: free Mistral key (console.mistral.ai) — stays in your browser">
+      <button class="mini ghost" id="ks">Set</button>
+    </div>
+    <p class="hint">Streaming your climb? <a href="../">Stream Warrior</a> runs your games and decks on screen, and the <a href="../den/">Warrior's Den</a> is the home base. Life stuff between matches: the <a href="../life-coach/?v=16">Life Coach Warrior</a> has a whole department for tilt in real life too.</p>
+    <div class="safety">
+      🚨 <strong>One honest note from your coach: rank climbs slow, and tilt makes every bad game worse. If the anger at the game is spilling into the rest of your life — or the darkness is — that's not a rank problem and no comp fixes it.</strong> Call or text <strong>988</strong> (24/7, free). Now queue up. ⚔️
+    </div>
+  </div>
+
+  <footer>
+    <p><strong>The Warrior family</strong> — 🛡️ <a href="../">Stream Warrior</a> · 🙏 <a href="../warrior-prophet/">Warrior Prophet</a> · 🛡️ <a href="../phone-warrior/">Phone Warrior</a> · ⚔️ <a href="../warrior-survival/?v=15">The Warrior — Survival AI</a> · 📣 <a href="../ads-manager/?v=15">Warrior Ads AI</a> · 🪖 <a href="../life-coach/?v=16">Life Coach Warrior</a> · ❤️ <a href="../comeback-planner/?v=23">Comeback Planner</a> · 🔥🫂 <a href="../relationship-reality-check/?v=23">Reality Check</a> · 🔥 <a href="../problem-solver/?v=23">Problem Solver</a> · 🔥 <a href="../no-excuses/?v=24">No-Excuses Mode</a> · 💰 <a href="../wealth-builder/?v=17">Wealth Builder AI</a> · 📸 <a href="../viral-creator/?v=18">Viral Creator AI</a> · 📚 <a href="../academy/?v=19">Warrior Academy</a> · 🚸 <a href="../family-center/?v=20">Family Center</a> · 🚸🚸 <a href="../positive-discipline/?v=21">Discipline Coach</a> · 🔥 <a href="../parent-support/?v=22">Parent Support Room</a> · 🔴 <a href="../den/">Warrior's Den</a> · 🔥 <a href="../ai-builder/?v=10">Warrior Forge</a> (this tool was forged there) · 📖 <a href="../flamekeeper/">Bible Flamekeeper</a> · ⚖️ <a href="../weirdlaw/">Weird Law or Fake?</a></p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ---- visible crash banner: if anything breaks, show WHY instead of dead buttons ---- */
+function tfBanner(msg){
+  try {
+    var b = document.createElement("div");
+    b.style.cssText = "background:var(--red);color:#fff;padding:10px 14px;border-radius:10px;margin:0 0 14px;font:12px/1.5 system-ui;word-break:break-word;";
+    b.textContent = "\u26a0 Tool error: " + msg + " \u2014 screenshot this and tell Redeemed Warrior.";
+    var w = document.querySelector(".wrap");
+    if (w && w.firstChild) w.insertBefore(b, w.firstChild); else document.body.insertBefore(b, document.body.firstChild);
+  } catch(e){}
+}
+window.addEventListener("error", function(ev){ tfBanner((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ tfBanner("network/async: " + ((ev && ev.reason && ev.reason.message) ? ev.reason.message : String(ev && ev.reason || "unknown"))); });
+
+var LS_KEY = "forge_key"; // same key slot as every Warrior chat tool
+function $(id){ return document.getElementById(id); }
+function esc(s){ var d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
+
+/* ---- built-in coach engine (no key needed) ----
+   Shop odds are the classic published table; exact percentages can shift with patches \u2014 treat as strong approximations. */
+var PLAYS = [
+  { k:["comp","comps","team comp","what should i run","meta team","builds","what comp"],
+    t:"Comp question \u2014 here's the patch-proof way to answer it yourself, because exact lists rot every two weeks but the METHOD doesn't: \u2694\ufe0f\n\n\u2694\ufe0f The comp-scouting method:\n1. Pick comps with 2+ FLEXIBLE slots \u2014 comps that force one exact unit every game lose to comps that flex around what the shop gives you.\n2. Read the patch notes THE day they drop: buffs to traits/units nobody pivoted away from yet = free LP for 48 hours while everyone else clings to last patch.\n3. Two-comp discipline: lock ONE AD carry comp and ONE AP carry comp per patch. Depth in two beats confusion in five.\n4. In-game: commit by 3-1. Comps switch at a price; the players who top-4 constantly keep a pivot exit planned (which units are shared).\n\u2694\ufe0f For live, up-to-the-minute comps: sites like Metatft/LoLChess update tier lists daily \u2014 use them for the WHAT, use me for the HOW and WHY.\n\n\ud83c\udfaf Your one next action: after your next game, check the patch notes page and name the ONE trait you'd bet gets kneecapped next patch. Comp prediction is a muscle \u2014 start the rep." },
+  { k:["odds","chances of hitting","chance to roll","hit my 3 star","roll down","shop odds","probability","what are my odds"],
+    t:"Odds math \u2014 the shop table (classic values, patch-shiftable, treat as ballpark): \ud83d\udd22\n\n\ud83d\udd22 Roll odds per shop slot, 1-cost/2/3/4/5:\n\u2022 Lv 6: 30/40/25/5/0\n\u2022 Lv 7: 19/30/33/15/3\n\u2022 Lv 8: 16/24/32/24/4\n\u2022 Lv 9: 9/15/24/32/20\n\nThe roll-down math that matters:\n1. Each refresh costs 2 gold and the shop re-randomizes every time \u2014 with 2 copies already taken out of the pool, your odds per slot sit near the table number minus pool fatigue.\n2. Expectation, not promises: at lv8 hunting a 4-cost 3-star expect to spend 40-70 gold rolling. Budget your DECISION to roll down before you're emotionally underwater.\n3. Contested = ruined: if two others hold the same carry, your real odds collapse \u2014 pivot EARLY (4-2) not heroic-late.\n4. How many copies are out? Count what dead boards are holding; someone's bottom-half board is your pool info.\n\n\ud83c\udfaf Your one next action: this game, BEFORE you roll down, say the budget number out loud ('50 gold, then stop'). Tunnel-rolling loses boards it was always going to win." },
+  { k:["save or spend","when to level","econ","interest","gold management","slow roll","level 7 or 8","fast 8"],
+    t:"Econ \u2014 the gold rules that top-4 you more than any single comp: \ud83e\udd41\n\n\ud83e\udd41 The econ doctrine:\n1. Interest: +1 gold per 10 saved, capped at +5 (50g). Past 50, gold is only worth spending on power NOW or the level that hits power SOON.\n2. The standard curve: level to 7 around 3-2 (stage 3-2, ~28g), to 8 around 4-1/5-1. These are the two biggest tempo outs \u2014 be near 'em.\n3. Slow roll vs fast 8: hunting a 3-COST carry \u2192 sit at 7, roll, preserve pairs. Your carry is a 4-COST \u2192 fast 8, roll expensive fish, hit them at 24%.\n4. HP is a currency too: losing 2 rounds to keep 20 gold loses you 4-6 HP to save 2 gold of interest \u2014 sometimes the SPEND is the save.\n5. Loss-streak only when DELIBERATE (you still held pairs and items); accidental bleeding without items or pairs is just bleeding \u2014 fix the cause.\n\n\ud83c\udfaf Your one next action: next game, write your two 'power checkpoints' at the start (e.g., '7 at 3-2, 50g floor until 4-1') and torture-test your spending against them." },
+  { k:["items","itemization","what items on","bis","best items","combine","bf sword","recurve","bow","rod","tear"],
+    t:"Item doctrine \u2014 same principles every patch: \ud83e\ude99\n\n\ud83e\ude99 The item rules:\n1. SLAM early: components shouldn't rot on the bench. A mediocre-early slam ('sustainability' items, warm-up stat sticks) that saves HP now beats a perfect-BIS finished 10 rounds too late.\n2. Carry types: AD carry \u2192 attack damage/speed components (B.F. Sword, Recurve Bow lines) + a last-whisper-style shredder when the frontline is beefy. AP carry \u2192 Rod/Tear lines. Tank \u2192 resistances + HP, and one aura item \u2014 tanks devour cheap components so carries get the finished ones.\n3. The shredder rule: if the lobby's boards look armored, item humility (shred/pierce) outscales raw damage numbers.\n4. Trajectory economy: 'who takes the THIRD finished item' scales harder than who gets the first two; your second carry lurks on that third.\n5. Bench-rot audit: components sitting past stage 3 = bench rot \u2014 slam SOMETHING.\n\n\ud83c\udfaf Your one next action: next game, at stage 2, slam at least 3 components onto someone. Yes, mid-game. Perfect-BIS waits are how HP evaporates." },
+  { k:["position","positioning","where do i place","vs assassins","front line","corner carry","scout"],
+    t:"Positioning \u2014 the free LP most players leave on the table: \ud83d\udccd\n\n\ud83d\udccd The position doctrine:\n1. THE SCOUT, every round's last 2 seconds: who's on your edge, who has assassins/divers, who warrants a corner flip. Un-scouted positioning is a bet you didn't know you placed.\n2. Corner the carry vs assassins: tuck both corners, tank in front of the carry's diagonal \u2014 assassins lunge INTO the unit you LEFT open.\n3. Anti-AOE spread: full-cluster boards evaporate to splash damage mid-game; stagger the backline a seat apart.\n4. Front-back tension: too much frontline = nobody dies (fine) \u2014 but if your carry gets PERMA-FROZEN or one-shot, the fix is usually a bodyguard \u2014 one chunky unit NEXT to the carry, not in front of the whole board.\n5. Flip decision: if BOTH sides can hit you, position for the FIGHT THAT MATTERS (the fight that decides 5th vs 4th deserves your positioning more than the one that decides 1st vs 2nd).\n\n\ud83c\udfaf Your one next action: this game, scout the assassins' side BEFORE every fight \u2014 one habit, massive pays. Count how many fights the scout flipped for you." },
+  { k:["losing every game","tilted","hard stuck","0-5","lose streak","getting destroyed","demoted","rank anxiety"],
+    t:"Tilt rescue \u2014 the coach is parking the meta talk for sixty seconds: \ud83e\udd11\n\n\ud83e\udd11 The tilt protocol:\n1. Tilt taxes MECHANICS first: scouting slower, item slams late, comps forced. You're not suddenly bad \u2014 you're undisciplined-under-emotion. Name it.\n2. The 'one change' rule: ONE concrete fix per session \u2014 'scout every round,' 'slam by stage 2,' 'hit my level checkpoints.' Multi-fix comebacks are how tilt-players stay tilted.\n3. The two-game mercy valve: two consecutive tilt-losses \u2192 queue NORMALS or stand UP for ten minutes. Tilt-queued sessions have ruined more climbs than any meta shift ever shipped.\n4. The math check: everyone's LP graph is sawtooth \u2014 5ths that could be 4ths (top-4 discipline) is the whole climb at every bracket. Chase CONSISTENCY, not highlights.\n5. If demotion fear sets in \u2014 demotion SHIELD exists at most ranks, check yours before the fear lies to you.\n\n\ud83c\udfaf Your one next action: pick your ONE change for tonight's session now \u2014 write it. Then play 3 games evaluating only that, no LP emotional monitoring." },
+  { k:["new to tft","beginner","how do i play","basics","just started","first game","rookie"],
+    t:"Welcome to the auto-battler \u2014 best board-game of the decade, worst tutorial of all time. The rookie five: \ud83c\udf31\n\n\ud83c\udf31 The beginner five:\n1. The loop: buy units \u2192 three-of-a-kind combines to a 2-star (stronger) \u2192 the board fights AUTOMATICALLY every round \u2014 your job is the roster, not the reflexes.\n2. Traits are the POINT: units share traits; matching traits (2/4/6 counts) power up. A board of 9 random strong units loses to 7 units holding 3 trait lines.\n3. The economy basics: don't spend everything every round \u2014 10 gold per interest point (+1 free each), cap at 50. 'Round 20 income' is how good boards get built.\n4. HP drains slowly, then all at once: an early loss streak WITH pairs and items is banking; without them it's bleeding \u2014 slam something and commit before 4-1.\n5. Copy a meta comp first: a known top comp (Metatft/LoLChess) teaches faster than the cafeteria of your own experiments \u2014 THEN experiment.\n\n\ud83c\udfaf Your one next action: play 3 games this week copying one meta comp start to finish \u2014 no freelancing. That's the fastest onboarding button in TFT." },
+  { k:["patch","just dropped","nerfed","buffed","meta changed","patch notes","banned"],
+    t:"Patch day \u2014 the LP pinata, if you move early: \ud83c\udf88\n\n\ud83c\udf88 The patch-day routine:\n1. Read the notes with two lists: what got BUFFED that was already close (those become the new meta), and what got NERFED that was everything (those become free LP if you can punish lobbies that queue with muscle memory).\n2. The 48-hour edge: same-patch Day 1-2 is the friendliest climbing window \u2014 secondhand memory, patch-blind lobbies, players running extinct comps.\n3. Update YOUR two comps (one AD, one AP \u2014 the coach's standing rule), then stop kitchen-sinking: patch-hopping through five comps costs more LP than the patch did.\n4. Watch augments and trait reworks too \u2014 those usually re-route carry builds more than unit nerfs do.\n5. Give balance 3-4 days before declaring anything 'dead' \u2014 hotfixes happen.\n\n\ud83c\udfaf Your one next action: today's patch notes \u2014 list the two buffs you'll run at 6pm. The pinata, as ever, goes to the early movers." },
+  { k:["streaming tft","on stream","stream my climb","overlay","chase","content from tft"],
+    t:"TFT on stream \u2014 good niche, underserved, here's the ops: \ud83d\udcdb\ufe0f\n\n\ud83d\udcdb\ufe0f The stream doctrine:\n1. The climb IS the content: a 'Road to \u2014' arc series outperforms highlight reels \u2014 chat attaches to narrative, not clips.\n2. Tools on-screen: Stream Warrior runs your decks, sounds and overlays in the corner \u2014 the game PLUS the toolkit look is the signature.\n3. Chat-comp democracy: let chat vote on your comp pivot at the fork \u2014 the wrong comp, chosen together, outperforms the right comp played silent.\n4. Climb sessions > one-offs: 'Road to Gold, Day 5' narrative structures carry a stream, a TikTok, AND a YouTube short from one session.\n5. The tilt bit handled ON stream (coach's tilt protocol, played straight) is the most relatable content in the genre \u2014 patience is character development.\n\n\ud83c\udfaf Your one next action: name the arc ('Road to ___') and write your session-1 opener line. Content stacks on narrative; the queue is just the B-roll." }
+];
+var GENERAL = [
+  "Board received. \u2694\ufe0f The TFT Coach runs on a simple doctrine: meta rots every two weeks, but the FIVE disciplines don't \u2014 econ management, item trajectory, position-scouting, comp flexibility, and tilt control. Get asked anything in those and you'll leave with a rule, not a rumor.\n\n(Exact live comps rotate fast \u2014 for the what, cross-check a live tier site; the how and why live here.)\n\n\ud83c\udfaf Give me the situation \u2014 the game state, the gold, or the tilt \u2014 and I'll pull the discipline that moves it.",
+  "Heard, summoner. \u2694\ufe0f Straight talk before strategy: TFT punishes vibes and rewards checklists. The players you envy aren't luckier \u2014 they know their level checkpoints, slam early, scout like it's their job, and rage less than you.\n\nAll of that is coachable, right here, no key required. So: what's on the board \u2014 the shop, the HP, the gold, or the anger?\n\n\ud83c\udfaf Give me the line-up (units + level + gold) or the problem, and we'll make the next round wrong in a smaller font."
+];
+function builtinAnswer(q){
+  var low = q.toLowerCase();
+  var best = null, bestScore = 0;
+  PLAYS.forEach(function(v){
+    var score = 0;
+    v.k.forEach(function(word){ if (low.indexOf(word) !== -1) score++; });
+    if (score > bestScore) { bestScore = score; best = v; }
+  });
+  if (best) return best.t;
+  return GENERAL[Math.floor(Math.random() * GENERAL.length)];
+}
+
+var HIST = [];
+
+function addMsg(cls, safeHtml){
+  var d = document.createElement("div");
+  d.className = "msg " + cls;
+  d.innerHTML = safeHtml;
+  $("chat").appendChild(d);
+  $("chat").scrollTop = $("chat").scrollHeight;
+  return d;
+}
+
+function answer(q){
+  var key = "";
+  try { key = localStorage.getItem(LS_KEY) || ""; } catch(e){}
+  // safety check on every path \u2014 tilt is real but 988 outranks LP
+  var low = q.toLowerCase();
+  if (low.indexOf("hurt myself") !== -1 || low.indexOf("kill myself") !== -1 || low.indexOf("killing myself") !== -1 || low.indexOf("suicide") !== -1 || low.indexOf("end my life") !== -1 || low.indexOf("no reason to live") !== -1 || low.indexOf("don't want to be here") !== -1){
+    addMsg("ai", esc("\ud83d\udea8 Pause the queue for one second, coach speaking off the record.\n\nIf you're thinking about hurting yourself or ending things: please call or text 988 right now (Suicide & Crisis Lifeline \u2014 24/7, free, confidential). Or 911 if you're in immediate danger.\n\nNo rank, no game, no losing streak weighs that much. The humans at 988 stay on the line exactly for this moment. Please reach out tonight. \u2764\ufe0f"));
+    return;
+  }
+  if (!key) {
+    addMsg("ai", esc(builtinAnswer(q))); return;
+  }
+  var think = addMsg("ai", "\u2026");
+  var prompt = "You are the TFT Coach inside the Stream Warrior toolkit, created by Redeemed Warrior \u2014 a Teamfight Tactics coach who teaches patch-proof fundamentals: comp flexibility, shop-odds math and roll-down budgeting, econ/interest rules and level checkpoints, item doctrine (slam early, shredders, carry types), positioning and scouting, tempo, and tilt control. Respond with: (1) quick read of the situation, (2) the PRINCIPLE named, (3) concrete numbers and rules-of-thumb (levels, stage timings, gold figures \u2014 use classic approximations and label them 'patch-shiftable'), (4) end with exactly ONE next action phrased as 'Your one next action:' \u2014 something applicable in the NEXT game. Rules: under 170 words. Never pretend to know the current exact meta \u2014 give principles + point to live tier sites (Metatft, LoLChess) for exact comps. NEVER mock losses. If tilt/demote/rank-anxiety \u2014 include a short tilt discipline note. If ANY sign of real distress or self-harm: drop gaming talk entirely, 988 with warmth. Streamers: mention Stream Warrior tools for overlays/decks where natural. Match their energy: beginner gets the basics, tilted gets tilt rescue first, hardcore gets numbers.";
+  fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+    body: JSON.stringify({ model: "mistral-small-latest", temperature: 0.6, max_tokens: 420,
+      messages: [{ role: "system", content: prompt }].concat(HIST, [{ role: "user", content: q }]) })
+  }).then(function(r){ return r.json(); }).then(function(j){
+    var out = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "";
+    if (!out) out = "(No answer \u2014 check your key or provider status.)";
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc(out));
+    HIST.push({ role: "user", content: q });
+    HIST.push({ role: "assistant", content: out });
+    if (HIST.length > 12) HIST = HIST.slice(-12);
+  }).catch(function(e){
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc("Couldn't reach the AI \u2014 here's the built-in TFT Coach instead:\n\n" + builtinAnswer(q)));
+  });
+}
+
+function go(){
+  var q = $("say").value.trim();
+  if (!q) return;
+  $("say").value = "";
+  addMsg("user", esc(q));
+  answer(q);
+}
+$("send").onclick = go;
+$("say").addEventListener("keydown", function(e){ if (e.key === "Enter") go(); });
+
+$("ks").onclick = function(){
+  var v = $("akey").value.trim();
+  try {
+    if (v) { localStorage.setItem(LS_KEY, v); addMsg("sys", "Key saved \u2014 the full TFT coach is on."); }
+    else { localStorage.removeItem(LS_KEY); addMsg("sys", "Key removed \u2014 back to the built-in coach."); }
+  } catch(e){ addMsg("sys", "Couldn't save key in this browser."); }
+  $("akey").value = "";
+};
+try { if (localStorage.getItem(LS_KEY)) $("akey").placeholder = "Key is saved \u2713 (type to replace)"; } catch(e){}
+
+/* ---- quick subjects ---- */
+var SUBJECTS = ["what comp should I run", "what are my roll odds", "should I save or spend", "when do I level up", "what items on my carry", "how do I position vs assassins", "I'm tilted from losing", "beginner basics", "new patch just dropped"];
+var LOW = {
+  "what comp should I run": "what comp should I run this patch, best meta team comp",
+  "what are my roll odds": "what are my odds, chance to roll, roll down for my unit at this level",
+  "should I save or spend": "should I save or spend my gold, econ, interest, slow roll",
+  "when do I level up": "when to level, level 7 or 8, the leveling curve",
+  "what items on my carry": "what items on my carry, itemization, best items, BIS",
+  "how do I position vs assassins": "positioning, where do I place my carry, vs assassins, scout",
+  "I'm tilted from losing": "I'm tilted, hard stuck, losing every game, demoted and rank anxiety",
+  "new patch just dropped": "new patch just dropped, nerfed, buffed, meta changed"
+};
+SUBJECTS.forEach(function(s){
+  var b = document.createElement("button");
+  b.type = "button"; b.className = "subj"; b.textContent = s;
+  b.onclick = function(){ $("say").value = (s in LOW) ? LOW[s] : s; $("say").focus(); };
+  $("subjects").appendChild(b);
+});
+
+/* ---- boot ---- */
+addMsg("sys", "TFT Coach \u2014 ready. Comps, odds, gold, items, positioning, tilt: patch-proof fundamentals, no key needed. Add one for the full AI coach. GLHF, summoner. \u2694\ufe0f");
+</script>
+</body>
+</html>

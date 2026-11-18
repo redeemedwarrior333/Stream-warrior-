@@ -2,7 +2,7 @@
 "use strict";
 
 const App = {
-  VERSION: "v24",
+  VERSION: "v25",
   modules: {},
   order: ["tarot", "twentyq", "trivia", "soundboard", "madlibs", "jokes", "lines", "facts", "wyr", "laws"],
   meta: {
@@ -288,6 +288,9 @@ const Home = {
           </a>
           <a class="home-card" href="no-excuses/?v=24" style="text-decoration:none">
             <span class="home-ico">🔥</span><span class="home-label">No-Excuses Mode</span>
+          </a>
+          <a class="home-card" href="tft-coach/?v=25" style="text-decoration:none">
+            <span class="home-ico">📡</span><span class="home-label">TFT Coach</span>
           </a>
           <a class="home-card" href="warrior-survival/?v=15" style="text-decoration:none">
             <span class="home-ico">⚔️</span><span class="home-label">Survival AI</span>
