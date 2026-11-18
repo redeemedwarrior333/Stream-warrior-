@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Phone Warrior — Get a stalker out of your phone | by Redeemed Warrior</title>
+<meta name="description" content="Phone Warrior: a free Android scanner that finds stalkerware and spy apps on your phone, a guide to kick him out of your accounts, a New Identity email plan he can never take over, and a secret encrypted vault. Always free for survivors.">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0E0B1D; color: #F3EFFF; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 20px 18px 60px; }
+
+  /* QUICK EXIT — always visible */
+  #quickExit {
+    position: fixed; top: 10px; right: 10px; z-index: 99;
+    background: #FF5A6E; color: #fff; font-weight: 800; font-size: 15px;
+    border: none; border-radius: 10px; padding: 12px 16px; cursor: pointer;
+    box-shadow: 0 0 18px rgba(255,90,110,.45);
+  }
+  #quickExit:hover { background: #ff7686; }
+
+  .brand { color: #F0C878; letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: #A79DD0; font-size: 12px; margin-bottom: 24px; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 8px 0 12px; }
+  h1 .gold { color: #F0C878; }
+  .sub { color: #C9C2E8; font-size: 17px; margin-bottom: 24px; max-width: 640px; }
+
+  .panel { background: #201A48; border: 1px solid #332A63; border-radius: 16px; padding: 20px; margin: 16px 0; }
+  .panel h2 { color: #F0C878; font-size: 18px; margin-bottom: 10px; }
+  .panel.danger { border-color: #FF5A6E; }
+  .panel.danger h2 { color: #FF5A6E; }
+  .panel p { margin: 8px 0; font-size: 15px; color: #E4DFF8; }
+  .panel ol, .panel ul { margin: 10px 0 10px 22px; font-size: 15px; color: #E4DFF8; }
+  .panel li { margin: 6px 0; }
+  .muted { color: #A79DD0; font-size: 14px; }
+  strong { color: #fff; }
+
+  .pillrow { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0; }
+  .pill { display: inline-block; background: #201A48; border: 1px solid #F0C878; color: #F0C878; border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; }
+  .pill.red { border-color: #FF5A6E; color: #FF5A6E; }
+
+  a.btn, button.btn {
+    display: inline-block; background: #F0C878; color: #241A05; font-weight: 800;
+    border: none; border-radius: 12px; padding: 13px 20px; font-size: 15px;
+    text-decoration: none; cursor: pointer; margin: 6px 8px 2px 0;
+  }
+  a.btn.red, button.btn.red { background: #FF5A6E; color: #fff; }
+  a.btn.ghost { background: transparent; color: #F0C878; border: 2px solid #F0C878; }
+  a.btn:hover, button.btn:hover { filter: brightness(1.08); }
+
+  .hotline { display: block; background: #2A0F1C; border: 1px solid #FF5A6E; border-radius: 14px; padding: 16px; margin: 14px 0; color: #FFD7DC; text-decoration: none; font-weight: 700; font-size: 16px; }
+  .hotline span { display: block; font-weight: 400; font-size: 13px; color: #E9A9B2; margin-top: 3px; }
+
+  .free { border: 2px solid #F0C878; border-radius: 16px; padding: 20px; text-align: center; margin: 26px 0; }
+  .free h2 { color: #F0C878; font-size: 22px; margin-bottom: 6px; }
+
+  footer { margin-top: 40px; border-top: 1px solid #332A63; padding-top: 18px; font-size: 14px; color: #A79DD0; }
+  footer a { color: #F0C878; text-decoration: none; }
+
+  @media (max-width: 600px) { h1 { font-size: 27px; } }
+</style>
+</head>
+<body>
+<button id="quickExit" onclick="quickExit()">🚨 QUICK EXIT</button>
+
+<div class="wrap">
+  <div class="brand">🛡️ Phone Warrior</div>
+  <div class="byline">by Redeemed Warrior · part of the Warrior family</div>
+
+  <h1>Kick him out of your phone.<br><span class="gold">For good.</span></h1>
+  <p class="sub">A free Android app that scans your phone for stalkerware, spy apps and hidden tracking — plus the step-by-step plan for emails, accounts and a secret vault he can <strong>never</strong> get into.</p>
+
+  <div class="pillrow">
+    <span class="pill">🛡️ On-phone stalkerware scan</span>
+    <span class="pill">🧹 Evidence-safe cleanup</span>
+    <span class="pill">🔒 Encrypted secret vault</span>
+    <span class="pill">✉️ New-identity email plan</span>
+    <span class="pill red">Always FREE for survivors</span>
+  </div>
+
+  <a class="hotline" href="tel:18007997233">📞 National Domestic Violence Hotline — 1-800-799-7233<span>Free · Confidential · 24/7 · Also text START to 88788. If you are in immediate danger, call 911.</span></a>
+  <a class="hotline" href="sms:88788&body=START">💬 Prefer texting? Tap here to text START to 88788<span>The hotline texts back — messages stay in your phone, so delete the thread after.</span></a>
+
+  <div class="panel danger">
+    <h2>⚠️ READ THIS FIRST</h2>
+    <p><strong>Abuse often gets worse the moment he notices the surveillance is about to be cut off.</strong> Do these steps quietly, in order, and tell at least one trusted person what's happening. Make a plan with a hotline or a local advocate before you make your move.</p>
+  </div>
+
+  <div class="panel">
+    <h2>📲 Step 1 · Get the free app</h2>
+    <p>Phone Warrior is an Android app. There is a web guide on this page you can use right now on any phone — and the Android app adds the automatic scan plus the secret vault.</p>
+    <ol>
+      <li>On this site's GitHub repo, open the <strong>Actions</strong> tab.</li>
+      <li>Click the latest <strong>"Build Phone Warrior APK"</strong> run.</li>
+      <li>Download the <strong>PhoneWarrior-debug-apk</strong> artifact.</li>
+      <li>On your phone, open the .apk and install it (allow "install unknown apps" if asked).</li>
+      <li>First open: tap <strong>SCAN MY PHONE NOW</strong>.</li>
+    </ol>
+    <p class="muted">The app has NO internet permission — it physically cannot send anything it finds to anyone. What it sees stays on your phone.</p>
+  </div>
+
+  <div class="panel">
+    <h2>🔍 Step 2 · What the scan looks for</h2>
+    <ul>
+      <li>Known stalkerware families by name and signature</li>
+      <li>Apps using <strong>accessibility services</strong> to read your screen and messages</li>
+      <li><strong>Device-admin / device-owner</strong> apps that won't let you uninstall things</li>
+      <li>Apps with <strong>notification access</strong> (he can see every text)</li>
+      <li>Hidden apps with no icon that have your <strong>location, mic or camera</strong></li>
+      <li>Apps installed from outside the Play Store with spy-like names</li>
+    </ul>
+    <p class="muted">Screenshot anything suspicious <em>before</em> uninstalling — that's evidence if you need a protective order later.</p>
+  </div>
+
+  <div class="panel">
+    <h2>🧹 Step 3 · Clean up without tipping him off</h2>
+    <p>Change passwords from a <strong>different device</strong>, never this phone. Email first — your email is the master key to everything else. Then banking, then socials. Turn on two-factor with an <strong>authenticator app</strong>, never SMS codes (they arrive on this phone — the one he may be reading). Check your email's <strong>forwarding rules and recovery phone/email</strong>: that's the classic trick for stealing your reset messages.</p>
+  </div>
+
+  <div class="panel">
+    <h2>✉️ Step 4 · Make an email he can NEVER take over</h2>
+    <p>If he takes every account you make, it's because he's breaking in through the <strong>recovery email and recovery phone</strong> you've had since before him. Start over the right way — from a <strong>clean device he has never touched</strong> (library computer, work computer, trusted friend's phone):</p>
+    <ol>
+      <li><strong>Create the new address on that clean device.</strong> Leave your real name and birthday out of it.</li>
+      <li><strong>Recovery email:</strong> set it to a SECOND brand-new secret account — never an old one he's seen.</li>
+      <li><strong>Recovery phone:</strong> NEVER your old number. Get a free new number (Google Voice / TextNow) from that same clean device — or skip the phone entirely.</li>
+      <li><strong>Security answers: make them up.</strong> He knows your real ones.</li>
+      <li><strong>2FA:</strong> authenticator app only — never SMS to your old number.</li>
+      <li><strong>Password:</strong> brand new, never used anywhere before.</li>
+      <li>Then in the new account: <strong>sign out all devices</strong>, check <strong>no forwarding rules</strong>, review <strong>third-party app access</strong>.</li>
+      <li>Keep the new addresses written <strong>only</strong> in the app's 🔒 Vault and on hidden paper. Never sign into the new accounts on a device he can reach.</li>
+    </ol>
+  </div>
+
+  <div class="panel">
+    <h2>🔒 Step 5 · The secret vault</h2>
+    <p>The app has a hidden, encrypted vault for the things you can't afford to lose — new email addresses, hotline case numbers, advocate contacts, the address of a safe place. Everything is encrypted with your PIN (AES) and it all stays on your phone.</p>
+    <p><strong>3 wrong PIN tries and it goes on LOCKDOWN</strong> — the PIN stops working on purpose, and only the Recovery Key you wrote down when you created it can open it again. No wipe button, no way for anyone forcing you to destroy what's inside, and no override — not for anyone who takes your phone, and not even for us.</p>
+  </div>
+
+  <div class="panel">
+    <h2>🥸 Disguise mode</h2>
+    <p>One tap inside the app swaps its home-screen icon and name to a boring gray <strong>"Notes"</strong> app. The icon hides; the protection doesn't.</p>
+  </div>
+
+  <div class="panel">
+    <h2>📱 On an iPhone?</h2>
+    <p>iPhones are much harder to bug <em>without</em> your Apple ID password — so changing that password from another device is your strongest move. Then: <strong>Settings → General → VPN &amp; Device Management</strong> (delete any profile you don't recognize), audit your <strong>Apple ID device list</strong>, check <strong>Location Sharing</strong> and <strong>Family Sharing</strong>. Apps like Cydia, Sileo or Zebra mean the phone may be jailbroken — erase it and set up fresh from a backup that only has photos and messages.</p>
+  </div>
+
+  <div class="free">
+    <h2>Phone Warrior is free. Always.</h2>
+    <p class="sub" style="margin:0 auto;">For every survivor, everywhere — no trial, no paywall, no ads. We sell other things on this site so that this one never has to cost you anything.</p>
+  </div>
+
+  <div class="panel">
+    <h2>More help, in human form</h2>
+    <ul>
+      <li><a href="tel:18007997233" style="color:#F0C878">1-800-799-7233</a> · National DV Hotline (24/7) · <a href="sms:88788&body=START" style="color:#F0C878">text START to 88788</a></li>
+      <li><a href="tel:18663319474" style="color:#F0C878">1-866-331-9474</a> · Love Is Respect (teens &amp; young adults)</li>
+      <li><a href="https://www.techsafety.org" target="_blank" rel="noopener" style="color:#F0C878">techsafety.org</a> — step-by-step tech safety guides for every app</li>
+      <li><a href="https://www.thehotline.org" target="_blank" rel="noopener" style="color:#F0C878">thehotline.org</a> — chat, plan-making, local advocates</li>
+    </ul>
+  </div>
+
+  <footer>
+    <p><strong>The Warrior family</strong> — 🛡️ <a href="../">Stream Warrior</a> (tools for phone live-streamers) · ✨ <a href="../warrior-prophet/">Warrior Prophet</a> (daily faith-based tarot, angel numbers &amp; blessings) · 🛡️ <strong>Phone Warrior</strong> (you are here).</p>
+    <p style="margin-top:8px">If you can leave this site safely, browse privately: use an incognito window and clear your history, or use it on a device he can't reach.</p>
+  </footer>
+</div>
+
+<script>
+  function quickExit() {
+    try { window.open("https://www.weather.com", "_blank"); } catch (e) {}
+    window.location.replace("https://www.google.com/search?q=weather");
+  }
+  // Extra safety: Escape key also triggers quick exit (desktop)
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") quickExit();
+  });
+</script>
+</body>
+</html>
