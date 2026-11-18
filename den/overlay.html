@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔴 Warrior's Den — Stream Overlay (browser source)</title>
+<meta name="description" content="Warrior's Den branded stream overlay: name badge + scrolling ticker. Paste into OBS or Streamlabs as a browser source.">
+<style>:root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
+  /* TRANSPARENT browser-source overlay */
+  html, body { background: transparent !important; margin: 0; padding: 0; overflow: hidden; }
+  body { color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  #errbar { position: fixed; top: 0; left: 0; right: 0; z-index: 9; background:var(--red); color:#fff; padding:8px 12px; font: 12px/1.5 system-ui; display:none; }
+  /* corner badge */
+  #badge {
+    position: fixed; left: 18px; top: 18px; z-index: 2;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  #badge .row1 { display: flex; align-items: center; gap: 8px; }
+  #badge .live {
+    background: var(--red); color: #fff; font-weight: 800; font-size: 12px; letter-spacing: 1px;
+    border-radius: 6px; padding: 3px 8px; box-shadow: 0 0 14px rgba(255,90,110,.55);
+    animation: pulse 2.2s infinite;
+  }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 14px rgba(255,90,110,.55); } 50% { box-shadow: 0 0 26px rgba(255,90,110,.9); } }
+  #badge .nm {
+    font-weight: 800; font-size: 17px; color: var(--gold);
+    text-shadow: 0 2px 8px rgba(0,0,0,.85), 0 0 18px rgba(240,200,120,.25);
+    white-space: nowrap;
+  }
+  #badge .tag {
+    font-size: 12px; color: var(--sub); text-shadow: 0 2px 6px rgba(0,0,0,.85);
+    white-space: nowrap;
+  }
+  /* ticker */
+  #tickerwrap {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 2;
+    background: linear-gradient(180deg, rgba(14,11,29,.82), rgba(14,11,29,.94));
+    border-top: 2px solid var(--gold);
+    height: 34px; overflow: hidden;
+  }
+  #ticker {
+    position: absolute; white-space: nowrap; line-height: 34px;
+    font-size: 15px; font-weight: 700; color: var(--text);
+    will-change: transform;
+  }
+  #ticker .seg { display: inline-block; padding-right: 220px; }
+  #ticker .fire { color: var(--gold); }
+  #ticker .dot { color: var(--red); padding: 0 6px; }
+  .hintbar { position: fixed; left: 10px; top: 10px; z-index: 8; color: rgba(255,255,255,.6); font-size: 11px; background: rgba(0,0,0,.4); border-radius: 6px; padding: 4px 8px; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="errbar"></div>
+<div class="hintbar" id="hintbar" style="display:none">⬛ Transparent everywhere except badge + ticker — that's correct.</div>
+<div id="badge">
+  <div class="row1"><span class="live">● LIVE</span></div>
+  <div class="nm" id="badge_nm">Redeemed Warrior</div>
+  <div class="tag" id="badge_tag"></div>
+</div>
+<div id="tickerwrap"><div id="ticker"></div></div>
+
+<script>
+"use strict";
+var errbar = document.getElementById("errbar");
+function showErr(m){ try { errbar.style.display = "block"; errbar.textContent = "\u26a0 Den overlay error: " + m; } catch(e){} }
+window.addEventListener("error", function(ev){ showErr((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ showErr("async: " + String(ev && ev.reason || "unknown")); });
+
+var DEFAULT_MSGS = ["Welcome to the Den \ud83d\udd25", "Follow so you don't miss the next live", "New tool every week \u2014 Warrior Forge", "Stay blessed, stay dangerous \ud83d\ude4f"];
+function loadCfg(){
+  try { var c = JSON.parse(localStorage.getItem("den_config") || "null"); if (c && c.name) return c; } catch(e){}
+  return { name: "Redeemed Warrior", tag: "Walking in it. \ud83d\udd25", msgs: DEFAULT_MSGS.slice() };
+}
+var cfg = loadCfg();
+document.getElementById("badge_nm").textContent = cfg.name;
+document.getElementById("badge_tag").textContent = cfg.tag || "";
+
+/* ticker: each message repeated 3x for a seamless CSS-free ticker via rAF */
+function buildTicker(){
+  var msgs = (cfg.msgs && cfg.msgs.length) ? cfg.msgs : DEFAULT_MSGS;
+  var t = document.getElementById("ticker");
+  var seq = [];
+  for (var rep = 0; rep < 3; rep++) {
+    msgs.forEach(function(m, i){
+      seq.push('<span class="seg"><span class="dot">◆</span><span class="' + (i % 2 ? "" : "fire") + '">' + m.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + '</span></span>');
+    });
+  }
+  t.innerHTML = seq.join("");
+  return t.scrollWidth / 3; // width of one full set
+}
+var oneSetWidth = buildTicker();
+var x = 0, last = null;
+function tick(ts){
+  if (last !== null) x += (ts - last) * 0.06; // px per ms
+  last = ts;
+  if (oneSetWidth > 0 && x >= oneSetWidth) x -= oneSetWidth;
+  document.getElementById("ticker").style.transform = "translateX(" + (-x) + "px)";
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* live updates from the Command Center (same browser) */
+try {
+  var chan = new BroadcastChannel("den_channel");
+  chan.onmessage = function(ev){
+    var d = ev.data || {};
+    if (d.type === "config" && d.cfg) {
+      cfg = d.cfg;
+      document.getElementById("badge_nm").textContent = cfg.name;
+      document.getElementById("badge_tag").textContent = cfg.tag || "";
+      oneSetWidth = buildTicker();
+      try { localStorage.setItem("den_config", JSON.stringify(cfg)); } catch(e){}
+    }
+  };
+} catch(e){}
+
+/* preview hint */
+try {
+  var qs = {}; document.location.search.replace(/^\?/, "").split("&").forEach(function(p){ var kv = p.split("="); qs[decodeURIComponent(kv[0] || "")] = decodeURIComponent(kv.slice(1).join("=") || ""); });
+  if (qs.preview === "1") document.getElementById("hintbar").style.display = "block";
+} catch(e){}
+</script>
+</body>
+</html>

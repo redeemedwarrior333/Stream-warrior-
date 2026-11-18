@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔴 Warrior's Den — streamer toolkit by Redeemed Warrior</title>
+<meta name="description" content="Warrior's Den: alerts, branded overlay, ticker, and the Den platform — our own streamer toolkit, built by Redeemed Warrior.">
+<style>:root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  .brand { color: var(--gold); letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+  h1 { font-size: 30px; margin: 4px 0 8px; }
+  h1 .gold { color: var(--gold); }
+  .sub { color: var(--sub); font-size: 15px; margin-bottom: 18px; max-width: 640px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; padding: 18px; display: block; text-decoration: none; color: inherit; }
+  .panel h2 { color: var(--gold); font-size: 15px; margin-bottom: 6px; letter-spacing: .5px; }
+  .big { font-size: 34px; margin-bottom: 6px; }
+  .panel p { color: var(--sub); font-size: 13px; line-height: 1.6; }
+  .ghostnote { margin-top: 16px; background: var(--panel2); border: 1px dashed var(--edge); border-radius: 14px; padding: 14px 16px; }
+  .ghostnote h3 { color: var(--muted); font-size: 13px; letter-spacing: .5px; margin-bottom: 6px; }
+  .ghostnote p { color: var(--muted); font-size: 13px; line-height: 1.7; }
+  footer { margin-top: 40px; border-top: 1px solid var(--edge); padding-top: 18px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--gold); text-decoration: none; }
+  a.home-btn { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-btn" href="../">← Stream Warrior home</a>
+  <div class="brand">🔴 The Warrior's Den</div>
+  <div class="byline">by Redeemed Warrior · our own streamer toolkit</div>
+
+  <h1>Welcome to the <span class="gold">Warrior's Den</span></h1>
+  <p class="sub">Everything you need to run a live stream under one roof — alerts, overlays, and the command center that drives them. Free. No keys. No accounts.</p>
+
+  <div class="grid">
+    <a class="panel" href="control.html">
+      <div class="big">🎛️</div>
+      <h2>COMMAND CENTER</h2>
+      <p>Set your name, ticker lines, and fire alerts live mid-stream from one page. This is where the Den is run from.</p>
+    </a>
+    <a class="panel" href="alerts.html">
+      <div class="big">🔔</div>
+      <h2>ALERT BOX</h2>
+      <p>Follows, subs, tips, and raids pop on stream with sound and your branding. Browser source — paste the URL into OBS or Streamlabs.</p>
+    </a>
+    <a class="panel" href="overlay.html">
+      <div class="big">🖼️</div>
+      <h2>BRANDED OVERLAY</h2>
+      <p>LIVE badge, your name, your line, and a scrolling ticker of your rules — floating over your game or camera.</p>
+    </a>
+    <div class="panel" style="cursor:default">
+      <div class="big">🧪</div>
+      <h2>TEST DRIVE (30 SECONDS)</h2>
+      <p>Open the Command Center, tap 👁 PREVIEW OVERLAY and 👁 PREVIEW ALERTS, then tap ⚡ alerts in Step 2. You'll see exactly what viewers see.</p>
+    </div>
+  </div>
+
+  <div class="ghostnote">
+    <h3>🔷 COMING TO THE DEN (Phase 2+)</h3>
+    <p>
+      <strong>Chatbot</strong> — reads real chat and answers commands (needs platform login keys — built when the Den backend ships).<br>
+      <strong>Remote control</strong> — drive alerts from your phone away from the streaming device (needs the Den backend).<br>
+      <strong>Tipping page</strong> — a dedicated support page for your stream (needs your payment link — tell Redeemed Warrior where you want tips to go).<br>
+      <strong>The platform itself</strong> — stream once, everywhere; hourly pay tiers; subscribers with badges; diamonds at $1 with a $10 cash-out minimum. The Den holds the vault keys.
+    </p>
+  </div>
+
+  <footer>
+    <p><strong>The Warrior family</strong> — 🛡️ <a href="../">Stream Warrior</a> · 🙏 <a href="../warrior-prophet/">Warrior Prophet</a> · 🛡️ <a href="../phone-warrior/">Phone Warrior</a> · 🔥 <a href="../ai-builder/?v=10">Warrior Forge</a> · 📖 <a href="../flamekeeper/">Bible Flamekeeper</a> · ⚖️ <a href="../weirdlaw/">Weird Law or Fake?</a> · 🔴 <strong>Warrior's Den</strong> (you are here)</p>
+  </footer>
+</div>
+</body>
+</html>
