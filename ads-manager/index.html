@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📣 Warrior Ads Manager AI — by Redeemed Warrior</title>
+<meta name="description" content="Warrior Ads Manager AI: describe what you're advertising, get hooks, ad copy, CTAs and hashtags for TikTok, Twitch, Instagram and YouTube. An AI tool by Redeemed Warrior.">
+<style>
+  :root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  .brand { color: var(--gold); letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+  h1 { font-size: 30px; margin: 4px 0 8px; }
+  h1 .gold { color: var(--gold); }
+  .sub { color: var(--sub); font-size: 15px; margin-bottom: 18px; max-width: 640px; }
+  .panel { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; padding: 18px; }
+  .panel h2 { color: var(--gold); font-size: 15px; margin-bottom: 10px; letter-spacing: .5px; }
+  input {
+    width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--edge);
+    border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit;
+  }
+  input:focus { outline: none; border-color: var(--gold); }
+  button {
+    background: var(--gold); color: var(--ink); font-weight: 800; border: none; border-radius: 10px;
+    padding: 11px 16px; font-size: 14px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
+  .mini { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
+  #chat { background: var(--panel2); border: 1px solid var(--edge); border-radius: 12px; height: 380px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .msg { max-width: 88%; padding: 9px 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .msg.user { align-self: flex-end; background: var(--gold); color: var(--ink); border-bottom-right-radius: 4px; }
+  .msg.ai { align-self: flex-start; background: var(--panel); border: 1px solid var(--edge); border-bottom-left-radius: 4px; }
+  .msg.sys { align-self: center; color: var(--muted); font-size: 12px; background: none; }
+  .chatsend { display: flex; gap: 8px; margin-top: 10px; }
+  .chatsend input { flex: 1; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.5; }
+  .hint a { color: var(--gold); }
+  .keyrow { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+  .keyrow input { flex: 1; }
+  .subjects { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .subj { background: var(--panel2); border: 1px solid var(--edge); color: var(--sub); border-radius: 999px; padding: 5px 11px; font-size: 12px; cursor: pointer; }
+  footer { margin-top: 40px; border-top: 1px solid var(--edge); padding-top: 18px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--gold); text-decoration: none; }
+  a.home-btn { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-btn" href="../">← More Warrior tools</a>
+  <div class="brand">📣 Warrior Forge tool</div>
+  <div class="byline">by Redeemed Warrior</div>
+
+  <h1>📣 Warrior Ads <span class="gold">Manager AI</span></h1>
+  <p class="sub">The Ultimate AI Advertising &amp; Marketing Command Center. Tell it what you're advertising — get a hook, ad copy, a call-to-action, and hashtags tuned to the platform. <strong>Works with no key</strong> (built-in formula engine); add a free Mistral key for the full AI copywriter.</p>
+
+  <div class="panel">
+    <h2>📣 WHAT ARE WE ADVERTISING?</h2>
+    <div class="subjects" id="subjects"></div>
+    <div id="chat"></div>
+    <div class="chatsend">
+      <input id="say" placeholder="e.g. my new merch drop on TikTok">
+      <button id="send">▶</button>
+    </div>
+    <div class="keyrow">
+      <input id="akey" type="password" placeholder="Optional: free Mistral key (console.mistral.ai) — stays in your browser">
+      <button class="mini ghost" id="ks">Set</button>
+    </div>
+    <p class="hint">Formulas and AI give starting points — always check platform ad rules and your own claims before spending money. Built by Redeemed Warrior.</p>
+  </div>
+
+  <footer>
+    <p><strong>The Warrior family</strong> — 🛡️ <a href="../">Stream Warrior</a> · 🙏 <a href="../warrior-prophet/">Warrior Prophet</a> · 🛡️ <a href="../phone-warrior/">Phone Warrior</a> · 🔥 <a href="../ai-builder/?v=10">Warrior Forge</a> (this tool was forged there) · 📖 <a href="../flamekeeper/">Bible Flamekeeper</a> · ⚖️ <a href="../weirdlaw/">Weird Law or Fake?</a> · 🔴 <a href="../den/">Warrior's Den</a></p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ---- visible crash banner: if anything breaks, show WHY instead of dead buttons ---- */
+function adsBanner(msg){
+  try {
+    var b = document.createElement("div");
+    b.style.cssText = "background:var(--red);color:#fff;padding:10px 14px;border-radius:10px;margin:0 0 14px;font:12px/1.5 system-ui;word-break:break-word;";
+    b.textContent = "\u26a0 Tool error: " + msg + " \u2014 screenshot this and tell Redeemed Warrior.";
+    var w = document.querySelector(".wrap");
+    if (w && w.firstChild) w.insertBefore(b, w.firstChild); else document.body.insertBefore(b, document.body.firstChild);
+  } catch(e){}
+}
+window.addEventListener("error", function(ev){ adsBanner((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ adsBanner("network/async: " + ((ev && ev.reason && ev.reason.message) ? ev.reason.message : String(ev && ev.reason || "unknown"))); });
+
+var LS_KEY = "forge_key"; // same key slot as Warrior Forge / Flamekeeper
+function $(id){ return document.getElementById(id); }
+function esc(s){ var d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
+
+/* ---- built-in formula engine (no key needed) ---- */
+var PLATFORMS = {
+  tiktok: { label: "TikTok", hash: ["#fyp", "#foryoupage", "#viral", "#smallbusiness", "#tiktokmademebuyit"], style: "vertical video, first 2 seconds decide everything, trends + sound on" },
+  twitch: { label: "Twitch", hash: ["#twitchstreamer", "#twitchaffiliate", "#smallstreamer", "#supportsmallstreamers"], style: "schedule + highlight clips, community-first, consistent vibe" },
+  youtube: { label: "YouTube", hash: ["#shorts", "#youtubeshorts", "#newvideo", "#subscribe"], style: "thumbnail + title are half the battle, searchable titles, series content" },
+  instagram: { label: "Instagram", hash: ["#reels", "#explorepage", "#instagood", "#smallbusiness"], style: "clean visuals, reel-first, story polls to boost reach" },
+  facebook: { label: "Facebook", hash: ["#shoplocal", "#smallbusiness", "#deals"], style: "community groups + events, word-of-mouth energy" },
+  general: { label: "All platforms", hash: ["#redeemedwarrior", "#warriorfamily", "#newdrop", "#comingsoon"], style: "one message, three sizes: whisper, shout, banner" }
+};
+
+function detectPlatform(q){
+  var low = q.toLowerCase();
+  var keys = [["tiktok","tiktok"],["twitch","twitch"],["youtube","youtube"],["instagram","instagram"],["insta","instagram"],["facebook","facebook"],["fb ","facebook"],["meta","facebook"]];
+  for (var i = 0; i < keys.length; i++) if (low.indexOf(keys[i][0]) !== -1) return PLATFORMS[keys[i][1]];
+  return PLATFORMS.general;
+}
+var HOOKS = [
+  "STOP scrolling — {p} changes everything.",
+  "Nobody told me about {p}. I had to see it to believe it.",
+  "3 seconds. That's all {p} needs to win you over.",
+  "POV: you just discovered {p} before everyone else.",
+  "I wasn't ready for how good {p} actually is.",
+  "If you've been waiting for a sign about {p} — this is it."
+];
+var CTAS = [
+  "Tap the link before it's gone. \ud83d\udca5",
+  "Follow so you don't miss what's next. \ud83d\udd25",
+  "Comment 'ME' and I'll send you the details. \ud83d\udce9",
+  "Share this with somebody who needs it today. \ud83d\ude4f",
+  "Save this post — future you will thank you. \ud83d\udcbe"
+];
+var BODY_TEMPLATES = [
+  "{p}. Made for the people who don't quit. Here's what makes it different: it actually delivers. {c}",
+  "Say hello to {p}. No gimmicks, no fluff — just the real thing. {c}",
+  "You asked. We built it. {p} is here — and the first wave always goes fastest. {c}",
+  "{p} — because 'good enough' was never the Warrior way. {c}"
+];
+function builtinAnswer(q){
+  var plat = detectPlatform(q);
+  var p = q.replace(/(on|for) (tiktok|twitch|youtube|instagram|facebook)/ig, "").replace(/\s+/g, " ").trim();
+  if (p.length < 3) p = "this";
+  function pick(arr, salt){ return arr[Math.floor(Math.random() * arr.length)]; }
+  var hook = pick(HOOKS).replace("{p}", p);
+  var body = pick(BODY_TEMPLATES).replace(/\{p\}/g, p).replace("{c}", "");
+  var cta = pick(CTAS);
+  var tags = plat.hash.join(" ");
+  return "\ud83c\udfac PLATFORM: " + plat.label + " (" + plat.style + ")\n\n" +
+    "\ud83e\udd29 HOOK:\n" + hook + "\n\n" +
+    "\ud83d\udcdd COPY:\n" + body + "\n\n" +
+    "\ud83d\udce3 CALL-TO-ACTION:\n" + cta + "\n\n" +
+    "#\ufe0f\u20e3 HASHTAGS:\n" + tags + "\n\n" +
+    "(Formula Engine \u2014 add a free key above and this becomes a full AI copywriter.)";
+}
+
+/* ---- chat ---- */
+var HIST = [];
+function addMsg(cls, safeHtml){
+  var m = document.createElement("div");
+  m.className = "msg " + cls;
+  m.innerHTML = safeHtml;
+  $("chat").appendChild(m);
+  $("chat").scrollTop = $("chat").scrollHeight;
+  return m;
+}
+
+function answer(q){
+  var key = "";
+  try { key = localStorage.getItem(LS_KEY) || ""; } catch(e){}
+  if (!key) { addMsg("ai", esc(builtinAnswer(q))); return; }
+  var think = addMsg("ai", "\u2026");
+  var prompt = "You are Warrior Ads Manager AI, created by Redeemed Warrior. The user describes something they want to advertise or promote (a stream, product, event, or channel). Respond with: (1) line '\ud83c\udfac PLATFORM FIT:' naming the best platform(s) and one tactical note, (2) '\ud83e\udd29 HOOK:' a scroll-stopping first line, (3) '\ud83d\udcdd COPY:' short ad copy that fits that platform's culture, (4) '\ud83d\udce3 CTA:' one call-to-action, (5) '#\ufe0f\u20e3 HASHTAGS:' 4-5 relevant hashtags. Rules: under 130 words total. Punchy, confident, positive — never sleazy, never false claims, no fake scarcity or made-up discounts, no guaranteeing results. Match brand energy: faithful, bold, family-safe. If the user's idea seems risky for ad platforms, gently flag it and offer a compliant alternative.";
+  fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+    body: JSON.stringify({ model: "mistral-small-latest", temperature: 0.8, max_tokens: 450,
+      messages: [{ role: "system", content: prompt }].concat(HIST, [{ role: "user", content: q }]) })
+  }).then(function(r){ return r.json(); }).then(function(j){
+    var out = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "";
+    if (!out) out = "(No answer \u2014 check your key or provider status.)";
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc(out));
+    HIST.push({ role: "user", content: q });
+    HIST.push({ role: "assistant", content: out });
+    if (HIST.length > 12) HIST = HIST.slice(-12);
+  }).catch(function(e){
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc("Couldn't reach the AI provider \u2014 formula engine instead:\n\n" + builtinAnswer(q)));
+  });
+}
+
+function go(){
+  var q = $("say").value.trim();
+  if (!q) return;
+  $("say").value = "";
+  addMsg("user", esc(q));
+  answer(q);
+}
+$("send").onclick = go;
+$("say").addEventListener("keydown", function(e){ if (e.key === "Enter") go(); });
+
+$("ks").onclick = function(){
+  var v = $("akey").value.trim();
+  try {
+    if (v) { localStorage.setItem(LS_KEY, v); addMsg("sys", "Key saved \u2014 full AI copywriter mode on."); }
+    else { localStorage.removeItem(LS_KEY); addMsg("sys", "Key removed \u2014 back to the Formula Engine."); }
+  } catch(e){ addMsg("sys", "Couldn't save key in this browser."); }
+  $("akey").value = "";
+};
+try { if (localStorage.getItem(LS_KEY)) $("akey").placeholder = "Key is saved \u2713 (type to replace)"; } catch(e){}
+
+/* ---- quick subjects ---- */
+var SUBJECTS = ["my merch drop on TikTok", "my Twitch stream schedule", "Warrior Prophet subscriptions", "a holiday sale on Instagram", "my YouTube channel trailer", "a giveaway for followers", "Phone Warrior free app", "my livestream event on Facebook", "the Warrior's Den for streamers", "new Bible Flamekeeper tool", "my small business grand opening", "come see my weird-law game"];
+SUBJECTS.forEach(function(s){
+  var b = document.createElement("button");
+  b.type = "button"; b.className = "subj"; b.textContent = s;
+  b.onclick = function(){ $("say").value = s; $("say").focus(); };
+  $("subjects").appendChild(b);
+});
+
+/* ---- boot ---- */
+addMsg("sys", "Warrior Ads Manager AI \u2014 ready for battle. Tap a subject or describe what we're advertising. No key needed; add one for full AI copy.");
+</script>
+</body>
+</html>
