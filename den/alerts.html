@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔴 Warrior's Den — Alert Box (browser source)</title>
+<meta name="description" content="Warrior's Den alert box: paste into OBS or Streamlabs as a browser source. Follows, subs, tips and raids pop on your stream with sound.">
+<style>:root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
+  /* TRANSPARENT by design — this page is a browser source overlay */
+  html, body { background: transparent !important; margin: 0; padding: 0; overflow: hidden; }
+  body { color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  #stage { position: fixed; inset: 0; display: flex; align-items: flex-start; justify-content: center; pointer-events: none; }
+  .alert {
+    margin-top: 6vh;
+    max-width: 520px; width: 92%;
+    background: linear-gradient(135deg, var(--panel) 0%, var(--panel2) 100%);
+    border: 2px solid var(--gold); border-radius: 18px;
+    padding: 18px 22px; text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,.55);
+    opacity: 0; transform: translateY(-24px) scale(.92);
+    transition: opacity .35s ease, transform .35s cubic-bezier(.2,1.4,.4,1);
+  }
+  .alert.show { opacity: 1; transform: translateY(0) scale(1); }
+  .alert .ico { font-size: 44px; display: block; margin-bottom: 6px; filter: drop-shadow(0 0 12px rgba(240,200,120,.55)); }
+  .alert .line { font-size: 22px; font-weight: 800; color: var(--gold); text-shadow: 0 2px 10px rgba(0,0,0,.5); }
+  .alert .line .who { color: var(--red); }
+  .alert .sub2 { margin-top: 6px; font-size: 13px; color: var(--sub); word-break: break-word; white-space: pre-wrap; }
+  .alert.follow { border-color: var(--good); } .alert.follow .line { color: var(--good); }
+  .alert.sub    { border-color: var(--blue); } .alert.sub .line { color: var(--blue); }
+  .alert.tip    { border-color: var(--gold); }
+  .alert.raid   { border-color: var(--red); }
+  .testbar {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    background: rgba(14,11,29,.92); border-top: 1px solid var(--edge);
+    padding: 10px 14px; display: none; gap: 8px; flex-wrap: wrap; align-items: center;
+    pointer-events: auto; z-index: 5;
+  }
+  body.preview .testbar { display: flex; }
+  .testbar span.lbl { color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .5px; }
+  .testbar button {
+    background: var(--gold); color: var(--ink); font-weight: 800; border: none; border-radius: 8px;
+    padding: 7px 12px; font-size: 12px; cursor: pointer;
+  }
+  .err { position: fixed; top: 0; left: 0; right: 0; z-index: 9; background:var(--red); color:#fff; padding:8px 12px; font: 12px/1.5 system-ui; display:none; }
+</style>
+</head>
+<body>
+<div class="err" id="errbar"></div>
+<div id="stage"></div>
+<div class="testbar" id="testbar">
+  <span class="lbl">TEST FIRES:</span>
+  <button id="t_follow">🔔 FOLLOW</button>
+  <button id="t_sub">⭐ SUB</button>
+  <button id="t_tip">💰 TIP</button>
+  <button id="t_raid">🚀 RAID</button>
+  <span class="lbl" style="margin-left:auto;opacity:.7">this bar never shows on stream — add ?preview=1</span>
+</div>
+
+<script>
+"use strict";
+var errbar = document.getElementById("errbar");
+function showErr(m){ try { errbar.style.display = "block"; errbar.textContent = "\u26a0 Den alert error: " + m; } catch(e){} }
+window.addEventListener("error", function(ev){ showErr((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ showErr("async: " + String(ev && ev.reason || "unknown")); });
+
+/* preview + config */
+var qs = {}; try { document.location.search.replace(/^\?/, "").split("&").forEach(function(p){ var kv = p.split("="); qs[decodeURIComponent(kv[0] || "")] = decodeURIComponent(kv.slice(1).join("=") || ""); }); } catch(e){}
+function loadCfg(){
+  try { var c = JSON.parse(localStorage.getItem("den_config") || "null"); if (c && c.name) return c; } catch(e){}
+  return { name: "Redeemed Warrior", tag: "Walking in it. \ud83d\udd25", msgs: [] };
+}
+function esc(s){ var d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
+if (qs.preview === "1") document.body.classList.add("preview");
+
+/* ---- sounds: tiny WebAudio synth (no files) ---- */
+var AC = null;
+function ac(){ if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){ AC = null; } } if (AC && AC.state === "suspended") { try { AC.resume(); } catch(e){} } return AC; }
+function beep(freq, when, dur, type, vol){
+  var c = ac(); if (!c) return;
+  var o = c.createOscillator(), g = c.createGain();
+  o.type = type || "triangle"; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, c.currentTime + when);
+  g.gain.exponentialRampToValueAtTime(vol || 0.18, c.currentTime + when + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + when + dur);
+  o.connect(g); g.connect(c.destination);
+  o.start(c.currentTime + when); o.stop(c.currentTime + when + dur + 0.05);
+}
+var SOUNDS = {
+  follow: function(){ beep(660, 0, .12); beep(880, .12, .18); },
+  sub:    function(){ beep(523, 0, .1); beep(659, .1, .1); beep(784, .2, .22); },
+  tip:    function(){ beep(987, 0, .08, "square", .12); beep(1318, .09, .2, "square", .12); beep(1568, .2, .25, "triangle", .14); },
+  raid:   function(){ beep(196, 0, .3, "sawtooth", .1); beep(392, .15, .3, "sawtooth", .1); beep(523, .3, .4, "triangle", .16); }
+};
+
+/* ---- alert rendering + queue ---- */
+var QUEUE = [];
+var SHOWING = false;
+var ICO = { follow: "\ud83d\udd30", sub: "\u2b50", tip: "\ud83d\udcb0", raid: "\ud83d\ude80" };
+function pushAlert(a){
+  if (!a) return;
+  QUEUE.push(a);
+  nextAlert();
+}
+function nextAlert(){
+  if (SHOWING || !QUEUE.length) return;
+  SHOWING = true;
+  var a = QUEUE.shift();
+  var cfg = loadCfg();
+  var el = document.createElement("div");
+  el.className = "alert " + (a.kind || "follow");
+  var who = a.name || "Someone";
+  var line = "";
+  if (a.kind === "follow") line = '<span class="who">' + esc(who) + '</span> just followed!';
+  else if (a.kind === "sub") line = '<span class="who">' + esc(who) + '</span> subscribed!';
+  else if (a.kind === "tip") line = '<span class="who">' + esc(who) + '</span> tipped ' + esc(a.amt || "");
+  else if (a.kind === "raid") line = '<span class="who">' + esc(who) + '</span> raided with their crew!';
+  else line = '<span class="who">' + esc(who) + '</span> ' + esc(a.label || "says hi!");
+  var subText = (a.kind === "tip" && a.msg) ? a.msg : (a.msg || "");
+  el.innerHTML =
+    '<span class="ico">' + (ICO[a.kind] || "\ud83d\udd14") + '</span>' +
+    '<div class="line">' + line + '</div>' +
+    (subText ? '<div class="sub2">' + esc(subText) + '</div>' : '');
+  var stage = document.getElementById("stage");
+  stage.appendChild(el);
+  try { (SOUNDS[a.kind] || SOUNDS.follow)(); } catch(e){}
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ el.classList.add("show"); }); });
+  setTimeout(function(){
+    el.classList.remove("show");
+    setTimeout(function(){
+      if (el.parentNode) el.remove();
+      SHOWING = false;
+      nextAlert();
+    }, 400);
+  }, 5200);
+}
+
+/* ---- live channel from the Command Center (same browser) ---- */
+try {
+  var chan = new BroadcastChannel("den_channel");
+  chan.onmessage = function(ev){
+    var d = ev.data || {};
+    if (d.type === "alert") pushAlert(d);
+    if (d.type === "config") { try { localStorage.setItem("den_config", JSON.stringify(d.cfg || {})); } catch(e){} }
+  };
+} catch(e){ /* no BroadcastChannel: test buttons still work */ }
+
+/* ---- test fires (preview mode) ---- */
+function wire(id, kind){
+  var b = document.getElementById(id);
+  if (!b) return;
+  b.onclick = function(){
+    pushAlert({ type: "alert", kind: kind, name: "NightOwl_77", msg: kind === "tip" ? "Keep going, warrior!" : "", amt: kind === "tip" ? "$5" : "", label: "" });
+  };
+}
+wire("t_follow", "follow"); wire("t_sub", "sub"); wire("t_tip", "tip"); wire("t_raid", "raid");
+
+/* welcome self-test in preview mode only */
+if (qs.preview === "1") setTimeout(function(){ pushAlert({ kind: "follow", name: "Den Check", label: "just followed!" }); }, 600);
+</script>
+</body>
+</html>

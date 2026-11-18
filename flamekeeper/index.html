@@ -5,45 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>🔥 Bible Verse Flamekeeper — by Redeemed Warrior</title>
 <meta name="description" content="Any struggle becomes a matching Bible verse plus one line of fire. Stories in, fire out — walk in it. An AI tool by Redeemed Warrior.">
-<style>
+<style>:root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0E0B1D; color: #F3EFFF; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
   .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
-  .brand { color: #F0C878; letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
-  .byline { color: #A79DD0; font-size: 12px; margin-bottom: 18px; }
+  .brand { color: var(--gold); letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
   h1 { font-size: 30px; margin: 4px 0 8px; }
-  h1 .gold { color: #F0C878; }
-  .sub { color: #C9C2E8; font-size: 15px; margin-bottom: 18px; max-width: 640px; }
-  .panel { background: #201A48; border: 1px solid #332A63; border-radius: 16px; padding: 18px; }
-  .panel h2 { color: #F0C878; font-size: 15px; margin-bottom: 10px; letter-spacing: .5px; }
+  h1 .gold { color: var(--gold); }
+  .sub { color: var(--sub); font-size: 15px; margin-bottom: 18px; max-width: 640px; }
+  .panel { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; padding: 18px; }
+  .panel h2 { color: var(--gold); font-size: 15px; margin-bottom: 10px; letter-spacing: .5px; }
   input {
-    width: 100%; background: #0E0B1D; color: #F3EFFF; border: 1px solid #332A63;
+    width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--edge);
     border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit;
   }
-  input:focus { outline: none; border-color: #F0C878; }
+  input:focus { outline: none; border-color: var(--gold); }
   button {
-    background: #F0C878; color: #241A05; font-weight: 800; border: none; border-radius: 10px;
+    background: var(--gold); color: var(--ink); font-weight: 800; border: none; border-radius: 10px;
     padding: 11px 16px; font-size: 14px; cursor: pointer;
   }
-  button.ghost { background: transparent; color: #F0C878; border: 2px solid #F0C878; }
+  button.ghost { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
   button:disabled { opacity: .55; cursor: wait; }
   .mini { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
-  #chat { background: #14102e; border: 1px solid #332A63; border-radius: 12px; height: 380px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  #chat { background: var(--panel2); border: 1px solid var(--edge); border-radius: 12px; height: 380px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
   .msg { max-width: 88%; padding: 9px 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
-  .msg.user { align-self: flex-end; background: #F0C878; color: #241A05; border-bottom-right-radius: 4px; }
-  .msg.ai { align-self: flex-start; background: #201A48; border: 1px solid #332A63; border-bottom-left-radius: 4px; }
-  .msg.sys { align-self: center; color: #A79DD0; font-size: 12px; background: none; }
+  .msg.user { align-self: flex-end; background: var(--gold); color: var(--ink); border-bottom-right-radius: 4px; }
+  .msg.ai { align-self: flex-start; background: var(--panel); border: 1px solid var(--edge); border-bottom-left-radius: 4px; }
+  .msg.sys { align-self: center; color: var(--muted); font-size: 12px; background: none; }
   .chatsend { display: flex; gap: 8px; margin-top: 10px; }
   .chatsend input { flex: 1; }
-  .hint { color: #A79DD0; font-size: 12px; margin-top: 8px; line-height: 1.5; }
-  .hint a { color: #F0C878; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.5; }
+  .hint a { color: var(--gold); }
   .keyrow { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
   .keyrow input { flex: 1; }
   .subjects { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-  .subj { background: #14102e; border: 1px solid #332A63; color: #C9C2E8; border-radius: 999px; padding: 5px 11px; font-size: 12px; cursor: pointer; }
-  footer { margin-top: 40px; border-top: 1px solid #332A63; padding-top: 18px; font-size: 14px; color: #A79DD0; }
-  footer a { color: #F0C878; text-decoration: none; }
-  a.home-btn { display: inline-block; background: #F0C878; color: #241A05; font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
+  .subj { background: var(--panel2); border: 1px solid var(--edge); color: var(--sub); border-radius: 999px; padding: 5px 11px; font-size: 12px; cursor: pointer; }
+  footer { margin-top: 40px; border-top: 1px solid var(--edge); padding-top: 18px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--gold); text-decoration: none; }
+  a.home-btn { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
 </style>
 </head>
 <body>

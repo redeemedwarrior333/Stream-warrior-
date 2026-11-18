@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔴 Warrior's Den — Command Center</title>
+<meta name="description" content="Warrior's Den: stream alerts, branded overlays, and ticker — browser-source tools for your livestreams, by Redeemed Warrior.">
+<style>:root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  .brand { color: var(--gold); letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+  h1 { font-size: 30px; margin: 4px 0 8px; }
+  h1 .gold { color: var(--gold); }
+  .sub { color: var(--sub); font-size: 15px; margin-bottom: 18px; max-width: 640px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; padding: 18px; }
+  .panel h2 { color: var(--gold); font-size: 15px; margin-bottom: 10px; letter-spacing: .5px; }
+  .panel h3 { color: var(--sub); font-size: 13px; margin: 10px 0 4px; }
+  label { display: block; font-size: 12px; color: var(--muted); font-weight: 700; margin: 10px 0 4px; letter-spacing: .5px; }
+  input, textarea {
+    width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--edge);
+    border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit;
+  }
+  textarea { min-height: 90px; resize: vertical; line-height: 1.5; }
+  input:focus, textarea:focus { outline: none; border-color: var(--gold); }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  button {
+    background: var(--gold); color: var(--ink); font-weight: 800; border: none; border-radius: 10px;
+    padding: 11px 16px; font-size: 14px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
+  button.mini { padding: 7px 12px; font-size: 12px; border-radius: 8px; }
+  button:hover { filter: brightness(1.08); }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.5; }
+  .hint a { color: var(--gold); }
+  .ok { color: var(--good); font-size: 13px; margin-top: 8px; min-height: 18px; }
+  .den-links { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+  .den-link { display: flex; align-items: center; gap: 10px; background: var(--panel2); border: 1px solid var(--edge); border-radius: 12px; padding: 12px 14px; text-decoration: none; color: var(--text); font-size: 14px; }
+  .den-link b { color: var(--gold); }
+  .den-link .ico { font-size: 22px; }
+  ol.steps { margin: 6px 0 0 20px; color: var(--sub); font-size: 13px; line-height: 1.9; }
+  ol.steps code { background: var(--panel2); border: 1px solid var(--edge); border-radius: 6px; padding: 1px 6px; font-size: 12px; color: var(--gold); word-break: break-all; }
+  footer { margin-top: 40px; border-top: 1px solid var(--edge); padding-top: 18px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--gold); text-decoration: none; }
+  a.home-btn { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-btn" href="../">← Stream Warrior home</a>
+  <div class="brand">🔴 The Warrior's Den</div>
+  <div class="byline">by Redeemed Warrior · our own streamer toolkit</div>
+
+  <h1>Run your <span class="gold">whole stream</span> from the Den</h1>
+  <p class="sub">Alerts that fire on command, a branded overlay, and a ticker that reads your rules — all browser-source pages you paste into OBS or Streamlabs. <strong>No keys, no accounts.</strong> Works today.</p>
+
+  <div class="grid">
+    <div class="panel">
+      <h2>🎛️ STEP 1 — CONFIGURE</h2>
+      <p class="hint" style="margin-top:0">Set your streamer name and ticker lines. These save to this browser and are sent live to every Den page you have open.</p>
+      <label>STREAMER NAME</label>
+      <input id="c_name" placeholder="Redeemed Warrior">
+      <label>BRAND LINE (shown under your name on the overlay)</label>
+      <input id="c_tag" placeholder="Walking in it. 🔥">
+      <label>TICKER MESSAGES (one per line — the overlay scrolls these)</label>
+      <textarea id="c_msgs" placeholder="Welcome to the Den 🔥
+Follow so you don't miss the next live
+New tool every week — Warrior Forge
+Stay blessed, stay dangerous 🙏"></textarea>
+      <div class="row">
+        <button id="c_save">SAVE + PUSH LIVE</button>
+        <button id="c_preview" class="ghost">👁 PREVIEW OVERLAY</button>
+        <button id="c_palerts" class="ghost">👁 PREVIEW ALERTS</button>
+      </div>
+      <div class="ok" id="c_ok"></div>
+    </div>
+
+    <div class="panel">
+      <h2>🔔 STEP 2 — FIRE ALERTS</h2>
+      <p class="hint" style="margin-top:0">Tap one while your browser-source Alerts page is running — it pops on stream with a sound. Name and message appear in the alert.</p>
+      <label>VIEWER NAME (fake viewer names are fine for tests)</label>
+      <input id="f_name" placeholder="NightOwl_77">
+      <label>MESSAGE (for tips/raids — shown small under the alert)</label>
+      <input id="f_msg" placeholder="Keep going, warrior!">
+      <label>AMOUNT (tips — shown in the alert)</label>
+      <input id="f_amt" placeholder="$5">
+      <div class="row">
+        <button class="mini" data-fire="follow">🔔 FOLLOW</button>
+        <button class="mini" data-fire="sub">⭐ SUB</button>
+        <button class="mini" data-fire="tip">💰 TIP</button>
+        <button class="mini" data-fire="raid">🚀 RAID</button>
+      </div>
+      <p class="hint">Broadcast range: same browser, same device, any tabs. Stream alerts from another device (or real platform events) arrive in Phase 2 when the Den backend comes online — the alert page is already built to receive them.</p>
+    </div>
+
+    <div class="panel">
+      <h2>🛠️ STEP 3 — PUT THEM ON STREAM (OBS / Streamlabs)</h2>
+      <ol class="steps">
+        <li>In OBS (or Streamlabs Desktop): <strong>Sources → + → Browser</strong></li>
+        <li>Name it <code>Den Alerts</code>, paste the <b>Alerts link</b> from Step 4, size <code>1920 × 1080</code></li>
+        <li>Repeat for the <b>Overlay link</b> (corner badge + ticker)</li>
+        <li>Keep this Command Center open in a browser tab on the streaming device — tap alerts live, mid-stream</li>
+        <li>TIP: lock the browser layer in OBS so you don't click it on camera</li>
+      </ol>
+      <p class="hint">Browsers on phone can't paste browser sources — drive the Den from the device you stream with (or the same device's browser). Phone control arrives with the Den backend.</p>
+    </div>
+
+    <div class="panel">
+      <h2>🧰 STEP 4 — YOUR BROWSER-SOURCE LINKS</h2>
+      <div class="den-links">
+        <a class="den-link" href="alerts.html" target="_blank" rel="noopener"><span class="ico">🔔</span><span><b>Alerts page</b> — copy this URL into OBS<br><span class="hint" id="u_alerts"></span></span></a>
+        <a class="den-link" href="overlay.html" target="_blank" rel="noopener"><span class="ico">🖼️</span><span><b>Overlay page</b> — badge + scrolling ticker<br><span class="hint" id="u_overlay"></span></span></a>
+      </div>
+      <p class="hint" id="copyhint">Long-press each link (or right-click on desktop) → Copy address, then paste into OBS. The commands above also write your name/ticker into these pages automatically.</p>
+    </div>
+  </div>
+
+  <footer>
+    <p><strong>The Warrior family</strong> — 🛡️ <a href="../">Stream Warrior</a> · 🙏 <a href="../warrior-prophet/">Warrior Prophet</a> · 🛡️ <a href="../phone-warrior/">Phone Warrior</a> · 🔥 <a href="../ai-builder/?v=10">Warrior Forge</a> · 📖 <a href="../flamekeeper/">Bible Flamekeeper</a> · ⚖️ <a href="../weirdlaw/">Weird Law or Fake?</a> · 🔴 <strong>Warrior's Den</strong> (you are here)</p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ---- visible crash banner ---- */
+function denBanner(msg){
+  try {
+    var b = document.createElement("div");
+    b.style.cssText = "background:#FF5A6E;color:#fff;padding:10px 14px;border-radius:10px;margin:0 0 14px;font:12px/1.5 system-ui;word-break:break-word;";
+    b.textContent = "\u26a0 Den error: " + msg + " \u2014 screenshot this and tell Redeemed Warrior.";
+    var w = document.querySelector(".wrap");
+    if (w && w.firstChild) w.insertBefore(b, w.firstChild); else document.body.insertBefore(b, document.body.firstChild);
+  } catch(e){}
+}
+window.addEventListener("error", function(ev){ denBanner((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ denBanner("network/async: " + ((ev && ev.reason && ev.reason.message) ? ev.reason.message : String(ev && ev.reason || "unknown"))); });
+
+var CH_NAME = "den_channel";
+var LS_CFG = "den_config";
+function $(id){ return document.getElementById(id); }
+function esc(s){ var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+var DEFAULTS = {
+  name: "Redeemed Warrior",
+  tag: "Walking in it. \ud83d\udd25",
+  msgs: ["Welcome to the Den \ud83d\udd25", "Follow so you don't miss the next live", "New tool every week \u2014 Warrior Forge", "Stay blessed, stay dangerous \ud83d\ude4f"]
+};
+function loadCfg(){
+  try {
+    var c = JSON.parse(localStorage.getItem(LS_CFG) || "null");
+    if (c && typeof c.name === "string") return c;
+  } catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULTS));
+}
+
+/* channel: control -> den pages (same browser). Safe if unsupported. */
+var chan = null;
+try { chan = new BroadcastChannel(CH_NAME); } catch(e){ chan = null; }
+function send(data){
+  if (chan) { try { chan.postMessage(data); } catch(e){} }
+}
+
+function pushConfig(){
+  var cfg = {
+    name: $("c_name").value.trim() || DEFAULTS.name,
+    tag: $("c_tag").value.trim(),
+    msgs: $("c_msgs").value.split("\n").map(function(s){ return s.trim(); }).filter(Boolean)
+  };
+  if (!cfg.msgs.length) cfg.msgs = DEFAULTS.msgs.slice();
+  try { localStorage.setItem(LS_CFG, JSON.stringify(cfg)); } catch(e){}
+  send({ type: "config", cfg: cfg });
+  var ok = $("c_ok");
+  if (ok) ok.textContent = "Saved \u2713 and pushed to every open Den page in this browser.";
+  return cfg;
+}
+
+$("c_save").onclick = pushConfig;
+$("c_name").addEventListener("keydown", function(e){ if (e.key === "Enter") pushConfig(); });
+$("c_preview").onclick = function(){ pushConfig(); window.open("overlay.html?preview=1", "_blank"); };
+$("c_palerts").onclick = function(){ pushConfig(); window.open("alerts.html?preview=1", "_blank"); };
+
+var FIRE_LABEL = { follow: "just followed!", sub: "subscribed \u2b50", tip: "tipped", raid: "raided with their crew \ud83d\ude80" };
+document.querySelectorAll("[data-fire]").forEach(function(b){
+  b.onclick = function(){
+    var kind = b.dataset.fire;
+    send({
+      type: "alert",
+      kind: kind,
+      name: $("f_name").value.trim() || "NightOwl_77",
+      msg: $("f_msg").value.trim() || "",
+      amt: $("f_amt").value.trim() || "",
+      label: FIRE_LABEL[kind] || "said hi"
+    });
+    var ok = $("c_ok");
+    if (ok) ok.textContent = "\ud83d\udd14 " + kind.toUpperCase() + " alert fired \u2014 watch the Alerts source on stream.";
+  };
+});
+
+/* show the absolute URLs for OBS */
+try {
+  var base = document.location.href.replace(/[^/]*$/, "");
+  $("u_alerts").textContent = base + "alerts.html";
+  $("u_overlay").textContent = base + "overlay.html";
+} catch(e){}
+
+/* boot from saved config */
+(function(){
+  var cfg = loadCfg();
+  $("c_name").value = cfg.name;
+  $("c_tag").value = cfg.tag || "";
+  $("c_msgs").value = (cfg.msgs || []).join("\n");
+})();
+</script>
+</body>
+</html>
