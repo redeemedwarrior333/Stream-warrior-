@@ -145,7 +145,7 @@ function answer(q){
   try { key = localStorage.getItem(LS_KEY) || ""; } catch(e){}
   // crisis check first: support room holds the lifelines (keyless or not — the AI can be down)
   var low = q.toLowerCase();
-    if (low.indexOf("hurt myself") !== -1 || low.indexOf("kill myself") !== -1 || low.indexOf("suicide") !== -1 || low.indexOf("end it") !== -1 || low.indexOf("don't want to be here") !== -1 || low.indexOf("no reason to live") !== -1){
+    if (low.indexOf("hurt myself") !== -1 || low.indexOf("kill myself") !== -1 || low.indexOf("suicide") !== -1 || low.indexOf("end it") !== -1 || low.indexOf("don't want to be here") !== -1 || low.indexOf("no reason to live") !== -1 || low.indexOf("killing myself") !== -1 || low.indexOf("end my life") !== -1){
       addMsg("ai", esc("\ud83d\udea8 Stop \u2014 this matters too much for a built-in reply.\n\nIf you're thinking about hurting yourself or ending things: please call or text 988 right now (Suicide & Crisis Lifeline \u2014 24/7, free, confidential). Or call 911 if you're in immediate danger.\n\nYou are not in trouble, and nothing about this moment disqualifies you as a parent or a person. The dark says it's permanent; it never is. 988 is staffed by humans whose whole job is exactly this conversation.\n\nI'm a built-in fallback message, not AI right now \u2014 but the number above is real, free, and awake this very minute. Please use it. \u2764\ufe0f"));
       return;
     }

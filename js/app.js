@@ -2,7 +2,7 @@
 "use strict";
 
 const App = {
-  VERSION: "v22",
+  VERSION: "v23",
   modules: {},
   order: ["tarot", "twentyq", "trivia", "soundboard", "madlibs", "jokes", "lines", "facts", "wyr", "laws"],
   meta: {
@@ -276,6 +276,15 @@ const Home = {
           </a>
           <a class="home-card" href="parent-support/?v=22" style="text-decoration:none">
             <span class="home-ico">🔥</span><span class="home-label">Parent Support</span>
+          </a>
+          <a class="home-card" href="comeback-planner/?v=23" style="text-decoration:none">
+            <span class="home-ico">❤️</span><span class="home-label">Comeback Planner</span>
+          </a>
+          <a class="home-card" href="relationship-reality-check/?v=23" style="text-decoration:none">
+            <span class="home-ico">🔥🫂</span><span class="home-label">Reality Check</span>
+          </a>
+          <a class="home-card" href="problem-solver/?v=23" style="text-decoration:none">
+            <span class="home-ico">🔥</span><span class="home-label">Problem Solver</span>
           </a>
           <a class="home-card" href="warrior-survival/?v=15" style="text-decoration:none">
             <span class="home-ico">⚔️</span><span class="home-label">Survival AI</span>
