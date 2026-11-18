@@ -2,7 +2,7 @@
 "use strict";
 
 const App = {
-  VERSION: "v9",
+  VERSION: "v10",
   modules: {},
   order: ["tarot", "twentyq", "trivia", "soundboard", "madlibs", "jokes", "lines", "facts", "wyr", "laws"],
   meta: {
@@ -255,7 +255,7 @@ const Home = {
           <a class="home-card" href="phone-warrior/" style="text-decoration:none">
             <span class="home-ico">🛡️</span><span class="home-label">Phone Warrior</span>
           </a>
-          <a class="home-card" href="ai-builder/" style="text-decoration:none">
+          <a class="home-card" href="ai-builder/?v=10" style="text-decoration:none">
             <span class="home-ico">🔥</span><span class="home-label">Warrior Forge</span>
           </a>
           <a class="home-card" href="weirdlaw/" style="text-decoration:none">
