@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Ask the Cards — AI Tarot Reader</title>
+<meta name="description" content="Free AI tarot reader. Ask a question, draw three cards, get a real reading. Mystica deck or Love Oracle deck. No signup.">
+<meta name="theme-color" content="#0d0a1a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230d0a1a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle'%3E%F0%9F%94%AE%3C/text%3E%3C/svg%3E">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  :root {
+    --bg:#0d0a1a; --panel:#161130; --panel2:#1e1745;
+    --gold:#f5c56b; --gold-dim:#b08d4f; --ink:#efe9ff; --muted:#9d92c4;
+    --line:#2e2456; --good:#7ee08a; --bad:#ff7a8a;
+  }
+  body {
+    background: radial-gradient(1200px 600px at 50% -10%, #241a52 0%, var(--bg) 55%);
+    color:var(--ink); font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    padding: max(14px, env(safe-area-inset-top)) 14px max(20px, env(safe-area-inset-bottom));
+  }
+  .wrap { width:100%; max-width:640px; }
+  header { text-align:center; padding:14px 0 6px; }
+  .brand { font-size:15px; letter-spacing:4px; color:var(--gold-dim); text-transform:uppercase; }
+  h1 { font-size:34px; margin:6px 0 4px; background:linear-gradient(90deg,#f5c56b,#ffe9b8,#f5c56b);
+       -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .tag { color:var(--muted); font-size:14px; }
+  .stars { letter-spacing:6px; color:#4a3d85; font-size:12px; margin-top:8px; }
+
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:16px; margin-top:14px; }
+
+  .decks { display:flex; gap:8px; }
+  .deck { flex:1; padding:12px 8px; border-radius:12px; border:1px solid var(--line);
+          background:var(--panel2); color:var(--muted); font-size:14px; font-weight:600; cursor:pointer;
+          transition:all .2s; }
+  .deck.on { border-color:var(--gold); color:var(--gold); box-shadow:0 0 14px rgba(245,197,107,.25) inset; }
+
+  input[type=text] {
+    width:100%; margin-top:12px; padding:13px 14px; border-radius:12px;
+    border:1px solid var(--line); background:var(--panel2); color:var(--ink); font-size:15px; outline:none;
+  }
+  input[type=text]:focus { border-color:var(--gold-dim); }
+
+  .drawbtn {
+    width:100%; margin-top:12px; padding:15px; border:none; border-radius:14px;
+    font-size:17px; font-weight:800; letter-spacing:1px; cursor:pointer; color:#1a1030;
+    background:linear-gradient(90deg,#f5c56b,#ffe0a0); box-shadow:0 4px 20px rgba(245,197,107,.35);
+    transition:transform .1s;
+  }
+  .drawbtn:active { transform:scale(.97); }
+  .drawbtn:disabled { opacity:.5; cursor:default; }
+
+  .table { display:flex; gap:10px; justify-content:center; margin:20px 0 6px; min-height:230px; }
+  .slot { flex:1; max-width:150px; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .pos { font-size:11px; letter-spacing:2px; color:var(--gold-dim); text-transform:uppercase; }
+  .card { width:100%; aspect-ratio:2/3.4; perspective:800px; cursor:default; }
+  .inner { position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .7s cubic-bezier(.4,.1,.2,1.2); }
+  .card.flip .inner { transform:rotateY(180deg); }
+  .card.reversed .inner { transform:rotateY(180deg) rotate(180deg); }
+  .face { position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+          border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .back { background:linear-gradient(160deg,#2a1e5e,#171040); border:1px solid #3d2f7a; font-size:38px; }
+  .back::after { content:''; position:absolute; inset:7px; border:1px solid rgba(245,197,107,.35); border-radius:8px; }
+  .front { background:linear-gradient(170deg,#241a52,#171040); border:1px solid var(--gold-dim);
+           transform:rotateY(180deg); padding:8px; }
+  .front .sym { font-size:40px; }
+  .front .nm { font-size:12px; font-weight:700; color:var(--gold); text-align:center; margin-top:8px; line-height:1.25; }
+  .front .rv { font-size:10px; color:var(--bad); margin-top:4px; letter-spacing:1px; }
+
+  .reading { margin-top:14px; line-height:1.65; font-size:15px; color:var(--ink); white-space:pre-wrap; }
+  .reading .cline { display:block; margin:8px 0; padding:10px 12px; background:var(--panel2);
+                    border-left:3px solid var(--gold-dim); border-radius:0 10px 10px 0; }
+  .verdict { display:block; margin-top:12px; padding:12px; border-radius:12px; font-weight:700; text-align:center; }
+  .v-good { background:rgba(126,224,138,.12); border:1px solid var(--good); color:var(--good); }
+  .v-mid  { background:rgba(245,197,107,.1); border:1px solid var(--gold); color:var(--gold); }
+  .v-bad  { background:rgba(255,122,138,.1); border:1px solid var(--bad); color:var(--bad); }
+
+  .actions { display:flex; gap:8px; margin-top:14px; }
+  .actions button { flex:1; padding:12px; border-radius:12px; border:1px solid var(--line);
+    background:var(--panel2); color:var(--ink); font-size:14px; font-weight:600; cursor:pointer; }
+  .actions button:active { transform:scale(.97); }
+
+  details { margin-top:14px; color:var(--muted); font-size:13px; }
+  details summary { cursor:pointer; color:var(--gold-dim); font-weight:600; }
+  details .airow { display:flex; gap:8px; margin-top:10px; }
+  details input { flex:1; margin-top:0; font-size:13px; }
+  details .save { padding:0 16px; border-radius:12px; border:1px solid var(--gold-dim);
+    background:transparent; color:var(--gold); font-weight:700; cursor:pointer; }
+  .hint { margin-top:8px; font-size:12px; line-height:1.5; }
+  .hint b { color:var(--gold-dim); }
+
+  footer { margin-top:26px; text-align:center; color:var(--muted); font-size:12px; line-height:1.8; }
+  footer a { color:var(--gold); text-decoration:none; font-weight:600; }
+  .forfun { font-size:11px; color:#6a5fa0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">✦ Ask the Cards ✦</div>
+    <h1>AI Tarot Reader</h1>
+    <div class="tag">Ask a question. Draw three. Get your reading.</div>
+    <div class="stars">· ˚ ✦ ˚ ·</div>
+  </header>
+
+  <div class="panel">
+    <div class="decks">
+      <button class="deck on" id="deckMystica">🔮 Mystica</button>
+      <button class="deck" id="deckLove">💘 Love Oracle</button>
+    </div>
+    <input type="text" id="question" maxlength="140" placeholder="What do you want to know?" autocomplete="off">
+    <button class="drawbtn" id="draw">✨ Reveal My Cards</button>
+  </div>
+
+  <div class="table" id="table">
+    <div class="slot"><div class="pos">Past</div><div class="card" id="c0"><div class="inner"><div class="face back">🌙</div><div class="face front"></div></div></div></div>
+    <div class="slot"><div class="pos">Present</div><div class="card" id="c1"><div class="inner"><div class="face back">🌙</div><div class="face front"></div></div></div></div>
+    <div class="slot"><div class="pos">Future</div><div class="card" id="c2"><div class="inner"><div class="face back">🌙</div><div class="face front"></div></div></div></div>
+  </div>
+
+  <div class="reading" id="reading" hidden></div>
+
+  <div class="actions" id="actions" hidden>
+    <button id="again">🔄 New Reading</button>
+    <button id="share">📤 Share</button>
+  </div>
+
+  <details>
+    <summary>⚡ Power up with AI (optional, free)</summary>
+    <div class="hint">The built-in reader works with <b>no key and no signup</b>. Paste an API key to get deeper, AI-written readings that answer your exact question.</div>
+    <div class="airow">
+      <input type="text" id="aikey" placeholder="API key (stored on your device only)">
+      <button class="save" id="aisave">Save</button>
+    </div>
+    <div class="hint" id="aistatus"></div>
+  </details>
+
+  <footer>
+    <div>Part of the <a href="https://redeemedwarrior333.github.io/Stream-warrior-/">⚔️ Stream Warrior</a> streamer toolkit</div>
+    <div class="forfun">For entertainment purposes only. The cards don't decide your future — you do.</div>
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* [name, symbol, upright, reversed, loveUpright, loveReversed, good]  good: 1 positive, 0 neutral, -1 heavy */
+var CARDS = [
+  ["The Fool","🃏","A pure new beginning. Take the leap — the energy is with you.","Reckless moves or cold feet. Look before you jump.","New love energy is circling you. Stay open — someone genuine is close.","Someone is enjoying the chase with no plans to stay. Protect your heart.",1],
+  ["The Magician","🪄","You have every tool you need. Manifest it — say it out loud.","Untapped talent or manipulation nearby. Focus your will.","Magnetic energy. You're more attractive than you realize right now.","Smooth talker alert. Watch the words, not the charm.",1],
+  ["The High Priestess","🌙","Trust your gut — you already know the answer. Secrets surface soon.","You're ignoring your intuition. Silence the noise and listen.","There's more to this person than they show. Your intuition is dead-on.","Hidden feelings or hidden truths. Something is being kept from you.",1],
+  ["The Empress","🌹","Abundance and growth. Nurture what you're building — it's blooming.","Creative block or self-neglect. Pour back into yourself.","Deep, nurturing love. This connection has real roots and real future.","Someone is being smothered, or you're settling for crumbs.",1],
+  ["The Emperor","👑","Structure and control. Take charge — discipline wins right now.","Rigidity or an ego problem. Loosen the grip.","A protector energy — loyal, stable, all-in. This one shows up.","Control issues or jealousy are poisoning the connection.",1],
+  ["The Hierophant","🔑","Tradition and guidance. Follow the proven path or find a mentor.","Break the rules. The conventional path isn't yours.","Commitment energy — labels, rings, official. This is going public.","Outdated beliefs about love are holding you back. Rewrite them.",1],
+  ["The Lovers","💞","A powerful union or a big choice. Lead with the heart, then the head.","Misalignment of values. The choice you're avoiding is the one that matters.","THE love card. Real, mutual, undeniable. Say yes.","A crossroads in love — or a third party stirring the pot. Choose yourself.",1],
+  ["The Chariot","🏎️","Momentum and victory through focus. Grab the reins and go.","Scattered energy. One direction, or you crash.","Go for it. Make the first move — the chase is favored.","Two people pulling in opposite directions. Someone has to steer.",1],
+  ["Strength","🦁","Quiet power. Patience and softness beat force right now.","Self-doubt is lying to you. You're stronger than the fear.","Gentle patience wins this heart. Slow and steady is the play.","Raw emotions running hot. Don't let pride burn the bridge.",1],
+  ["The Hermit","🕯️","Solitude brings the answer. Step back, reflect, recharge.","Isolation has gone too far. Come back to the world.","A meaningful connection needs quiet time to grow. Quality over quantity.","One of you is hiding from the relationship. Distance is a decision.",0],
+  ["Wheel of Fortune","☸️","Fate is turning in your favor. Ride the wave — luck is live.","A rough spin. This cycle is ending to free you.","Destiny energy. A fated meeting or reunion is in motion.","Timing is off — not the person. Let the wheel turn.",1],
+  ["Justice","⚖️","Truth and balance. What's owed is coming, both ways.","Bias or avoidance. Face the truth you're dodging.","Karmic fairness — this connection balances you. Honest talk seals it.","An imbalance: someone is giving more. Name it or lose it.",1],
+  ["The Hanged Man","🙃","Pause. The answer arrives when you change perspective.","Stalling as a lifestyle. A sacrifice must be made.","Wait before acting — the view changes and so will the answer.","You're hanging on to something that already ended.",0],
+  ["Death","💀","Transformation. Something must end so something better begins.","You're gripping a dead chapter. Release it.","A relationship is leveling up — old dynamics die, deeper bonds form.","It's over. You know it. The universe is just waiting on you.",0],
+  ["Temperance","⏳","Balance and patience. The middle path is the winning path.","Excess somewhere in your life. Recalibrate.","Slow-burn harmony. This one blends into your life beautifully.","Too hot, too cold — someone's all-or-nothing. Find the middle.",1],
+  ["The Devil","😈","An attachment or temptation has power over you. Name it to break it.","Breaking free from a toxic cycle. Keep climbing.","Intense, magnetic, physical chemistry — just keep your power.","Obsession, jealousy or a toxic loop. This is your sign to walk.",-1],
+  ["The Tower","🗼","Sudden shake-up — painful but liberating. The foundation was fake anyway.","You're avoiding the collapse. It's kinder to let it fall now.","A truth detonates the old dynamic — what survives is real.","Drama incoming. Don't build on someone else's chaos.",-1],
+  ["The Star","⭐","Hope and healing after the storm. Wish big — you're seen.","Faith is flickering. Rest, don't quit.","Wish-fulfillment love. The soft, healing kind you dreamed about.","Healing first, love second. Don't pour from an empty cup.",1],
+  ["The Moon","🌘","Not everything is as it seems. Move slowly through the fog.","The fog lifts. Clarity and truth arrive.","Mixed signals — feel the energy, don't just hear the words.","The confusion clears. What's revealed confirms your gut.",0],
+  ["The Sun","☀️","Full shine. Success, joy, vitality — everything's illuminated.","Dimmed joy. The sun's still there — find it.","Pure, happy, out-in-the-open love. This is the good stuff.","Ego is blocking the warmth. Lead with warmth instead.",1],
+  ["Judgement","📢","A calling. Time to rise, decide, and level up for real.","Self-judgment is drowning your potential. Forgive yourself.","A relationship reaches a verdict moment — define it or release it.","Repeating an old lesson with a new face. Break the loop.",1],
+  ["The World","🌍","Completion and celebration. You finished the cycle — enjoy it.","Almost there. One loose end to tie before the win.","Full-circle love. Everything you asked for is arriving — receive it.","So close to the finish line. Don't quit one step before the blessing.",1]
+];
+
+var POS_LABELS = ["Past", "Present", "Future"];
+var deck = "mystica";
+var lastReading = "";
+
+function $(id) { return document.getElementById(id); }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function questionType(q) {
+  var s = (q || "").toLowerCase();
+  if (/\b(love|crush|ex|relationship|him|her|date|dating|marry|marriage|soulmate|boyfriend|girlfriend|together|back)\b/.test(s)) return "love";
+  if (/\b(should i|career|job|move|quit|start|business|school|choice|decide|path|take the)\b/.test(s)) return "path";
+  return "general";
+}
+
+function introFor(type, q) {
+  var opener = q ? '"' + q + '"' : "your question";
+  if (type === "love") return "💘 The Love Oracle hears " + opener + ". Three cards, one truth — let's see what your heart is really asking.";
+  if (type === "path") return "🧭 The cards map your crossroads around " + opener + ". Past road, present weather, road ahead:";
+  return "🔮 The Mystica deck answers " + opener + ". Three cards tell one story — read it with me:";
+}
+
+function composeReading(draw, type, q) {
+  var score = 0;
+  var lines = draw.map(function (d, i) {
+    var c = CARDS[d.i];
+    var text = deck === "love" ? (d.rev ? c[5] : c[4]) : (d.rev ? c[3] : c[2]);
+    var good = (d.rev ? -c[6] : c[6]);
+    score += good;
+    return "🃏 " + POS_LABELS[i] + " — " + c[0] + (d.rev ? " (reversed)" : "") + ": " + text;
+  });
+  var verdict;
+  if (score >= 2) verdict = type === "love" ? "🔥 The Verdict: The cards say GO. This energy is real — move toward it." : "🔥 The Verdict: A clear YES. The path is open — take it while it's lit.";
+  else if (score === 1) verdict = "🔥 The Verdict: Leaning yes — but keep your eyes open and your standards higher.";
+  else if (score === 0) verdict = "🔥 The Verdict: The cards say WAIT. The answer isn't ready — and neither is the situation.";
+  else if (score === -1) verdict = "🔥 The Verdict: Leaning no. Protect your energy before you invest more of it.";
+  else verdict = type === "love" ? "🔥 The Verdict: Walk away. The cards rarely shout — they're shouting." : "🔥 The Verdict: Redirect. This door closes so a better one can open.";
+  return introFor(type, q) + "\n\n" + lines.join("\n\n") + "\n\n" + verdict;
+}
+
+function aiReading(draw, type, q) {
+  var key = localStorage.getItem("tr_key") || "";
+  if (!key) return Promise.resolve(null);
+  var names = draw.map(function (d) {
+    var c = CARDS[d.i];
+    return c[0] + (d.rev ? " (reversed)" : "") + (deck === "love" ? " — " + (d.rev ? c[5] : c[4]) : " — " + (d.rev ? c[3] : c[2]));
+  }).join("; ");
+  var voice = deck === "love"
+    ? "You are the Love Oracle: a warm, dramatic, straight-talking love tarot reader for a fun audience."
+    : "You are the Mystica deck: a mysterious, cinematic tarot reader with a little edge. Fun, never frightening.";
+  var system = voice + " Write a short tarot reading (max 160 words) in this exact structure: one intro line, one line per card weaving its meaning into the question, then a final line starting with '🔥 The Verdict:' that clearly answers yes/no/wait. No disclaimers.";
+  var user = "Question: " + (q || "(no question given — general energy reading)") + ". Cards drawn (Past, Present, Future): " + names + ".";
+  return fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+    body: JSON.stringify({
+      model: "mistral-small-latest",
+      messages: [{ role: "system", content: system }, { role: "user", content: user }],
+      max_tokens: 400,
+      temperature: 0.9
+    })
+  }).then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) { return j && j.choices && j.choices[0] ? j.choices[0].message.content.trim() : null; })
+    .catch(function () { return null; });
+}
+
+function renderFront(idx, d) {
+  var c = CARDS[d.i];
+  var card = $("c" + idx);
+  card.querySelector(".front").innerHTML =
+    '<div class="sym">' + c[1] + '</div><div class="nm">' + c[0] + '</div>' +
+    (d.rev ? '<div class="rv">REVERSED</div>' : '');
+}
+
+function doDraw() {
+  var q = $("question").value.trim();
+  var btn = $("draw");
+  btn.disabled = true;
+  btn.textContent = "🃏 Shuffling…";
+  var draw = shuffle(CARDS.map(function (_, i) { return i; })).slice(0, 3)
+    .map(function (i) { return { i: i, rev: Math.random() < 0.32 }; });
+
+  for (var i = 0; i < 3; i++) {
+    var card = $("c" + i);
+    card.classList.remove("flip", "reversed");
+    card.querySelector(".front").innerHTML = "";
+    if (draw[i].rev) card.classList.add("reversed");
+  }
+  $("reading").hidden = true;
+  $("actions").hidden = true;
+
+  var builtin = composeReading(draw, questionType(q), q);
+  var aiPromise = aiReading(draw, questionType(q), q);
+
+  draw.forEach(function (_, i) {
+    setTimeout(function () {
+      renderFront(i, draw[i]);
+      $("c" + i).classList.add("flip");
+    }, 400 + i * 450);
+  });
+
+  setTimeout(function () {
+    aiPromise.then(function (ai) {
+      lastReading = ai || builtin;
+      var box = $("reading");
+      box.innerHTML = "";
+      var parts = lastReading.split(/\n\n+/);
+      parts.forEach(function (p) {
+        var el = document.createElement("span");
+        el.className = "cline";
+        el.textContent = p;
+        box.appendChild(el);
+      });
+      box.hidden = false;
+      $("actions").hidden = false;
+      btn.disabled = false;
+      btn.textContent = "✨ Draw Again";
+      if (box.scrollIntoView) box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  }, 400 + 2 * 450 + 750);
+}
+
+function reset() {
+  $("question").value = "";
+  $("reading").hidden = true;
+  $("actions").hidden = true;
+  for (var i = 0; i < 3; i++) {
+    $("c" + i).classList.remove("flip", "reversed");
+    $("c" + i).querySelector(".front").innerHTML = "";
+  }
+  $("draw").disabled = false;
+  $("draw").textContent = "✨ Reveal My Cards";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function share() {
+  var text = "🃏 Ask the Cards — my tarot reading:\n\n" + lastReading + "\n\nDraw yours:";
+  if (navigator.share) {
+    navigator.share({ title: "Ask the Cards", text: text, url: location.href }).catch(function () {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(text + " " + location.href).then(function () {
+      $("share").textContent = "✅ Copied!";
+      setTimeout(function () { $("share").textContent = "📤 Share"; }, 1600);
+    });
+  }
+}
+
+function setDeck(d) {
+  deck = d;
+  $("deckMystica").classList.toggle("on", d === "mystica");
+  $("deckLove").classList.toggle("on", d === "love");
+}
+
+$("deckMystica").addEventListener("click", function () { setDeck("mystica"); });
+$("deckLove").addEventListener("click", function () { setDeck("love"); });
+$("draw").addEventListener("click", doDraw);
+$("again").addEventListener("click", reset);
+$("share").addEventListener("click", share);
+$("question").addEventListener("keydown", function (e) { if (e.key === "Enter") doDraw(); });
+
+(function initAI() {
+  var saved = localStorage.getItem("tr_key") || "";
+  $("aikey").value = saved;
+  $("aistatus").textContent = saved ? "✅ AI mode is ON — readings will be AI-written for your exact question." : "Built-in reader active. Add a key to switch to AI-written readings.";
+  $("aisave").addEventListener("click", function () {
+    var v = $("aikey").value.trim();
+    if (v) localStorage.setItem("tr_key", v); else localStorage.removeItem("tr_key");
+    $("aistatus").textContent = v ? "✅ AI mode is ON — readings will be AI-written for your exact question." : "Built-in reader active. Add a key to switch to AI-written readings.";
+  });
+})();
+</script>
+</body>
+</html>
