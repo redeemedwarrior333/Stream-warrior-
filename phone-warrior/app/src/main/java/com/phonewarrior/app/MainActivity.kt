@@ -181,6 +181,7 @@ class MainActivity : AppCompatActivity() {
         tabs.orientation = LinearLayout.HORIZONTAL
         btnScanTab = tabBtn("🔍 Scan")
         btnCleanTab = tabBtn("🧹 Clean")
+        btnVaultTab = tabBtn("🔒 Vault")
         btnSafetyTab = tabBtn("🛟 Safety")
         btnPhoneTab = tabBtn("📱 iPhone")
         val tp = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
