@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🪖 Life Coach Warrior — by Redeemed Warrior</title>
+<meta name="description" content="Life Coach Warrior: an interactive life strategy, decision-making, problem-solving and accountability AI by Redeemed Warrior. Real frameworks, real next steps — works with no key.">
+<style>
+  :root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  .brand { color: var(--gold); letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+  h1 { font-size: 30px; margin: 4px 0 8px; }
+  h1 .gold { color: var(--gold); }
+  .sub { color: var(--sub); font-size: 15px; margin-bottom: 18px; max-width: 640px; }
+  .panel { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; padding: 18px; }
+  .panel h2 { color: var(--gold); font-size: 15px; margin-bottom: 10px; letter-spacing: .5px; }
+  input {
+    width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--edge);
+    border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit;
+  }
+  input:focus { outline: none; border-color: var(--gold); }
+  button {
+    background: var(--gold); color: var(--ink); font-weight: 800; border: none; border-radius: 10px;
+    padding: 11px 16px; font-size: 14px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
+  .mini { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
+  #chat { background: var(--panel2); border: 1px solid var(--edge); border-radius: 12px; height: 380px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .msg { max-width: 88%; padding: 9px 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .msg.user { align-self: flex-end; background: var(--gold); color: var(--ink); border-bottom-right-radius: 4px; }
+  .msg.ai { align-self: flex-start; background: var(--panel); border: 1px solid var(--edge); border-bottom-left-radius: 4px; }
+  .msg.sys { align-self: center; color: var(--muted); font-size: 12px; background: none; }
+  .chatsend { display: flex; gap: 8px; margin-top: 10px; }
+  .chatsend input { flex: 1; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.5; }
+  .hint a { color: var(--gold); }
+  .keyrow { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+  .keyrow input { flex: 1; }
+  .subjects { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .subj { background: var(--panel2); border: 1px solid var(--edge); color: var(--sub); border-radius: 999px; padding: 5px 11px; font-size: 12px; cursor: pointer; }
+  footer { margin-top: 40px; border-top: 1px solid var(--edge); padding-top: 18px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--gold); text-decoration: none; }
+  a.home-btn { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-btn" href="../">← More Warrior tools</a>
+  <div class="brand">🔥 Warrior Forge tool</div>
+  <div class="byline">by Redeemed Warrior</div>
+
+  <h1>🪖 Life Coach <span class="gold">Warrior</span></h1>
+  <p class="sub">This is NOT an ordinary chatbot. It's an interactive personal development, life strategy, decision-making, problem-solving, and accountability platform. Bring a real situation — get real frameworks and one concrete next action. <strong>Works with no key</strong>; a free Mistral key unlocks the full AI coach.</p>
+
+  <div class="panel">
+    <h2>🪖 WHAT ARE WE CONQUERING TODAY?</h2>
+    <div class="subjects" id="subjects"></div>
+    <div id="chat"></div>
+    <div class="chatsend">
+      <input id="say" placeholder="e.g. I keep putting off starting my business">
+      <button id="send">▶</button>
+    </div>
+    <div class="keyrow">
+      <input id="akey" type="password" placeholder="Optional: free Mistral key (console.mistral.ai) — stays in your browser">
+      <button class="mini ghost" id="ks">Set</button>
+    </div>
+    <p class="hint">A coach pushes, a therapist heals. If you're dealing with trauma, abuse, or a mental-health crisis, this isn't the right tool — call <strong>988</strong> or <strong>1-800-799-7233</strong> and let professionals carry that weight. Built by Redeemed Warrior.</p>
+  </div>
+
+  <footer>
+    <p><strong>The Warrior family</strong> — 🛡️ <a href="../">Stream Warrior</a> · 🙏 <a href="../warrior-prophet/">Warrior Prophet</a> · 🛡️ <a href="../phone-warrior/">Phone Warrior</a> · ⚔️ <a href="../warrior-survival/?v=15">The Warrior — Survival AI</a> · 📣 <a href="../ads-manager/?v=15">Warrior Ads AI</a> · 🔥 <a href="../ai-builder/?v=10">Warrior Forge</a> (this tool was forged there) · 📖 <a href="../flamekeeper/">Bible Flamekeeper</a> · ⚖️ <a href="../weirdlaw/">Weird Law or Fake?</a> · 🔴 <a href="../den/">Warrior's Den</a></p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ---- visible crash banner: if anything breaks, show WHY instead of dead buttons ---- */
+function lcBanner(msg){
+  try {
+    var b = document.createElement("div");
+    b.style.cssText = "background:var(--red);color:#fff;padding:10px 14px;border-radius:10px;margin:0 0 14px;font:12px/1.5 system-ui;word-break:break-word;";
+    b.textContent = "\u26a0 Tool error: " + msg + " \u2014 screenshot this and tell Redeemed Warrior.";
+    var w = document.querySelector(".wrap");
+    if (w && w.firstChild) w.insertBefore(b, w.firstChild); else document.body.insertBefore(b, document.body.firstChild);
+  } catch(e){}
+}
+window.addEventListener("error", function(ev){ lcBanner((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ lcBanner("network/async: " + ((ev && ev.reason && ev.reason.message) ? ev.reason.message : String(ev && ev.reason || "unknown"))); });
+
+var LS_KEY = "forge_key"; // same key slot as Warrior Forge / Flamekeeper / Ads / Survival
+function $(id){ return document.getElementById(id); }
+function esc(s){ var d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
+
+/* ---- built-in coaching engine (no key needed) ---- */
+var PLAYS = [
+  { k:["decide","decision","choice","torn between","should i","can't choose","which one","options"],
+    t:"DECISIONS \u2014 a Warrior decides, then defends the decision with action.\n\n\u2694\ufe0f The framework:\n1. Two lists, on paper: what you GAIN vs what you LOSE with each option. Read them out loud.\n2. The 10/10/10 test: how will you feel about this in 10 minutes, 10 months, 10 years?\n3. Prefer reversible moves. If you can undo it, stop stalling \u2014 test it for real this week.\n4. Set a decide-by date. An unmade decision drains more energy than a wrong one.\n\n\ud83e\udde1 Don't wait for the fear to leave before you move \u2014 courage is moving WITH the fear.\n\n\ud83c\udfaf Your one next action: put a deadline on this decision, in your calendar, today." },
+  { k:["procrastinat","putting off","keep delaying","can't start","avoiding","stalling","lazy"],
+    t:"PROCRASTINATION \u2014 it's rarely laziness. It's usually a first step that's too big to see.\n\n\u2694\ufe0f The framework:\n1. Shrink the task until step one is embarrassing: not 'start the business' \u2014 open a notes app and write one bad idea.\n2. The 5-minute rule: work on it for five minutes, permission to stop after. Starting is the war; five minutes wins it.\n3. Clear the runway tonight: clothes out, tab open, tools ready \u2014 ambush your morning self with a ready-made start.\n4. Never miss twice in a row. Missing once is life; twice is a new pattern.\n\n\ud83c\udfaf Your one next action: do the smallest version of it RIGHT NOW \u2014 set a 5-minute timer before you forget." },
+  { k:["accountab","follow through","keep quitting","no discipline","consisten","stick with","give up on"],
+    t:"ACCOUNTABILITY \u2014 discipline is remembering what you want, with witnesses.\n\n\u2694\ufe0f The framework:\n1. The Weekly Review (15 min, same day every week): What moved? What stalled? What's the ONE priority next week? Write it, date it, keep the notes.\n2. Tell one person your commitment and your report date. Public promises survive the hard days.\n3. Keep a scoreboard \u2014 even tally marks. What gets measured gets done; streaks are strong medicine.\n4. Pre-decide the hard moment: 'When I don't feel like it, I will do the 10-minute version.' Feelings aren't consulted.\n\n\ud83c\udfaf Your one next action: message your witness person and declare this week's one priority." },
+  { k:["goal","dream","big picture","one day","someday","five year","this year","vision","ambition"],
+    t:"GOALS \u2014 a dream with a date and a next step stops being a dream.\n\n\u2694\ufe0f The framework:\n1. Reverse-plan: picture it DONE. What had to happen right before that? And before that? Walk it backwards to TODAY.\n2. Convert the first link into one physical action \u2014 something a camera could film you doing.\n3. Give it a checkable rhythm: weekly milestone, monthly checkpoint. 'Progress' you can't point at is a feeling, not progress.\n4. Protect the goal from sage mode: decide now what you'll cut FIRST when time gets tight, so the plan doesn't silently die.\n\n\ud83c\udfaf Your one next action: write the goal as one sentence with a date, then the single next physical step underneath it." },
+  { k:["overwhelm","too much","everything at once","burned out","burnout","stressed","drowning","burnt out"],
+    t:"OVERWHELM \u2014 you don't have a motivation problem, you have an unsorted pile.\n\n\u2694\ufe0f The framework:\n1. Brain dump: EVERYTHING on paper, out of your head. The head is for having thoughts, not holding them.\n2. Circle just 3. The rest gets a someday list \u2014 they're real, they're just not today's fight.\n3. Of the 3, pick the ONE that makes everything else lighter if it moved today. That's the spearhead.\n4. Cap the day: one spearhead task, two supports, nothing else survives contact.\n\n\ud83d\udca1 And rest is a strategy, not a reward. Tired warriors make expensive mistakes.\n\n\ud83c\udfaf Your one next action: 10 minutes, brain dump on paper, circle your 3. Do it before you sleep." },
+  { k:["habit","routine","morning","every day","daily","workout","gym","meditat","journal"],
+    t:"HABITS \u2014 motivation is weather; systems are climate.\n\n\u2694\ufe0f The framework:\n1. Cue \u2192 Routine \u2192 Reward. Pick a trigger you ALREADY do every day and weld the new habit to it: 'after I pour coffee, I do ten pushups.'\n2. Make it stupid small at the start \u2014 one page, one set, one sentence. Consistency first, size later.\n3. Track it visibly (paper on the fridge beats an app you forget).\n4. Never miss twice. And when you break the chain, restart SMALLER \u2014 the comeback is the habit.\n\n\ud83c\udfaf Your one next action: write your habit sentence '(existing thing) \u2192 I will (new habit) for (tiny amount)' and run it for 7 days." },
+  { k:["confidence","not good enough","imposter","doubt myself","scared to start","insecure"],
+    t:"CONFIDENCE \u2014 courage isn't a feeling you wait for; it's a rep count.\n\n\u2694\ufe0f The framework:\n1. Start an Evidence Journal: every win, no matter how small, written down. Doubt never reads memory \u2014 force it to.\n2. Confidence follows competence. Do the thing badly on purpose \u2014 rep 1 is supposed to be ugly.\n3. Borrow spine: what would the boldest person you respect do today? Do that one thing.\n4. Cut the invisible audience: most people are too busy starring in their own movie to review yours.\n\n\ud83c\udfaf Your one next action: book the ugliest possible 'rep 1' this week \u2014 the imperfect first attempt. Schedule it now." },
+  { k:["stuck","problem","no idea how","dead end","can't figure","roadblock","obstacle"],
+    t:"PROBLEM-SOLVING \u2014 a problem clearly defined is half-dead already.\n\n\u2694\ufe0f The framework:\n1. Write the problem as ONE sentence with numbers or specifics. Vague problems can't be beaten because they can't be seen.\n2. Generate 3 different attacks \u2014 direct, sideways, and the one that costs least. Don't marry the first idea.\n3. Pick the cheapest TEST, not the perfect plan. Ten dollars and one week of information beats three months of guessing.\n4. Set a review date: is the test working? Keep, adjust, or attacks again.\n\n\ud83c\udfaf Your one next action: write your problem in one clear sentence, then list your 3 attacks tonight." },
+  { k:["time","busy","no time","schedule","calendar","hours in the day"],
+    t:"TIME \u2014 you don't need more hours; you need fewer leaks.\n\n\u2694\ufe0f The framework:\n1. Time audit, one page: where did yesterday actually go? Real numbers, not memory \u2014 memory lies in your favor.\n2. Calendar the big rocks FIRST (the goal work), chores around THEM. Whatever isn't scheduled gets eaten.\n3. Batch the small stuff once daily instead of all day long.\n4. Practice the Warrior 'no': every yes spends hours you didn't budget. No is a complete sentence.\n\n\ud83c\udfaf Your one next action: tonight, write down where tomorrow's first TWO hours go \u2014 own them before anyone else does." },
+  { k:["job","career","quit","fired","money","business","income","side hustle","paycheck"],
+    t:"WORK & MONEY \u2014 strategy before leaps. Battles are won before they're fought.\n\n\u2694\ufe0f The framework:\n1. Never quit on a bad day. Big exits and big spends get decided on calm days only.\n2. Build the bridge before you cross it: savings runway (even 1 month counts) + a second income test, BEFORE the exit.\n3. If you're building something: one offer, one audience, real conversations with five potential customers this week. Clarity comes from contact, not from thinking harder.\n4. Track spending as a mission, not a shame list \u2014 every leak found is a raise you gave yourself.\n\n\ud83c\udfaf Your one next action: write your number \u2014 how much runway you have in months. Everything else in this plan hangs off it." },
+  { k:["relationship","friendship","family","partner","boundaries","say no"],
+    t:"PEOPLE \u2014 the people around you set the ceiling. Choose the roof-raisers.\n\n\u2694\ufe0f The framework:\n1. Audit your five closest voices: who walks out of conversations stronger, and who walks out smaller? Invest accordingly.\n2. Boundaries stated once, kindly, with a consequence attached \u2014 then enforced, not re-debated.\n3. Ask for what you need in one clear sentence; hinting is a strategy for exhausting yourself.\n4. Find one growth partner \u2014 someone building, too. Two warriors checking in weekly outrun a lone army.\n\n\ud83c\udfaf Your one next action: one honest sentence you've been sitting on \u2014 say or send it within 48 hours." }
+];
+var GENERAL = [
+  "Alright \u2014 let's turn that fog into a mission.\n\n\u2694\ufe0f The Warrior's standing orders for any situation:\n1. Write it as ONE specific sentence \u2014 what is actually true right now.\n2. Name what's inside your control and what isn't. Full attention only on the first column.\n3. Pick the single next physical action \u2014 something a camera could film.\n4. Set when, and tell one person. Momentum lives on dates and witnesses.\n\n\ud83c\udfaf Give me more detail on the situation and I'll tighten the battle plan.",
+  "Same ground, better footing. Here's the Warrior pattern for anything like this:\n\n\ud83e\udde1 Clarify \u2192 Decide \u2192 Test \u2192 Review. Loops, not leaps.\n\nThe trap most people fall into: planning forever, testing never. A rough plan executed teaches more in a week than a perfect plan in a month.\n\n\ud83c\udfaf Your one next action: take the smallest version of the thing you've been circling \u2014 and do it within 24 hours. Report back and we'll adjust the plan.",
+  "Heard. Remember what you've already survived \u2014 you're in the 100% club on hard days so far.\n\n\u2694\ufe0f Coaching truth: feelings are weather, standard operating procedure is climate. Your SOP:\n1. State the situation in one sentence.\n2. One action within 24 hours \u2014 small enough that you can't argue with it.\n3. Witness it: one person who knows.\n4. Review weekly, adjust without shame.\n\n\ud83c\udfaf Tell me the most concrete detail of the situation \u2014 dates, numbers, names \u2014 and we'll build the next move on facts, not fog."
+];
+function builtinAnswer(q){
+  var low = q.toLowerCase();
+  var best = null, bestScore = 0;
+  PLAYS.forEach(function(v){
+    var score = 0;
+    v.k.forEach(function(word){ if (low.indexOf(word) !== -1) score++; });
+    if (score > bestScore) { bestScore = score; best = v; }
+  });
+  if (best) return best.t;
+  return GENERAL[Math.floor(Math.random() * GENERAL.length)];
+}
+
+/* ---- chat ---- */
+var HIST = [];
+function addMsg(cls, safeHtml){
+  var m = document.createElement("div");
+  m.className = "msg " + cls;
+  m.innerHTML = safeHtml;
+  $("chat").appendChild(m);
+  $("chat").scrollTop = $("chat").scrollHeight;
+  return m;
+}
+
+function answer(q){
+  var key = "";
+  try { key = localStorage.getItem(LS_KEY) || ""; } catch(e){}
+  if (!key) { addMsg("ai", esc(builtinAnswer(q))); return; }
+  var think = addMsg("ai", "\u2026");
+  var prompt = "You are Life Coach Warrior, created by Redeemed Warrior \u2014 an exceptionally direct, warm life-strategy coach, not an ordinary chatbot. The user brings a decision, a goal, a stall, a habit, or a situation. Respond with: (1) brief acknowledgment of where they are, (2) a sharp reframe or reading of the real bottleneck, (3) a concrete framework or plan they can follow THIS WEEK (numbered steps), (4) end with exactly ONE next action phrased as 'Your one next action:' \u2014 small, specific, doable within 24 hours. Rules: under 170 words. Bold, encouraging, no cliches, no generic pep-talk filler. NEVER diagnose, NEVER therapy, medical, or legal advice \u2014 if the user shows signs of trauma, abuse, self-harm, or crisis, say a coach isn't the right tool and direct them to 988 (crisis) or 1-800-799-7233 (domestic abuse). Match their energy: stuck gets a push, discouraged gets steadiness, ambitious gets sharpening.";
+  fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+    body: JSON.stringify({ model: "mistral-small-latest", temperature: 0.7, max_tokens: 480,
+      messages: [{ role: "system", content: prompt }].concat(HIST, [{ role: "user", content: q }]) })
+  }).then(function(r){ return r.json(); }).then(function(j){
+    var out = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "";
+    if (!out) out = "(No answer \u2014 check your key or provider status.)";
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc(out));
+    HIST.push({ role: "user", content: q });
+    HIST.push({ role: "assistant", content: out });
+    if (HIST.length > 12) HIST = HIST.slice(-12);
+  }).catch(function(e){
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc("Couldn't reach the AI \u2014 here's coaching from the built-in drill manual instead:\n\n" + builtinAnswer(q)));
+  });
+}
+
+function go(){
+  var q = $("say").value.trim();
+  if (!q) return;
+  $("say").value = "";
+  addMsg("user", esc(q));
+  answer(q);
+}
+$("send").onclick = go;
+$("say").addEventListener("keydown", function(e){ if (e.key === "Enter") go(); });
+
+$("ks").onclick = function(){
+  var v = $("akey").value.trim();
+  try {
+    if (v) { localStorage.setItem(LS_KEY, v); addMsg("sys", "Key saved \u2014 the full AI coach is on."); }
+    else { localStorage.removeItem(LS_KEY); addMsg("sys", "Key removed \u2014 back to the built-in drill manual."); }
+  } catch(e){ addMsg("sys", "Couldn't save key in this browser."); }
+  $("akey").value = "";
+};
+try { if (localStorage.getItem(LS_KEY)) $("akey").placeholder = "Key is saved \u2713 (type to replace)"; } catch(e){}
+
+/* ---- quick subjects ---- */
+var SUBJECTS = ["I keep putting off starting my business", "I can't decide between two paths", "I want a big goal but no plan", "I quit everything I start", "I'm overwhelmed with everything at once", "I want a morning routine that sticks", "I don't feel good enough to start", "I'm stuck on a problem", "I have no free time", "I want to leave my job safely", "I need to set a boundary with someone"];
+var LOW = {
+  "I can't decide between two paths": "I'm torn between two options and can't decide which to choose",
+  "I want a big goal but no plan": "I have a big dream but no plan to get there",
+  "I quit everything I start": "I keep quitting things I start, I need accountability and consistency",
+  "I'm overwhelmed with everything at once": "I'm overwhelmed, too much everything at once, stressed and burning out",
+  "I want a morning routine that sticks": "I want a daily morning routine habit that I can stick with",
+  "I don't feel good enough to start": "I doubt myself, I don't feel good enough, scared to start",
+  "I'm stuck on a problem": "I'm stuck on a problem and can't figure out how to solve it",
+  "I have no free time": "I'm always busy, I have no time for anything important",
+  "I want to leave my job safely": "I want to quit my job but I need to plan it around money and income",
+  "I need to set a boundary with someone": "I need to set a boundary with someone in my life"
+};
+SUBJECTS.forEach(function(s){
+  var b = document.createElement("button");
+  b.type = "button"; b.className = "subj"; b.textContent = s;
+  b.onclick = function(){ $("say").value = (s in LOW) ? LOW[s] : s; $("say").focus(); };
+  $("subjects").appendChild(b);
+});
+
+/* ---- boot ---- */
+addMsg("sys", "Life Coach Warrior \u2014 standing by. Bring a decision, a stall, or a goal. No key needed; add one for the full AI coach.");
+</script>
+</body>
+</html>
