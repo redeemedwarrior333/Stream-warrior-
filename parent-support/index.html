@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔥 Parent Support Room — Warrior Family Center, by Redeemed Warrior</title>
+<meta name="description" content="Parent Support Room: a warm, judgment-free support room inside the Warrior Family & Parenting Center by Redeemed Warrior. Vent, be heard, get steady ground and one small next step. Works with no key.">
+<style>
+  :root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  .brand { color: var(--gold); letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+  h1 { font-size: 30px; margin: 4px 0 8px; }
+  h1 .gold { color: var(--gold); }
+  .sub { color: var(--sub); font-size: 15px; margin-bottom: 18px; max-width: 640px; }
+  .panel { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; padding: 18px; }
+  .panel h2 { color: var(--gold); font-size: 15px; margin-bottom: 10px; letter-spacing: .5px; }
+  input {
+    width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--edge);
+    border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit;
+  }
+  input:focus { outline: none; border-color: var(--gold); }
+  button {
+    background: var(--gold); color: var(--ink); font-weight: 800; border: none; border-radius: 10px;
+    padding: 11px 16px; font-size: 14px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
+  .mini { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
+  #chat { background: var(--panel2); border: 1px solid var(--edge); border-radius: 12px; height: 380px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .msg { max-width: 88%; padding: 9px 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .msg.user { align-self: flex-end; background: var(--gold); color: var(--ink); border-bottom-right-radius: 4px; }
+  .msg.ai { align-self: flex-start; background: var(--panel); border: 1px solid var(--edge); border-bottom-left-radius: 4px; }
+  .msg.sys { align-self: center; color: var(--muted); font-size: 12px; background: none; }
+  .chatsend { display: flex; gap: 8px; margin-top: 10px; }
+  .chatsend input { flex: 1; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.5; }
+  .hint a { color: var(--gold); }
+  .keyrow { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+  .keyrow input { flex: 1; }
+  .subjects { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .subj { background: var(--panel2); border: 1px solid var(--edge); color: var(--sub); border-radius: 999px; padding: 5px 11px; font-size: 12px; cursor: pointer; }
+  .safety { background: var(--panel2); border: 2px solid var(--red); border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 12px; line-height: 1.6; color: var(--sub); }
+  footer { margin-top: 40px; border-top: 1px solid var(--edge); padding-top: 18px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--gold); text-decoration: none; }
+  a.home-btn { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-btn" href="../">← More Warrior tools</a>
+  <div class="brand">🔥 Warrior Family Center — Support Department</div>
+  <div class="byline">by Redeemed Warrior</div>
+
+  <h1>🔥 Parent <span class="gold">Support Room</span></h1>
+  <p class="sub">The warm room in the Warrior Family &amp; Parenting Center. This is where you VENT first and strategy second — no judgment, no lectures, no "well have you tried\u2026" before you've even finished the sentence. <strong>Works with no key</strong>; a free Mistral key unlocks the full AI support companion.</p>
+
+  <div class="panel">
+    <h2>🔥 HOW'S THE PARENT DOING TONIGHT? (yes, you)</h2>
+    <div class="subjects" id="subjects"></div>
+    <div id="chat"></div>
+    <div class="chatsend">
+      <input id="say" placeholder="just say what's on your chest — this room listens first">
+      <button id="send">▶</button>
+    </div>
+    <div class="keyrow">
+      <input id="akey" type="password" placeholder="Optional: free Mistral key (console.mistral.ai) — stays in your browser">
+      <button class="mini ghost" id="ks">Set</button>
+    </div>
+    <p class="hint">Room rules: you will NOT be judged here — not for the yelling, not for the tiredness, not for any of it. Strategy lives next door in the <a href="../family-center/?v=20">Family Center</a> and the <a href="../positive-discipline/?v=21">Discipline Coach</a>; this room is for YOU.</p>
+    <div class="safety">
+      🚨 <strong>If you're thinking about hurting yourself, or the darkness has been sitting on you for weeks: please reach out — tonight.</strong> Call or text <strong>988</strong> (Suicide &amp; Crisis Lifeline, 24/7). Overwhelmed with a little one right now: National Parent &amp; Youth Helpline <strong>1-855-427-2736</strong>. Domestic danger: <strong>911</strong> / <strong>1-800-799-7233</strong>. You matter here — and not just as "someone's mom."
+    </div>
+  </div>
+
+  <footer>
+    <p><strong>The Warrior family</strong> — 🛡️ <a href="../">Stream Warrior</a> · 🙏 <a href="../warrior-prophet/">Warrior Prophet</a> · 🛡️ <a href="../phone-warrior/">Phone Warrior</a> · ⚔️ <a href="../warrior-survival/?v=15">The Warrior — Survival AI</a> · 📣 <a href="../ads-manager/?v=15">Warrior Ads AI</a> · 🪖 <a href="../life-coach/?v=16">Life Coach Warrior</a> · 💰 <a href="../wealth-builder/?v=17">Wealth Builder AI</a> · 📸 <a href="../viral-creator/?v=18">Viral Creator AI</a> · 📚 <a href="../academy/?v=19">Warrior Academy</a> · 🚸 <a href="../family-center/?v=20">Family Center</a> · 🚸🚸 <a href="../positive-discipline/?v=21">Discipline Coach</a> · 🔴 <a href="../den/">Warrior's Den</a> · 🔥 <a href="../ai-builder/?v=10">Warrior Forge</a> (this tool was forged there) · 📖 <a href="../flamekeeper/">Bible Flamekeeper</a> · ⚖️ <a href="../weirdlaw/">Weird Law or Fake?</a></p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ---- visible crash banner: if anything breaks, show WHY instead of dead buttons ---- */
+function psBanner(msg){
+  try {
+    var b = document.createElement("div");
+    b.style.cssText = "background:var(--red);color:#fff;padding:10px 14px;border-radius:10px;margin:0 0 14px;font:12px/1.5 system-ui;word-break:break-word;";
+    b.textContent = "\u26a0 Tool error: " + msg + " \u2014 screenshot this and tell Redeemed Warrior.";
+    var w = document.querySelector(".wrap");
+    if (w && w.firstChild) w.insertBefore(b, w.firstChild); else document.body.insertBefore(b, document.body.firstChild);
+  } catch(e){}
+}
+window.addEventListener("error", function(ev){ psBanner((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ psBanner("network/async: " + ((ev && ev.reason && ev.reason.message) ? ev.reason.message : String(ev && ev.reason || "unknown"))); });
+
+var LS_KEY = "forge_key"; // same key slot as every Warrior chat tool
+function $(id){ return document.getElementById(id); }
+function esc(s){ var d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
+
+/* ---- built-in support engine (no key needed): LISTEN first, then one small step ---- */
+var PLAYS = [
+  { k:["vent","just need to talk","no one listens","nobody listens","let me","sick and tired","fed up","over it"],
+    t:"Then let it out \u2014 this room doesn't interrupt. \ud83d\ude4f\n\nHere's what I want you to hear first, before anything else: what you're feeling doesn't make you ungrateful, dramatic, or a bad parent. It makes you a parent carrying a real load on a hard day. Those are different things.\n\n\ud83d\ude4f A little known truth: venting IS maintenance. Crying in the bathroom, whispering 'I can't do this' in the pantry \u2014 that's you keeping the ship afloat, not sinking it.\n\nSo \u2014 tell me the part that's heaviest right now. The part you couldn't say out loud to anyone today. I'm not going anywhere.\n\n\ud83c\udfaf And when you're done pouring, one small thing before you close this page: drink a full glass of water and put both feet flat on the floor. That's the whole assignment. Nothing else tonight." },
+  { k:["alone","isolated","no friends","no help","by myself","no support","nobody helps","invisible"],
+    t:"Parenting alone-ish is one of the loneliest rooms in the world \u2014 surrounded by people who need you, starving for one who SEES you. \ud83e\udd70\n\n\ud83d\udca1 What nobody tells you: this level of alone isn't a character flaw \u2014 it's a logistics gap. Support isn't something you magically have or lack; it's something that gets BUILT, one reply at a time.\n\n\ud83e\udd77 This week's whisper build:\n1. One text to one human: 'Hey \u2014 parenting's been heavy lately. Any chance you've got 15 minutes this week?' People don't offer because you didn't ask; asking is the whole unlock.\n2. One drop-in somewhere kids go (library storytime, playground at the busy hour): familiar faces arrive by repetition, not by friends-on-demand.\n3. One online group of parents who get YOUR specific load \u2014 even a quiet one. Lurking counts.\n\nYou are not invisible in this room. I saw everything you just typed.\n\n\ud83c\udfaf Your one next action: send that one text tonight \u2014 copy mine word for word if you want. One human. That's it." },
+  { k:["guilt","guilty","bad mom","bad dad","worst parent","failing my kids","screamed","yelled at my","lost it"],
+    t:"Sit down for this: today, your kid got a parent who loved them enough to WORRY about how they're doing. Kids with truly failing parents don't \u2014 that worry you feel is the sound of a parent who cares. \ud83e\udd45\n\n\ud83e\udecc The guilt audit, gently:\n1. Name what actually happened (out loud). Real events, not the shame highlight reel.\n2. Ask: did I repair it? A repair \u2014 'I yelled, I'm sorry, I love you' \u2014 is worth five perfect days. Kids remember repair, not incidents.\n3. If no repair yet \u2014 that's tonight's move, and it takes 30 seconds.\n4. Then retire the trial: guilt that has identified its lesson (be softer at bedtime, fewer words in conflicts) has done its job. Guilt with no job keeps you enslaved, not better.\n\n\ud83c\udcaf 'Good enough' parenting isn't the consolation prize \u2014 it's the actual research-confirmed gold standard. Good enough IS the goal.\n\n\ud83c\udfaf Your one next action: pick the moment you're carrying guilt about and deliver the 30-second repair tonight if you haven't. Then let guilt clock out \u2014 it's earned its rest." },
+  { k:["touched out","don't want to be touched","no patience","snapping at everyone","empty","running on empty","nothing left","depleted"],
+    t:"Touched-out, patience-bone-dry, running on fumes \u2014 let's name it straight: you're not a bad person for flinching when someone else needs your skin. Sensory overload from being demanded all day is a PHYSICAL state, and pretending it isn't is how parents break. \ud83d\ude4f\n\n\ud83d\udd04 The refill ladder (bottom rung first, no skipping):\n1. Today: 20 minutes where NOTHING touches you, asks you, or needs you. Bathroom with the fan on counts. Door locked. Guilt not invited.\n2. This week: one handoff \u2014 partner, sitter, family, ANY adult \u2014 where you LEAVE the building, not just the room. Breaks only count if you can't be summoned.\n3. This month: rebuild one non-parent identity hour (a show, a walk, a library book \u2014 something that is just YOURS).\n\n\ud83d\udca1 You can't be anyone's soft landing if you've been the floor all day non-stop. That's not philosophy, that's physics.\n\n\ud83c\udfaf Your one next action: book the 20 untouchable minutes for TODAY \u2014 on the clock, phone down, door shut. Start tonight." },
+  { k:["marriage","partner","husband","wife","relationship strain","we fight about","fighting about","resent","single parent","co-parenting"],
+    t:"Parenting strains even strong partnerships \u2014 the log of invisible labor grows quietly until somebody's carrying 70% and standing on it. \ud83e\uddf1\n\n\ud83e\udd43 The framework:\n1. Make the invisible VISIBLE: 20 minutes, both phones, list everything each household actually does weekly (including all the remembering). Numbers end the debates that feelings lose.\n2. Ask in one clean sentence: 'I need a real break \u2014 Saturday, 3 hours, kids are yours.' Named, timed, unsigned by guilt.\n3. Fight the PROBLEM, never the person: 'we vs the schedule' \u2014 not 'you vs me.'\n4. Solo-parenting Warriors: the co-parenting playbook is in the Family Center if you need it \u2014 but tonight's focus is you getting a break that's REAL.\n\n\ud83d\udcad And if you're parenting solo with NO adult help anywhere: that's not a personal failing, that's a person doing two jobs \u2014 and two-job humans get help: a family member, a friend, a church, a community center.\n\n\ud83c\udfaf Your one next action: schedule the named, timed break \u2014 Saturday 3 hours \u2014 and say the one clean sentence out loud today." },
+  { k:["screen never free","so much screen","feeling judged","mom guilt","dad guilt","in-laws","mother in law","critical family","everybody has an opinion"],
+    t:"The judgment chorus \u2014 in-laws, strangers at the store, the internet's award for Worst Parenting Decision of the Day. \ud83d\udcaf Let's build your shield:\n\n\ud83d\udee1\ufe0f The framework:\n1. The boundary sentence, kind and complete: 'Thanks for caring \u2014 this is how we're doing it.' Said once, same words, no debate. You don't owe anyone your reasoning; explanations are doors that invite negotiations.\n2. Sort the chorus: WHOSE opinion do you actually RESPECT? Two names, maybe three. Everyone else gets the weather report of your parenting: 'We're good. Thanks!'\n3. The comparison curtain: EVERY parent you envy is showing you their highlight reel. You're comparing their trailer to your unedited footage.\n4. Bookend rule: if a comment stings past one day, hand it to your respect-list person to referee \u2014 or let it expire at midnight. No lifetime subscriptions to other people's opinions.\n\n\ud83c\udfaf Your one next action: write your one-sentence boundary for the most frequent critic tonight, and say it once this week \u2014 calmly, completely, then change the subject." }
+];
+var GENERAL = [
+  "Pull up a chair \u2014 this room has no waiting list and no judgment. \ud83d\ude4f\n\nWhatever you carried in: a hard morning, a silence you're not proud of, a body running on four hours of sleep, a heart that loves big and still frays at the edges \u2014 set it down here.\n\nHere's the Support Room's standing offer:\n1. You TALK \u2014 I receive. No fixing before feeling gets its turn.\n2. Then \u2014 only if you want it \u2014 one small step. Not a plan. A step.\n3. And a standing truth: the fact that you came here \u2014 to a support room, on purpose \u2014 is proof of what kind of parent you are.\n\n\ud83c\udfaf Tell me what today actually looked like \u2014 the real version, no editing. I'll hold all of it.",
+  "Heard, warrior. \ud83e\udd77 Whatever the room just got handed \u2014 here's what I know for certain:\n\n\ud83c\udf31 You're still here. Still trying. Still asking questions and worrying and showing up. Parents who don't care don't end up in support rooms; they end up absent.\n\nThree permanent truths to hold tonight:\n1. Your kids don't need a perfect parent \u2014 they need a present one, and that's you.\n2. Tomorrow is a fresh draft, not a verdict on today.\n3. Rest is not a reward \u2014 it's maintenance, and it's allowed without earning.\n\n\ud83c\udfaf Tell me one more thing \u2014 the smallest good thing that happened today. Even tiny. I'll wait right here."
+];
+function builtinAnswer(q){
+  var low = q.toLowerCase();
+  var best = null, bestScore = 0;
+  PLAYS.forEach(function(v){
+    var score = 0;
+    v.k.forEach(function(word){ if (low.indexOf(word) !== -1) score++; });
+    if (score > bestScore) { bestScore = score; best = v; }
+  });
+  if (best) return best.t;
+  return GENERAL[Math.floor(Math.random() * GENERAL.length)];
+}
+
+/* ---- chat ---- */
+var HIST = [];
+function addMsg(cls, safeHtml){
+  var m = document.createElement("div");
+  m.className = "msg " + cls;
+  m.innerHTML = safeHtml;
+  $("chat").appendChild(m);
+  $("chat").scrollTop = $("chat").scrollHeight;
+  return m;
+}
+
+function answer(q){
+  var key = "";
+  try { key = localStorage.getItem(LS_KEY) || ""; } catch(e){}
+  // crisis check first: support room holds the lifelines (keyless or not — the AI can be down)
+  var low = q.toLowerCase();
+    if (low.indexOf("hurt myself") !== -1 || low.indexOf("kill myself") !== -1 || low.indexOf("suicide") !== -1 || low.indexOf("end it") !== -1 || low.indexOf("don't want to be here") !== -1 || low.indexOf("no reason to live") !== -1 || low.indexOf("killing myself") !== -1 || low.indexOf("end my life") !== -1){
+      addMsg("ai", esc("\ud83d\udea8 Stop \u2014 this matters too much for a built-in reply.\n\nIf you're thinking about hurting yourself or ending things: please call or text 988 right now (Suicide & Crisis Lifeline \u2014 24/7, free, confidential). Or call 911 if you're in immediate danger.\n\nYou are not in trouble, and nothing about this moment disqualifies you as a parent or a person. The dark says it's permanent; it never is. 988 is staffed by humans whose whole job is exactly this conversation.\n\nI'm a built-in fallback message, not AI right now \u2014 but the number above is real, free, and awake this very minute. Please use it. \u2764\ufe0f"));
+      return;
+    }
+  if (!key) {
+    addMsg("ai", esc(builtinAnswer(q))); return;
+  }
+  var think = addMsg("ai", "\u2026");
+  var prompt = "You are the Parent Support Room inside the Warrior Family & Parenting Center, created by Redeemed Warrior \u2014 a warm, judgment-free support companion for parents who need to be HEARD before helped. The parent is venting, exhausted, guilty, lonely, touched-out, or strained. Respond by: (1) genuinely HEARING them \u2014 reflect the specific weight of what they typed, no speeding past it to advice, (2) normalize without minimizing ('that's real and so common' \u2014 never 'every parent feels that, cheer up'), (3) ONE small grounded step \u2014 water, a break, a repair, a text to one person \u2014 phrased as 'Your one next action:', (4) end warm. Rules: under 150 words. This is a SUPPORT room, not a coaching room \u2014 no numbered frameworks, no discipline advice; if they need strategy, point them to the Family Center / Discipline Coach (linked on the page). If ANY sign of self-harm, suicidal thoughts, hopelessness for weeks, or danger: STOP everything and give 988 (call/text), 911 if immediate, National Parent & Youth Helpline 1-855-427-2736 \u2014 with full warmth, zero alarm-bell coldness. Match their energy: crying gets soft tones, angry gets validation of the anger, numb gets gentle presence.";
+  fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+    body: JSON.stringify({ model: "mistral-small-latest", temperature: 0.6, max_tokens: 420,
+      messages: [{ role: "system", content: prompt }].concat(HIST, [{ role: "user", content: q }]) })
+  }).then(function(r){ return r.json(); }).then(function(j){
+    var out = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "";
+    if (!out) out = "(No answer \u2014 check your key or provider status.)";
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc(out));
+    HIST.push({ role: "user", content: q });
+    HIST.push({ role: "assistant", content: out });
+    if (HIST.length > 12) HIST = HIST.slice(-12);
+  }).catch(function(e){
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc("Couldn't reach the AI \u2014 here's the built-in Support Room instead:\n\n" + builtinAnswer(q)));
+  });
+}
+
+function go(){
+  var q = $("say").value.trim();
+  if (!q) return;
+  $("say").value = "";
+  addMsg("user", esc(q));
+  answer(q);
+}
+$("send").onclick = go;
+$("say").addEventListener("keydown", function(e){ if (e.key === "Enter") go(); });
+
+$("ks").onclick = function(){
+  var v = $("akey").value.trim();
+  try {
+    if (v) { localStorage.setItem(LS_KEY, v); addMsg("sys", "Key saved \u2014 the full Support Room companion is on."); }
+    else { localStorage.removeItem(LS_KEY); addMsg("sys", "Key removed \u2014 back to the built-in Support Room."); }
+  } catch(e){ addMsg("sys", "Couldn't save key in this browser."); }
+  $("akey").value = "";
+};
+try { if (localStorage.getItem(LS_KEY)) $("akey").placeholder = "Key is saved \u2713 (type to replace)"; } catch(e){}
+
+/* ---- quick subjects ---- */
+var SUBJECTS = ["I just need to vent for a minute", "I feel so alone in this", "I feel guilty for yelling today", "I'm touched out and running on empty", "my partner and I are strained", "everyone keeps judging my parenting", "I haven't had a break in forever", "I miss feeling like myself"];
+var LOW = {
+  "I feel so alone in this": "I feel completely alone, no friends, no help, nobody supports me in this",
+  "I feel guilty for yelling today": "I feel so guilty, I yelled at my kids today, I feel like a bad mom",
+  "I'm touched out and running on empty": "I'm touched out, no patience left, running on empty, snapping at everyone",
+  "my partner and I are strained": "my husband and I keep fighting about the kids, I resent how uneven it is",
+  "everyone keeps judging my parenting": "my mother in law and everyone judges my parenting, I feel criticized constantly",
+  "I haven't had a break in forever": "I haven't had a break from the kids in forever",
+  "I miss feeling like myself": "I miss feeling like myself, I've lost who I am outside of being a mom"
+};
+SUBJECTS.forEach(function(s){
+  var b = document.createElement("button");
+  b.type = "button"; b.className = "subj"; b.textContent = s;
+  b.onclick = function(){ $("say").value = (s in LOW) ? LOW[s] : s; $("say").focus(); };
+  $("subjects").appendChild(b);
+});
+
+/* ---- boot ---- */
+addMsg("sys", "Parent Support Room \u2014 open. Take whatever load you carried in and set it down. No key needed; add one for the full companion. You go first tonight.");
+</script>
+</body>
+</html>

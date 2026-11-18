@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔥🫂 Relationship Reality Check — Pattern Detector &amp; Boundary Coach, by Redeemed Warrior</title>
+<meta name="description" content="Relationship Reality Check: pattern detector and boundary coach inside Life Coach Warrior by Redeemed Warrior. Name the cycle, get exact boundary scripts. Works with no key.">
+<style>
+  :root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  .brand { color: var(--gold); letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+  h1 { font-size: 30px; margin: 4px 0 8px; }
+  h1 .gold { color: var(--gold); }
+  .sub { color: var(--sub); font-size: 15px; margin-bottom: 18px; max-width: 640px; }
+  .panel { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; padding: 18px; }
+  .panel h2 { color: var(--gold); font-size: 15px; margin-bottom: 10px; letter-spacing: .5px; }
+  input {
+    width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--edge);
+    border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit;
+  }
+  input:focus { outline: none; border-color: var(--gold); }
+  button {
+    background: var(--gold); color: var(--ink); font-weight: 800; border: none; border-radius: 10px;
+    padding: 11px 16px; font-size: 14px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
+  .mini { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
+  #chat { background: var(--panel2); border: 1px solid var(--edge); border-radius: 12px; height: 380px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .msg { max-width: 88%; padding: 9px 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .msg.user { align-self: flex-end; background: var(--gold); color: var(--ink); border-bottom-right-radius: 4px; }
+  .msg.ai { align-self: flex-start; background: var(--panel); border: 1px solid var(--edge); border-bottom-left-radius: 4px; }
+  .msg.sys { align-self: center; color: var(--muted); font-size: 12px; background: none; }
+  .chatsend { display: flex; gap: 8px; margin-top: 10px; }
+  .chatsend input { flex: 1; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.5; }
+  .hint a { color: var(--gold); }
+  .keyrow { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+  .keyrow input { flex: 1; }
+  .subjects { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .subj { background: var(--panel2); border: 1px solid var(--edge); color: var(--sub); border-radius: 999px; padding: 5px 11px; font-size: 12px; cursor: pointer; }
+  .safety { background: var(--panel2); border: 2px solid var(--red); border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 12px; line-height: 1.6; color: var(--sub); }
+  footer { margin-top: 40px; border-top: 1px solid var(--edge); padding-top: 18px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--gold); text-decoration: none; }
+  a.home-btn { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-btn" href="../">← More Warrior tools</a>
+  <div class="brand">🔥🫂 Life Coach Warrior — Reality Check Department</div>
+  <div class="byline">by Redeemed Warrior</div>
+
+  <h1>🔥🫂 Relationship <span class="gold">Reality Check</span></h1>
+  <p class="sub">The Pattern Detector &amp; Boundary Coach. Say what keeps happening — the hot-and-cold, the eggshells, the phone-checking, the same partner with a different name — and we'll name the PATTERN, then build the exact words for the boundary. Honest mirror, no verdicts, <strong>works with no key</strong>; a free Mistral key unlocks the full AI reality-checker.</p>
+
+  <div class="panel">
+    <h2>🔥🫂 WHAT'S THE PATTERN? (describe it like you'd tell a friend)</h2>
+    <div class="subjects" id="subjects"></div>
+    <div id="chat"></div>
+    <div class="chatsend">
+      <input id="say" placeholder="what happened this time? — the checker listens, then names it">
+      <button id="send">▶</button>
+    </div>
+    <div class="keyrow">
+      <input id="akey" type="password" placeholder="Optional: free Mistral key (console.mistral.ai) — stays in your browser">
+      <button class="mini ghost" id="ks">Set</button>
+    </div>
+    <p class="hint">Deeper armor for cruelty &amp; mind games: <a href="../warrior-survival/?v=15">THE WARRIOR — Survival AI</a>. Rebuilding yourself after it ends: the <a href="../comeback-planner/?v=23">Comeback Planner</a>. Steady habits for the rest of life: the <a href="../life-coach/?v=16">Life Coach Warrior</a>.</p>
+    <div class="safety">
+      🚨 <strong>Reality check with teeth: controlling, monitoring, isolating, exploding, or frightening behavior is ABUSE — and it escalates, it doesn't mellow.</strong> In danger right now: <strong>911</strong>. National DV Hotline: <strong>1-800-799-7233</strong> (24/7, free, confidential). If the darkness says there's no way out: call or text <strong>988</strong>. You are not crazy, and you are not stuck forever.
+    </div>
+  </div>
+
+  <footer>
+    <p><strong>The Warrior family</strong> — 🛡️ <a href="../">Stream Warrior</a> · 🙏 <a href="../warrior-prophet/">Warrior Prophet</a> · 🛡️ <a href="../phone-warrior/">Phone Warrior</a> · ⚔️ <a href="../warrior-survival/?v=15">The Warrior — Survival AI</a> · 📣 <a href="../ads-manager/?v=15">Warrior Ads AI</a> · 🪖 <a href="../life-coach/?v=16">Life Coach Warrior</a> · ❤️ <a href="../comeback-planner/?v=23">Comeback Planner</a> · 🔥🫂 <a href="#">Reality Check</a> (you're here) · 💰 <a href="../wealth-builder/?v=17">Wealth Builder AI</a> · 📸 <a href="../viral-creator/?v=18">Viral Creator AI</a> · 📚 <a href="../academy/?v=19">Warrior Academy</a> · 🚸 <a href="../family-center/?v=20">Family Center</a> · 🚸🚸 <a href="../positive-discipline/?v=21">Discipline Coach</a> · 🔥 <a href="../parent-support/?v=22">Parent Support Room</a> · 🔴 <a href="../den/">Warrior's Den</a> · 🔥 <a href="../ai-builder/?v=10">Warrior Forge</a> (this tool was forged there) · 📖 <a href="../flamekeeper/">Bible Flamekeeper</a> · ⚖️ <a href="../weirdlaw/">Weird Law or Fake?</a></p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ---- visible crash banner: if anything breaks, show WHY instead of dead buttons ---- */
+function rcBanner(msg){
+  try {
+    var b = document.createElement("div");
+    b.style.cssText = "background:var(--red);color:#fff;padding:10px 14px;border-radius:10px;margin:0 0 14px;font:12px/1.5 system-ui;word-break:break-word;";
+    b.textContent = "\u26a0 Tool error: " + msg + " \u2014 screenshot this and tell Redeemed Warrior.";
+    var w = document.querySelector(".wrap");
+    if (w && w.firstChild) w.insertBefore(b, w.firstChild); else document.body.insertBefore(b, document.body.firstChild);
+  } catch(e){}
+}
+window.addEventListener("error", function(ev){ rcBanner((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ rcBanner("network/async: " + ((ev && ev.reason && ev.reason.message) ? ev.reason.message : String(ev && ev.reason || "unknown"))); });
+
+var LS_KEY = "forge_key"; // same key slot as every Warrior chat tool
+function $(id){ return document.getElementById(id); }
+function esc(s){ var d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
+
+/* ---- built-in reality-check engine (no key needed) ---- */
+var PLAYS = [
+  { k:["hot and cold","mixed signals","one week","loving then cruel","dr jekyll","on and off","blow up then nice"],
+    t:"What you're describing has a mechanical name: intermittent reinforcement \u2014 the same schedule slot machines use. Random reward attached to unpredictable cruelty creates the strongest attachment known to psychology. You're not 'too sensitive.' The psychology of the slot machine is working on you by design, whether they designed it or not. \ud83c\udf0a\n\n\ud83e\udded The reality check:\n1. Track one month: dates + what happened, plain facts, no editing toward mercy. Patterns hide in memory; ink doesn't.\n2. Judge the CYCLE, not the apology: kindness after a blow-up is part of the machine, not evidence against it.\n3. The scoreboard question: in a good month, do you feel more like yourself or less?\n\n\ud83c\udfaf Your one next action: start the log tonight \u2014 today's entry only. One line. The pattern unmasks itself from there." },
+  { k:["eggshells","walking on eggshells","afraid to bring things up","tiptoe","set them off","worried how they'll react"],
+    t:"Living on eggshells means your nervous system already ran the numbers and concluded that honesty is expensive here. That conclusion \u2014 not your tone \u2014 is the finding. \ud83e\udeb6\n\n\ud83e\udded The reality check:\n1. Healthy relationships pass the 'bills test': ordinary topics (money, plans, feelings, a mistake you made) can be raised without detonation. Which ordinary topics are radioactive in your house?\n2. The blast radius test: when they DO blow up \u2014 do they repair afterward with accountability, or only apology until the next time?\n3. Fear that manages itself (you pre-softening, pre-explaining, arriving late on purpose) is surveillance you're running on yourself.\n\n\ud83c\udfaf Your one next action: name ONE topic you've stopped raising, in writing. Not to raise it yet \u2014 just to look at the list. Watch its size over the next two weeks." },
+  { k:["gaslight","makes me feel crazy","am i crazy","told me it never happened","denies what he said","denies what she said"],
+    t:"Made to feel crazy is a strategy with a result, whether it's deliberate or a habit: when your memory and their story disagree, the conclusion 'I'm the broken one' keeps the peace \u2014 by renting space in your head. \ud83e\udded\n\n\ud83e\udded The reality check:\n1. Stop debating memory out loud; start recording it in ink: dates, quotes, screenshots (via matchups check Phone Warrior if a device is involved). Written history beats live gaslight every time.\n2. One outside witness who knew you before them, consulted regularly. Gaslighting requires an isolated jury.\n3. The tell: a person who misremembers occasionally can tolerate evidence. A person who rewrites it has to destroy the court reporter. Notice which reaction your receipts get.\n\n\ud83c\udfaf Your one next action: tonight, write down the most recent event-in-dispute \u2014 date, what was said, what was later denied. Paper one. The trail can grow from there." },
+  { k:["isolate","doesn't like my friends","won't let me see","no time for my family","cut off","alone with them"],
+    t:"Isolation rarely announces itself as an order. It arrives as friction: a complaint booked against each friend, a guilt tax on every visit home, until the field of people around you thins to just them. Then their word is the only forecast. \ud83e\udded\n\n\ud83e\udded The reality check:\n1. Count the doors: how many people did you see this month WITHOUT them present or in the room by phone? Compare to before them. The trend line is the evidence.\n2. Isolation asks for your version of 'reasonable.' Test the reverse: their friends unchanged, your friends all gone? Asymmetric erosion is a pattern, not a coincidence.\n3. Reopen one door this week \u2014 one friend, one call. The people you withdrew from will usually be relieved, not resentful.\n\n\ud83c\udfaf Your one next action: message the friend or family member you've seen least since this relationship started. Just 'hey, been too long.' One drawbridge, raised." },
+  { k:["love bombing","too fast","said i love you","moving fast","induction","future faking","grand gestures then nothing"],
+    t:"Love bombing is speed as strategy: a devotion so loud and so early that there's no time left for verification. The grand gestures arrive BEFORE the person has earned trust \u2014 and future-tense plans (the trips, the talk of moving in) are receipts for nothing yet. \ud83d\udc95\n\n\ud83e\udded The reality check:\n1. Rate is the tell, not intensity: consistency at walking speed is worth more than fireworks at sprint. The sprint often has a finish line in mind \u2014 dependence.\n2. Futures count when they're scheduled, not described. 'Someday' is free; 'March 14th' costs commitment.\n3. How do they handle the word 'slow'? A secure person may be disappointed. An insecure one punishes it \u2014 that answer tells you everything.\n\n\ud83c\udfaf Your one next action: propose one actual slowing \u2014 'let's pause on the big plans for two weeks and just date.' Their reaction to a reasonable request is data." },
+  { k:["checks my phone","jealous","accuses me of cheating","tracks my location","went through my phone","possessive"],
+    t:"Checking your phone without cause isn't love protecting itself \u2014 it's surveillance establishing itself. Innocent partners get questioned sometimes; monitored partners get INVENTORIZED, regularly, and the bar keeps moving no matter what you hand over. \ud83d\udd0e\n\n\ud83e\udded The reality check:\n1. The moving goalpost: did handing over anything actually END the suspicion, or just relocate it? If transparency buys no trust, the audit was never the point.\n2. False accusations of cheating are a well-known early feature of controlling relationships \u2014 they pre-load your guilt so the restrictions feel earned.\n3. Secure your devices regardless (Phone Warrior hunts exactly this \u2014 stalkingware and hidden access).\n\n\ud83c\udfaf Your one next action: today, change the passwords they might have \u2014 not as drama, as hygiene. Watch how the request is received. The reaction IS the research." },
+  { k:["boundary","say no","doesn't respect no","how do i tell them","stand up to","limits"],
+    t:"A boundary isn't a request they can decline \u2014 it's information about what YOU will do. That's why 'saying it louder' fails: the boundary lives in the consequence, not the volume. \ud83e\udef6\n\n\ud83e\udef6 The three-line script (works on in-laws, partners, friends, bosses):\n1. Name it, plain: 'When X happens, I'm not okay with it.'\n2. State your action, not their required change: 'If it happens again, I will Y.' (Leave the room / end the call / stop the visit.) You control Y.\n3. Follow through ONCE, calmly. Follow-through one time out of ten teaches endurance, not limits.\n\nThen the hard part: expect an extinction burst \u2014 boundary-breaking temporarily gets LOUDER when it stops working. A tantrum at a boundary isn't proof you're wrong; it's proof it's working.\n\n\ud83c\udfaf Your one next action: write your boundary in the three lines, for the ONE situation that needs it most, tonight. Delivery can wait until it's on paper." },
+  { k:["red flags","is this toxic","is it abuse","should i leave","is this normal","warnings"],
+    t:"Let's do what this room is FOR: inventory, not verdict. You'll come to your own conclusion \u2014 I'll make sure it's an informed one. \ud83d\udd0d\n\n\ud83d\udd0d The flag count (check what's present):\n\u2022 Fear of their reaction \u2022 isolation from your people \u2022 surveillance of your phone/moves \u2022 blame for their own anger ('you made me') \u2022 reality disputes you keep losing \u2022 cruelty followed by gifts/tears on schedule \u2022 your friends warning you \u2022 you lying to OTHERS to cover their behavior \u2022 feeling smaller, month over month\n\n0\u20131 flags: a conversation is due. 2\u20133: patterns are forming and boundaries are urgent. 4+: this is beyond a communication problem \u2014 call the National DV Hotline 1-800-799-7233 (free, 24/7, anonymous) just to get a read. That's why they exist.\n\n\ud83c\udfaf Your one next action: count honestly \u2014 tonight, on paper. Even half the truth written down beats the whole truth felt vaguely." },
+  { k:["same type","keep choosing","my type is the problem","pattern of my own","picker","always end up with"],
+    t:"A repeating type is a pattern with a scout \u2014 some part of you is running the same audition and casting the same role. The niceness isn't the only attractor; the FAMILIARITY is. We re-find what feels like home, even when home burned down. \ud83d\udcad\n\n\ud83e\udded The detector:\n1. Write the last three's top three shared traits \u2014 not looks, not jobs, the CHARACTER constants (charm fast, anger slow-burning, needed rescuing, kept you guessing...). Your real 'type' will surface as three traits.\n2. Name the origin point gently: who else in your history felt like this dynamics? The template's first draft tells you where it was learned \u2014 and learned things can be re-learned.\n3. The new audition: for the next 90 days, rate interested people on 'boredom at first \u2014 but safe.' Stable people can feel boring to a nervous system trained on chaos. That boredom is withdrawal, not a verdict.\n\n\ud83c\udfaf Your one next action: write the three shared traits tonight. You can't change a picker you haven't met." },
+  { k:["green flags","healthy relationship looks like","what should good feel like","is this what good is"],
+    t:"Refreshing question \u2014 most people can list red flags faster than green ones. Here's the actual blueprint of a healthy one: \ud83c\udf31\n\n\ud83c\udf31 The green flags:\n1. Conflict is survived, not avoided: hard topics get raised and you're BOTH still okay the next day. No detonation, no days of silence-as-punishment.\n2. The bills test passes: money, plans, feelings, and 'I was wrong' are all sayable. You never rehearse ordinary sentences in the car before coming home.\n3. Your people stay in the picture \u2014 they LIKE your friends and family or at minimum never tax you for them.\n4. You feel BIGGER in it: over two years of this person, are you braver, healthier, more yourself? Or fractionally smaller, visit by visit?\n5. No is respected: one no, honored, without sulking or interest charged later.\n\n\ud83c\udfaf Your one next action: score your current (or last) relationship against these five, one to five each. Five honest numbers \u2014 that's the reality check." }
+];
+var GENERAL = [
+  "Put it down here \u2014 the Reality Check is open, and nothing you describe gets you a lecture. \ud83e\udeb6\n\nThe department works on one law: PATTERNS, not verdicts. One event is an event. Two is a coincidence worth watching. Three of the same shape is a system \u2014 and systems can be named, scripted at, and exited or renegotiated. That's what happens here.\n\nWhether it's a rotation that needs ONE boundary script or a pattern that needs a bigger conversation, the next move is the same: get specific.\n\n\ud83c\udfaf Tell me the most recent installment: what happened, and what happened the time before that? I'll find the shape.",
+  "Heard, warrior. \ud83e\udeb6 Relationships make it genuinely hard to see straight from inside \u2014 the water pipes metaphor exists for a reason. Close to it, everything reads as your fault; at distance, patterns are obvious.\n\nSo we work in ink and acts, not vibes: what happened, how often, what each repair looked like, and what YOUR body does before and after. That's the evidence a reality check runs on.\n\nAnd standing truth at this counter: love should not require contortion. If you keep needing to shrink, that's a size problem, not a posture problem.\n\n\ud83c\udfaf Name the scene that keeps repeating \u2014 the one where you'd swear you've been here before. I'll run the pattern."
+];
+function builtinAnswer(q){
+  var low = q.toLowerCase();
+  var best = null, bestScore = 0;
+  PLAYS.forEach(function(v){
+    var score = 0;
+    v.k.forEach(function(word){ if (low.indexOf(word) !== -1) score++; });
+    if (score > bestScore) { bestScore = score; best = v; }
+  });
+  if (best) return best.t;
+  return GENERAL[Math.floor(Math.random() * GENERAL.length)];
+}
+
+var HIST = [];
+
+function addMsg(cls, safeHtml){
+  var d = document.createElement("div");
+  d.className = "msg " + cls;
+  d.innerHTML = safeHtml;
+  $("chat").appendChild(d);
+  $("chat").scrollTop = $("chat").scrollHeight;
+  return d;
+}
+
+function answer(q){
+  var key = "";
+  try { key = localStorage.getItem(LS_KEY) || ""; } catch(e){}
+  // safety pre-check on every path \u2014 danger wording gets hotlines before anything else
+  var low = q.toLowerCase();
+  if (low.indexOf("hurt myself") !== -1 || low.indexOf("killing myself") !== -1 || low.indexOf("end my life") !== -1 || low.indexOf("kill myself") !== -1 || low.indexOf("suicide") !== -1 || low.indexOf("no reason to live") !== -1 || low.indexOf("don't want to be here") !== -1 || low.indexOf("hits me") !== -1 || low.indexOf("hit me") !== -1 || low.indexOf("threatened me") !== -1 || low.indexOf("afraid to leave") !== -1){
+    addMsg("ai", esc("\ud83d\udea8 Stop \u2014 your safety comes before any pattern analysis.\n\nIf you are in danger right now: call 911. National Domestic Violence Hotline: 1-800-799-7233 (24/7, free, confidential \u2014 they also have a live chat and can help you plan a safe exit). If you're thinking about hurting yourself or ending things: call or text 988 right now.\n\nWhat you described deserves a real advocate, not just an AI. Please reach out tonight.\n\nThe Reality Check is here for the rebuilding when you're ready \u2014 but the numbers above are awake right now. \u2764\ufe0f"));
+    return;
+  }
+  if (!key) {
+    addMsg("ai", esc(builtinAnswer(q))); return;
+  }
+  var think = addMsg("ai", "\u2026");
+  var prompt = "You are the Relationship Reality Check \u2014 Pattern Detector & Boundary Coach inside Life Coach Warrior, created by Redeemed Warrior. The user describes a relationship situation. Respond with: (1) direct acknowledgment without judgment or rush to conclusions, (2) the PATTERN named (intermittent reinforcement, isolation, surveillance, gaslighting, love bombing, boundary erosion, a repeating type, etc.) with the mechanics briefly explained, (3) an evidence-gathering OR exact boundary-script step \u2014 word-for-word scripts in quotes where possible, (4) end with exactly ONE next action phrased as 'Your one next action:' \u2014 small and doable. Rules: under 170 words. Patterns, not verdicts \u2014 the user draws their own conclusions from informed evidence. NEVER diagnose anyone. NEVER initially recommend leaving as step one UNLESS safety language appears; in that case give the National DV Hotline 1-800-799-7233 first. If ANY sign of self-harm: 988 immediately, warmth first. If a narcissist/bully is named: cross-point to THE WARRIOR Survival AI (linked on page). If heartbreak/rebuilding: cross-point to the Comeback Planner (linked on page). Match their energy: confused gets the mechanics, hurt gets soft tone + evidence steps, fed-up gets the boundary scripts.";
+  fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+    body: JSON.stringify({ model: "mistral-small-latest", temperature: 0.6, max_tokens: 420,
+      messages: [{ role: "system", content: prompt }].concat(HIST, [{ role: "user", content: q }]) })
+  }).then(function(r){ return r.json(); }).then(function(j){
+    var out = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "";
+    if (!out) out = "(No answer \u2014 check your key or provider status.)";
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc(out));
+    HIST.push({ role: "user", content: q });
+    HIST.push({ role: "assistant", content: out });
+    if (HIST.length > 12) HIST = HIST.slice(-12);
+  }).catch(function(e){
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc("Couldn't reach the AI \u2014 here's the built-in Reality Check instead:\n\n" + builtinAnswer(q)));
+  });
+}
+
+function go(){
+  var q = $("say").value.trim();
+  if (!q) return;
+  $("say").value = "";
+  addMsg("user", esc(q));
+  answer(q);
+}
+$("send").onclick = go;
+$("say").addEventListener("keydown", function(e){ if (e.key === "Enter") go(); });
+
+$("ks").onclick = function(){
+  var v = $("akey").value.trim();
+  try {
+    if (v) { localStorage.setItem(LS_KEY, v); addMsg("sys", "Key saved \u2014 the full Reality Checker is on."); }
+    else { localStorage.removeItem(LS_KEY); addMsg("sys", "Key removed \u2014 back to the built-in checker."); }
+  } catch(e){ addMsg("sys", "Couldn't save key in this browser."); }
+  $("akey").value = "";
+};
+try { if (localStorage.getItem(LS_KEY)) $("akey").placeholder = "Key is saved \u2713 (type to replace)"; } catch(e){}
+
+/* ---- quick subjects ---- */
+var SUBJECTS = ["their feelings change out of nowhere", "I walk on eggshells at home", "it's perfect one week, chaos the next", "they check my phone constantly", "I'm not allowed to see my friends", "they deny things that happened", "how do I set a boundary", "I keep choosing the same partners", "what healthy actually looks like"];
+var LOW = {
+  "their feelings change out of nowhere": "my partner is hot and cold, loving then cruel, it changes out of nowhere like mixed signals",
+  "I walk on eggshells at home": "I walk on eggshells at home, I'm afraid to bring things up because of how they'll react",
+  "it's perfect one week, chaos the next": "it's perfect one week and chaos the next, on and off, mixed signals",
+  "they deny things that happened": "they deny things that happened and say they never said that, I feel like I'm going crazy",
+  "how do I set a boundary": "how do I set a boundary with someone who doesn't respect no"
+};
+SUBJECTS.forEach(function(s){
+  var b = document.createElement("button");
+  b.type = "button"; b.className = "subj"; b.textContent = s;
+  b.onclick = function(){ $("say").value = (s in LOW) ? LOW[s] : s; $("say").focus(); };
+  $("subjects").appendChild(b);
+});
+
+/* ---- boot ---- */
+addMsg("sys", "Relationship Reality Check \u2014 open. Patterns get named here, boundaries get scripts, and 'blame yourself' gets checked at the door. No key needed; add one for the full checker.");
+</script>
+</body>
+</html>
