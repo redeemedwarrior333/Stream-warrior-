@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>💰 Den Tip Page — support your stream, by Redeemed Warrior</title>
+<meta name="description" content="Den Tip Page: a dedicated tipping page for your stream, keyless and backend-free. Set your payment links once, share your personalized URL.">
+<style>
+  :root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 24px 16px 60px; }
+  .brand { color: var(--gold); letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+  h1 { font-size: 30px; margin: 4px 0 8px; }
+  h1 .gold { color: var(--gold); }
+  .sub { color: var(--sub); font-size: 15px; margin-bottom: 18px; max-width: 640px; }
+  .panel { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; padding: 18px; margin-bottom: 16px; }
+  .panel h2 { color: var(--gold); font-size: 15px; margin-bottom: 10px; letter-spacing: .5px; }
+  label { display: block; font-size: 12px; color: var(--muted); font-weight: 700; margin: 10px 0 4px; letter-spacing: .5px; }
+  input {
+    width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--edge);
+    border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit;
+  }
+  input:focus { outline: none; border-color: var(--gold); }
+  button {
+    background: var(--gold); color: var(--ink); font-weight: 800; border: none; border-radius: 10px;
+    padding: 11px 16px; font-size: 14px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
+  .mini { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .trow { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+  .trow input { flex: 1; }
+  .trow button { flex: 0 0 auto; }
+  .tipbtn {
+    display: flex; align-items: center; gap: 12px; width: 100%;
+    background: var(--panel2); border: 2px solid var(--gold); border-radius: 14px;
+    padding: 16px 18px; margin-top: 12px; text-decoration: none; color: var(--text);
+  }
+  .tipbtn:hover { filter: brightness(1.12); }
+  .tipbtn .tico { font-size: 28px; }
+  .tipbtn .tlab { font-weight: 800; font-size: 16px; }
+  .tipbtn .tdesc { color: var(--muted); font-size: 12px; }
+  .sharebox { background: var(--bg); border: 1px dashed var(--gold); border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--good); word-break: break-all; margin-top: 10px; display: none; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.5; }
+  .safety { background: var(--panel2); border: 2px solid var(--red); border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 12px; line-height: 1.6; color: var(--sub); }
+  footer { margin-top: 40px; border-top: 1px solid var(--edge); padding-top: 18px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--gold); text-decoration: none; }
+  a.home-btn { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-btn" href="index.html">← Warrior's Den</a>
+  <div class="brand">💰 The Warrior's Den — Tip Department</div>
+  <div class="byline">by Redeemed Warrior</div>
+
+  <h1>Den <span class="gold">Tip Page</span></h1>
+
+  <!-- ===================== SETUP MODE ===================== -->
+  <div id="setup">
+    <p class="sub">Set your payment links (<strong>Ko-fi, CashApp, PayPal.me, Streamlabs tip URL, anything</strong>) once. The Den builds you a personalized page + a share link that works on every device — no account, no backend, your links stay yours.</p>
+
+    <div class="panel">
+      <h2>💰 STEP 1 — YOUR STREAMER NAME</h2>
+      <input id="sname" placeholder="e.g. Redeemed Warrior">
+    </div>
+
+    <div class="panel">
+      <h2>💰 STEP 2 — YOUR PAYMENT LINKS</h2>
+      <div id="rows"></div>
+      <div class="row">
+        <button class="mini ghost" id="add">+ Add payment link</button>
+        <button id="save">💾 Save to this device</button>
+      </div>
+      <p class="hint" id="loadmsg"></p>
+    </div>
+
+    <div class="panel">
+      <h2>🔗 STEP 3 — YOUR SHARE LINK (the one you post everywhere)</h2>
+      <div class="row">
+        <button id="gen">🔗 Generate my Tip Page link</button>
+        <button class="ghost" id="preview">👁 Preview as viewers see it</button>
+      </div>
+      <div class="sharebox" id="share"></div>
+      <p class="hint">Drop that link in your stream title, profile bio, or chat command. Viewers get your branded tipping page — works even from their phone.</p>
+    </div>
+
+    <div class="safety">
+      🚨 <strong>Tips are real money — protect them. Never share account passwords, never accept "tips" that ask you to send money back, and never pay a "fee" to receive money.</strong> Real platforms (Ko-fi, Streamlabs, PayPal) never ask that. Scam tips target new streamers first. You're smarter than them. 🛡️
+    </div>
+  </div>
+
+  <!-- ===================== VIEWER MODE ===================== -->
+  <div id="viewer" style="display:none">
+    <p class="sub" id="vsub"></p>
+    <div class="panel">
+      <h2>💜 SUPPORT THE STREAM</h2>
+      <div id="vbtns"></div>
+      <p class="hint">Tips go directly to the streamer's own payment platforms — the Den doesn't touch the money and takes no cut.</p>
+    </div>
+  </div>
+
+  <footer>
+    <p><strong>The Warrior family</strong> — 🛡️ <a href="../../">Stream Warrior</a> · 🙏 <a href="../../warrior-prophet/">Warrior Prophet</a> · 🛡️ <a href="../../phone-warrior/">Phone Warrior</a> · ⚔️ <a href="../../warrior-survival/?v=15">The Warrior — Survival AI</a> · 📣 <a href="../../ads-manager/?v=15">Warrior Ads AI</a> · 🪖 <a href="../../life-coach/?v=16">Life Coach Warrior</a> · ❤️ <a href="../../comeback-planner/?v=23">Comeback Planner</a> · 🔥🫂 <a href="../../relationship-reality-check/?v=23">Reality Check</a> · 🔥 <a href="../../problem-solver/?v=23">Problem Solver</a> · 🔥 <a href="../../no-excuses/?v=24">No-Excuses Mode</a> · 📡 <a href="../../tft-coach/?v=25">TFT Coach</a> · 💰 <a href="../../wealth-builder/?v=17">Wealth Builder AI</a> · 📸 <a href="../../viral-creator/?v=18">Viral Creator AI</a> · 📚 <a href="../../academy/?v=19">Warrior Academy</a> · 🚸 <a href="../../family-center/?v=20">Family Center</a> · 🚸🚸 <a href="../../positive-discipline/?v=21">Discipline Coach</a> · 🔥 <a href="../../parent-support/?v=22">Parent Support Room</a> · 🔥 <a href="../../ai-builder/?v=10">Warrior Forge</a> (this tool was forged there) · 📖 <a href="../../flamekeeper/">Bible Flamekeeper</a> · ⚖️ <a href="../../weirdlaw/">Weird Law or Fake?</a> · 🔴 <strong>Warrior's Den</strong></p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ---- visible crash banner: if anything breaks, show WHY instead of dead buttons ---- */
+function tipBanner(msg){
+  try {
+    var b = document.createElement("div");
+    b.style.cssText = "background:var(--red);color:#fff;padding:10px 14px;border-radius:10px;margin:0 0 14px;font:12px/1.5 system-ui;word-break:break-word;";
+    b.textContent = "\u26a0 Tool error: " + msg + " \u2014 screenshot this and tell Redeemed Warrior.";
+    var w = document.querySelector(".wrap");
+    if (w && w.firstChild) w.insertBefore(b, w.firstChild); else document.body.insertBefore(b, document.body.firstChild);
+  } catch(e){}
+}
+window.addEventListener("error", function(ev){ tipBanner((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ tipBanner("network/async: " + ((ev && ev.reason && ev.reason.message) ? ev.reason.message : String(ev && ev.reason || "unknown"))); });
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ var d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
+
+var LS_TIPS = "den_tips";
+
+/* ---- url-safe base64 helpers (unicode-safe) ---- */
+function enc64(obj){
+  try {
+    var j = JSON.stringify(obj);
+    var u = encodeURIComponent(j);
+    return btoa(u);
+  } catch(e){ return ""; }
+}
+function dec64(str){
+  try {
+    return JSON.parse(decodeURIComponent(atob(str)));
+  } catch(e){ return null; }
+}
+
+/* ---- tip-method icons by label keywords (best effort) ---- */
+function icoFor(label){
+  var l = String(label || "").toLowerCase();
+  if (l.indexOf("ko-fi") !== -1 || l.indexOf("kofi") !== -1) return "\u2615";
+  if (l.indexOf("paypal") !== -1) return "\ud83d\udcb3";
+  if (l.indexOf("cash" ) !== -1) return "\ud83d\udcb5";
+  if (l.indexOf("venmo") !== -1) return "\ud83d\udcb8";
+  if (l.indexOf("streamlabs") !== -1 || l.indexOf("streamelements") !== -1) return "\ud83d\udd14";
+  if (l.indexOf("crypto") !== -1 || l.indexOf("bitcoin") !== -1) return "\ud83e\ude99";
+  if (l.indexOf("patreon") !== -1) return "\ud83c\udfa9";
+  if (l.indexOf("sub") !== -1) return "\u2b50";
+  return "\ud83d\udcb0";
+}
+
+/* ================= SETUP MODE ================= */
+var haveSaved = null;
+try { haveSaved = JSON.parse(localStorage.getItem(LS_TIPS) || "null"); } catch(e){}
+var ROWS = (haveSaved && haveSaved.t && haveSaved.t.length) ? haveSaved.t.map(function(x){ return { l: x.l || "", u: x.u || "" }; }) : [{ l: "", u: "" }];
+
+function addRow(l, u){
+  var d = document.createElement("div");
+  d.className = "trow";
+  var il = document.createElement("input");
+  il.placeholder = "Label (e.g. Ko-fi)";
+  il.value = l || "";
+  il.className = "rl";
+  var iu = document.createElement("input");
+  iu.placeholder = "Your link (https://...)";
+  iu.value = u || "";
+  iu.className = "ru";
+  var del = document.createElement("button");
+  del.type = "button"; del.className = "mini ghost"; del.textContent = "\u2715";
+  del.onclick = function(){ d.remove(); };
+  d.appendChild(il); d.appendChild(iu); d.appendChild(del);
+  $("rows").appendChild(d);
+}
+
+function collect(){
+  var out = { n: ($("sname").value || "").trim(), t: [] };
+  var rows = document.querySelectorAll("#rows .trow");
+  for (var i = 0; i < rows.length; i++){
+    var l = rows[i].querySelector(".rl").value.trim();
+    var u = rows[i].querySelector(".ru").value.trim();
+    if (l && u && u.indexOf("http") === 0) out.t.push({ l: l, u: u });
+  }
+  return out;
+}
+
+function validCfg(c){
+  return c && c.n && c.t && c.t.length > 0;
+}
+
+/* ================= VIEWER MODE ================= */
+function renderViewer(cfg){
+  $("setup").style.display = "none";
+  $("viewer").style.display = "block";
+  $("vsub").innerHTML = esc(cfg.n) + " streams free, loves every viewer, and pays for the fun out of pocket. Tipping is NEVER required \u2014 but if the stream added something to your night, this is the door.";
+  var box = $("vbtns");
+  box.innerHTML = "";
+  cfg.t.forEach(function(x){
+    var a = document.createElement("a");
+    a.className = "tipbtn";
+    a.href = x.u;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.innerHTML = '<span class="tico">' + icoFor(x.l) + '</span><span><span class="tlab">' + esc(x.l) + '</span><br><span class="tdesc">opens the streamer\u2019s own payment platform \u2014 nothing goes through the Den</span></span>';
+    box.appendChild(a);
+  });
+}
+
+/* ---- boot: viewer mode only when a share payload is in the URL ---- */
+(function boot(){
+  var m = location.search.match(/[?&]t=([^&]+)/);
+  if (m){
+    var cfg = dec64(m[1]);
+    if (validCfg(cfg)){ renderViewer(cfg); return; }
+  }
+  /* setup mode */
+  var nm = document.querySelector("#sname");
+  if (haveSaved && haveSaved.n) nm.value = haveSaved.n;
+  ROWS.forEach(function(r){ addRow(r.l, r.u); });
+  if (haveSaved && haveSaved.t && haveSaved.t.length){
+    $("loadmsg").textContent = "Saved setup loaded from this device \u2713 \u2014 link below still works, or update and regenerate.";
+  }
+})();
+
+$("add").onclick = function(){ addRow("", ""); };
+
+$("save").onclick = function(){
+  var cfg = collect();
+  if (!validCfg(cfg)){
+    $("loadmsg").textContent = "Add your streamer name and at least one link (starting with https://) first, then save.";
+    return;
+  }
+  try {
+    localStorage.setItem(LS_TIPS, JSON.stringify(cfg));
+    $("loadmsg").textContent = "Saved on this device \u2713 \u2014 now generate your share link (Step 3).";
+  } catch(e){
+    $("loadmsg").textContent = "Couldn't save on this device \u2014 no problem, Step 3's link still works.";
+  }
+};
+
+$("gen").onclick = function(){
+  var cfg = collect();
+  if (!validCfg(cfg)){
+    $("share").style.display = "block";
+    $("share").textContent = "Almost \u2014 add your streamer name and at least one link (starting with https://), then generate again.";
+    return;
+  }
+  try { localStorage.setItem(LS_TIPS, JSON.stringify(cfg)); } catch(e){}
+  var b64 = enc64(cfg);
+  if (!b64){
+    $("share").style.display = "block";
+    $("share").textContent = "Couldn't build the link \u2014 check your link text for odd characters.";
+    return;
+  }
+  var full = location.origin + location.pathname + "?t=" + b64;
+  $("share").style.display = "block";
+  $("share").textContent = full;
+  try { navigator.clipboard.writeText(full).catch(function(){}); } catch(e){}
+};
+
+$("preview").onclick = function(){
+  var cfg = collect();
+  if (validCfg(cfg)) renderViewer(cfg);
+};
+</script>
+</body>
+</html>
