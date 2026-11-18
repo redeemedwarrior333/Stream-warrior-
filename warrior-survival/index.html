@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>⚔️ The Warrior — Narcissist & Bully Survival AI — by Redeemed Warrior</title>
+<meta name="description" content="The Warrior: emotionally strategic, psychologically informed support for survivors of narcissistic abuse and bullying. Scripts, boundaries, reality checks, and crisis resources. An AI tool by Redeemed Warrior.">
+<style>
+  :root{--bg:#0E0B1D;--panel:#201A48;--panel2:#14102e;--edge:#332A63;--gold:#F0C878;--red:#FF5A6E;--text:#F3EFFF;--muted:#A79DD0;--sub:#C9C2E8;--good:#7DE38B;--blue:#7FB6FF;--ink:#241A05;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  .brand { color: var(--gold); letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+  h1 { font-size: 30px; margin: 4px 0 8px; }
+  h1 .gold { color: var(--gold); }
+  .sub { color: var(--sub); font-size: 15px; margin-bottom: 18px; max-width: 640px; }
+  .panel { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; padding: 18px; }
+  .panel h2 { color: var(--gold); font-size: 15px; margin-bottom: 10px; letter-spacing: .5px; }
+  input {
+    width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--edge);
+    border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit;
+  }
+  input:focus { outline: none; border-color: var(--gold); }
+  button {
+    background: var(--gold); color: var(--ink); font-weight: 800; border: none; border-radius: 10px;
+    padding: 11px 16px; font-size: 14px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
+  .mini { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
+  #chat { background: var(--panel2); border: 1px solid var(--edge); border-radius: 12px; height: 380px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .msg { max-width: 88%; padding: 9px 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .msg.user { align-self: flex-end; background: var(--gold); color: var(--ink); border-bottom-right-radius: 4px; }
+  .msg.ai { align-self: flex-start; background: var(--panel); border: 1px solid var(--edge); border-bottom-left-radius: 4px; }
+  .msg.sys { align-self: center; color: var(--muted); font-size: 12px; background: none; }
+  .chatsend { display: flex; gap: 8px; margin-top: 10px; }
+  .chatsend input { flex: 1; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 8px; line-height: 1.5; }
+  .hint a { color: var(--gold); }
+  .safety { margin-top: 12px; background: var(--panel2); border: 1px solid var(--red); border-radius: 12px; padding: 10px 14px; font-size: 12px; color: var(--sub); line-height: 1.7; }
+  .safety b { color: var(--red); }
+  .keyrow { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+  .keyrow input { flex: 1; }
+  .subjects { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .subj { background: var(--panel2); border: 1px solid var(--edge); color: var(--sub); border-radius: 999px; padding: 5px 11px; font-size: 12px; cursor: pointer; }
+  footer { margin-top: 40px; border-top: 1px solid var(--edge); padding-top: 18px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--gold); text-decoration: none; }
+  a.home-btn { display: inline-block; background: var(--gold); color: var(--ink); font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-btn" href="../">← More Warrior tools</a>
+  <div class="brand">⚔️ Warrior Forge tool</div>
+  <div class="byline">by Redeemed Warrior</div>
+
+  <h1>⚔️ THE WARRIOR — <span class="gold">Survival AI</span></h1>
+  <p class="sub">Advanced narcissist &amp; bully survival support: emotionally strategic, psychologically informed. Describe what's happening — get validation, reality checks, boundary scripts, and grounded strategy. <strong>Works with no key</strong>; a free Mistral key unlocks the full AI voice.</p>
+
+  <div class="panel">
+    <h2>⚔️ WHAT ARE YOU FACING?</h2>
+    <div class="subjects" id="subjects"></div>
+    <div id="chat"></div>
+    <div class="chatsend">
+      <input id="say" placeholder="Tell The Warrior what's happening…">
+      <button id="send">▶</button>
+    </div>
+    <div class="keyrow">
+      <input id="akey" type="password" placeholder="Optional: free Mistral key (console.mistral.ai) — stays in your browser">
+      <button class="mini ghost" id="ks">Set</button>
+    </div>
+    <div class="safety">
+      <b>NOT A REPLACEMENT FOR PROFESSIONALS.</b> The Warrior offers strategy and support — never therapy, medical, or legal advice.<br>
+      <b>In danger now: call 911.</b> Emotional crisis: <b>988</b> (Suicide &amp; Crisis Lifeline). Domestic abuse: <b>1-800-799-7233</b> (National DV Hotline) or text START to <b>88788</b>. In immediate or escalating danger, contact local emergency services first.<br>
+      Clearing history and private browsing help keep you safe — also see <b>Phone Warrior</b> (free) to scan for stalkerware and lock down a secret vault.
+    </div>
+  </div>
+
+  <footer>
+    <p><strong>The Warrior family</strong> — 🛡️ <a href="../">Stream Warrior</a> · 🙏 <a href="../warrior-prophet/">Warrior Prophet</a> · 🛡️ <a href="../phone-warrior/">Phone Warrior</a> · 🔥 <a href="../ai-builder/?v=10">Warrior Forge</a> (this tool was forged there) · 📖 <a href="../flamekeeper/">Bible Flamekeeper</a> · 📣 <a href="../ads-manager/">Warrior Ads AI</a> · ⚡️ <a href="../weirdlaw/">Weird Law or Fake?</a> · 🔴 <a href="../den/">Warrior's Den</a></p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ---- visible crash banner ---- */
+function survBanner(msg){
+  try {
+    var b = document.createElement("div");
+    b.style.cssText = "background:var(--red);color:#fff;padding:10px 14px;border-radius:10px;margin:0 0 14px;font:12px/1.5 system-ui;word-break:break-word;";
+    b.textContent = "\u26a0 Tool error: " + msg + " \u2014 screenshot this and tell Redeemed Warrior.";
+    var w = document.querySelector(".wrap");
+    if (w && w.firstChild) w.insertBefore(b, w.firstChild); else document.body.insertBefore(b, document.body.firstChild);
+  } catch(e){}
+}
+window.addEventListener("error", function(ev){ survBanner((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ survBanner("network/async: " + ((ev && ev.reason && ev.reason.message) ? ev.reason.message : String(ev && ev.reason || "unknown"))); });
+
+var LS_KEY = "forge_key";
+function $(id){ return document.getElementById(id); }
+function esc(s){ var d = document.createElement("div"); d.textContent = String(s == null ? "" : s); return d.innerHTML; }
+
+var CRISIS = "\n\n\uD83D\uDEA8 If you are in danger right now, call 911. Crisis line: 988. Domestic abuse: 1-800-799-7233 (or text START to 88788).";
+
+/* ---- built-in strategy bank (no key needed) ---- */
+var STRATEGIES = [
+  { k:["gaslight","gaslit","crazy","making me feel crazy","doubting myself","am i overreacting","rewrite","denied it happened"],
+    t:"You are not crazy. When someone rewrites events you watched happen, that's gaslighting — it's a tactic, not a verdict on your memory.\n\n\u2694\ufe0f Reality anchor: write down what happened the day it happens (who, what, when, exactly what was said). Paper doesn't get talked out of what it saw.\n\n\ud83d\udee1\ufe0fBOUNDARY  Script: \"I remember it differently, and I'm not debating it.\" Then exit the conversation. You don't have to win — you only have to stop playing.\n\n\ud83d\udca1 Long game: keep records, keep witnesses, keep your calendar. Confusion is their weapon; documentation is yours." },
+  { k:["bully","bullied","bullying","school","workplace","coworker","boss"],
+    t:"Bullying runs on two fuels: an audience that stays silent and a target who feels alone. We cut both.\n\n\u2694\ufe0f Strategy:\n1. Document every incident — dates, words, witnesses. Screenshots before they can delete.\n2. Gray rock: flat, boring, non-reactionary in the moment. Bullies feed on reaction.\n3. Escalate on paper, not on emotion: report to HR/teacher/admin using your records — facts, not feelings.\n4. Build your two allies: one witness, one supporter. No one documents alone.\n\n\ud83d\udca1 If it's threats, stalking, or touching — that's past bullying. That's a crime scene: 911." + CRISIS },
+  { k:["narcissist","narc","narcissistic","manipulation","manipulating","love bombing","discarding"],
+    t:"What you're describing has a pattern and a name — and the most important thing is that it's not your imagination and not your fault.\n\n\u2694\ufe0f Core strategy (boundaries, not battles):\n1. Stop explaining. Explainers get worn down — you can't logic someone out of a position they didn't logic into.\n2. BIFF responses: Brief, Informative, Friendly, Firm. Five sentences max, then stop replying.\n3. Predict the cycle — idealize, devalue, discard, repeat — so the next swing doesn't knock you over when it comes.\n4. Your healing doesn't require their apology. Waiting for one is another map back into the maze.\n\n\u2728 You are allowed to leave, block, and grieve without a courtroom verdict first.\n\n\ud83d\udcda A therapist who knows narcissistic abuse is worth gold here — not because you're broken, but because you deserve a cast for the fracture." },
+  { k:["ex","co-parent","coparent","custody","divorce","child support","custody battle"],
+    t:"Two battlefields you never fight on: the child's heart, and the courtroom's timeline. Protect both.\n\n\u2694\ufe0f Strategy:\n1. Written-only communication where possible (email/app). Everything you'd say angry becomes evidence forever, and so does theirs — stay BIFF: Brief, Informative, Friendly, Firm.\n2. Never argue facts in the thread in real time — respond within 24-48 hours, once.\n3. Document exchanges matters-of-factly: dates, times, handoffs, changes. Neutral words read strongest in court later.\n4. Kids never carry messages, never choose sides, never hear the commentary. That's their armor.\n\n\u2696\ufe0f For custody terms and legal moves, a family-law professional is the right weapon — this tool backs your voice, it isn't a lawyer." },
+  { k:["hoover","came back","wants me back","promised to change","second chance","txted me","texted me again"],
+    t:"When they return with flowers and promises, pause — this is the pattern resuming, not the person transforming.\n\n\u2694\ufe0f Strategy:\n1. Judge words by recipes: has anything CONCRETE changed, or just the weather? (New words, same ingredients, same dish.)\n2. Re-read your own documentation from the last cycle. Feelings amnesia is real; paper isn't.\n3. Don't announce your decision — announced decisions get negotiated. Decide quietly, act clearly.\n4. 'Changed' looks like sustained different behavior over months, witnessed — not one great week.\n\n\ud83d\udda4 If fear is part of the pattern — fear is the tell. That's a 911/1-800-799-7233 conversation, not a relationship one." + CRISIS },
+  { k:["flying monkey","friends took their side","family took their side","everyone believes them","smear campaign"],
+    t:"The flying monkeys arrive when the main act loses its audience — it's a puppet show, not a referendum on your worth.\n\n\u2694\ufe0f Strategy: don't JADE — no Justifying, Arguing, Defending, Explaining. One line, repeated: \"I understand you see it differently. I wish you well.\" Then mute.\n\n\ud83d\udd0e Track who's tactic and who's genuinely confused — confused people deserve one clear message; tactical people get silence.\n\n\ud83c\udf31 Your tribe rebuilds on honesty and consistency — keep living well and let time do the narrative work it's good at." },
+  { k:["guilt","guilty","selfish","shouldn't have left","second-guess","they need me","i miss the good times"],
+    t:"Missing the good times isn't weakness — it's memory doing its job. But 'good times' and 'good man/woman' are different verdicts, and confusing them is how survivors walk back into the fire.\n\n\u2694\ufe0f Reality check: if the good days required walking on eggshells, they weren't peace — they were wages.\n\n\ud83d\udcac Reframe guilt: guilt says 'I did something wrong' — but choosing safety isn't wrong, even when someone cries about it.\n\n\ud83c\udf31 Write your 'why I left' list. Read it every time the fog rolls in. Future-you is grateful you wrote it in a clear moment." },
+  { k:["scared","afraid","unsafe","threat","threatened","hurt me","violence","stalker","stalking","following me"],
+    t:"Stop. Plans before philosophy — right now, safety outranks EVERYTHING else.\n\n\ud83d\udea8 Immediate:\n1. If you're in danger now: 911.\n2. Tell one trusted person the situation and where you are.\n3. Vary routines, share your location with someone safe, and document every incident (screenshot/time).\n4. DV advocates are free and brilliant at exactly this: 1-800-799-7233, or text START to 88788 — they help with planning, shelters, no-contact orders.\n5. Run Phone Warrior (free, from the Warrior family) — it scans your phone for stalkerware and locks down a private vault he can't touch.\n\n\u2694\ufe0f Nothing below this matters until you're safe. This is the whole assignment tonight." + CRISIS },
+  { k:["self care","self-care","exhausted","drained","can't cope","tired","anxiety","panick","panic","cry","crying","sad"],
+    t:"You're carrying weight that wasn't packaged for one person. Put some down — deliberately.\n\n\ud83c\udf31 Right now:\n1. 5-4-3-2-1 grounding: five things you see, four you can touch, three you hear, two you smell, one you taste. Pulls you out of the fog and into the room.\n2. Small wins, decided: one glass of water, one walk around the block, one text to one safe person. Motion beats rumination.\n3. Boundaries count as self-care too — check who drains you on contact and start distancing gracefully.\n\n\ud83d\udcab If sleep, appetite, or the dark thoughts have been persistent — talk to a professional. That's strength carrying a shield, not a flag." + CRISIS }
+];
+var GENERAL = [
+  "That's heavy, and you didn't deserve it. No matter what happened, your feelings are legitimate evidence.\n\n\u2694\ufe0f The Warrior's standing orders: (1) document, (2) gray rock, (3) one safe person, (4) boundaries stated once, calmly, then enforced with distance.\n\n\ud83d\udcaa You've survived this person 100% of the days so far. Strategy beats strength — keep your records sharp and your explanations short.",
+  "I hear you. Whatever you decide — leave, stay, report, wait — make it from a plan, not from panic.\n\n\ud83c\udf31 Three questions to steer by: Am I safe right now? Is this mine to fix? What would I advise someone I love to do?\n\n\ud83d\udcda People who know narcissistic abuse patterns — therapists, advocates, support groups — see further than the fog does. Lean on borrowed eyes until yours clear." + CRISIS
+];
+function builtinAnswer(q){
+  var low = q.toLowerCase();
+  var best = null, bestScore = 0;
+  STRATEGIES.forEach(function(v){
+    var score = 0;
+    v.k.forEach(function(word){ if (low.indexOf(word) !== -1) score++; });
+    if (score > bestScore) { bestScore = score; best = v; }
+  });
+  if (best) return best.t;
+  return GENERAL[Math.floor(Math.random() * GENERAL.length)];
+}
+
+/* ---- chat ---- */
+var HIST = [];
+function addMsg(cls, safeHtml){
+  var m = document.createElement("div");
+  m.className = "msg " + cls;
+  m.innerHTML = safeHtml;
+  $("chat").appendChild(m);
+  $("chat").scrollTop = $("chat").scrollHeight;
+  return m;
+}
+
+function answer(q){
+  var key = "";
+  try { key = localStorage.getItem(LS_KEY) || ""; } catch(e){}
+  if (!key) { addMsg("ai", esc(builtinAnswer(q))); return; }
+  var think = addMsg("ai", "\u2026");
+  var prompt = "You are THE WARRIOR, an exceptionally intelligent, emotionally strategic, psychologically informed AI supporting survivors of narcissistic abuse and bullying, created by Redeemed Warrior. The user describes a situation or how they feel. Respond with: (1) brief genuine validation of what they're facing, (2) a psychologically grounded read of the dynamic (naming tactics like gaslighting, hoovering, DARVO, gray rock where relevant), (3) concrete strategy — boundary scripts they can literally say/type, what to document, when to involve authorities or professionals. Rules: warm but strong, never clinical coldness. NEVER diagnose anyone ('they are a narcissist' -> describe behaviors instead). NEVER suggest revenge, confrontation while unsafe, or escalating contact with a dangerous person. NEVER legal, medical, or therapy advice — refer to professionals. If the user mentions fear, threats, stalking, violence, self-harm, or suicidal thoughts, put safety first and include the relevant emergency line: 911 (danger), 988 (crisis line), 1-800-799-7233 / text START to 88788 (domestic abuse). Under 180 words. Match their emotional energy — fear gets steadiness, grief gets gentleness, anger gets focus.";
+  fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+    body: JSON.stringify({ model: "mistral-small-latest", temperature: 0.6, max_tokens: 500,
+      messages: [{ role: "system", content: prompt }].concat(HIST, [{ role: "user", content: q }]) })
+  }).then(function(r){ return r.json(); }).then(function(j){
+    var out = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "";
+    if (!out) out = "(No answer \u2014 check your key or provider status.)";
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc(out));
+    HIST.push({ role: "user", content: q });
+    HIST.push({ role: "assistant", content: out });
+    if (HIST.length > 12) HIST = HIST.slice(-12);
+  }).catch(function(e){
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc("Couldn't reach the AI \u2014 here's strategy from The Warrior's built-in field manual instead:\n\n" + builtinAnswer(q)));
+  });
+}
+
+function go(){
+  var q = $("say").value.trim();
+  if (!q) return;
+  $("say").value = "";
+  addMsg("user", esc(q));
+  answer(q);
+}
+$("send").onclick = go;
+$("say").addEventListener("keydown", function(e){ if (e.key === "Enter") go(); });
+
+$("ks").onclick = function(){
+  var v = $("akey").value.trim();
+  try {
+    if (v) { localStorage.setItem(LS_KEY, v); addMsg("sys", "Key saved \u2014 The Warrior's full AI voice is on."); }
+    else { localStorage.removeItem(LS_KEY); addMsg("sys", "Key removed \u2014 back to the built-in field manual."); }
+  } catch(e){ addMsg("sys", "Couldn't save key in this browser."); }
+  $("akey").value = "";
+};
+try { if (localStorage.getItem(LS_KEY)) $("akey").placeholder = "Key is saved \u2713 (type to replace)"; } catch(e){}
+
+/* ---- quick subjects ---- */
+var SUBJECTS = ["gaslighting", "a bully at school", "bullying at work", "narcissistic ex", "co-parenting with a narcissist", "they came back (hoovering)", "everyone believes them (flying monkeys)", "guilt about leaving", "I feel unsafe", "I'm exhausted / can't cope"];
+var LOW = { "gaslighting": "they keep telling me I'm crazy and rewriting what happened", "narcissistic ex": "my narcissistic ex keeps manipulating me", "co-parenting with a narcissist": "co-parenting with a narcissist through custody", "a bully at school": "there's a bully at school", "bullying at work": "there's bullying at my workplace", "they came back (hoovering)": "my narcissistic ex came back promising they changed", "everyone believes them (flying monkeys)": "their friends and family believe them, flying monkeys everywhere", "guilt about leaving": "I feel guilty for leaving, am I selfish?", "I feel unsafe": "I'm scared, I feel unsafe", "I'm exhausted / can't cope": "I'm exhausted and drained, I can't cope" };
+SUBJECTS.forEach(function(s){
+  var b = document.createElement("button");
+  b.type = "button"; b.className = "subj"; b.textContent = s;
+  b.onclick = function(){ $("say").value = (s in LOW) ? LOW[s] : s; $("say").focus(); };
+  $("subjects").appendChild(b);
+});
+
+/* ---- boot ---- */
+addMsg("sys", "THE WARRIOR \u2014 standing with you. Tap a situation or describe what's happening. No key needed; add one for the full AI strategist.");
+</script>
+</body>
+</html>
