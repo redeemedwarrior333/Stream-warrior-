@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔥 Bible Verse Flamekeeper — by Redeemed Warrior</title>
+<meta name="description" content="Any struggle becomes a matching Bible verse plus one line of fire. Stories in, fire out — walk in it. An AI tool by Redeemed Warrior.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0E0B1D; color: #F3EFFF; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  .brand { color: #F0C878; letter-spacing: 2px; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+  .byline { color: #A79DD0; font-size: 12px; margin-bottom: 18px; }
+  h1 { font-size: 30px; margin: 4px 0 8px; }
+  h1 .gold { color: #F0C878; }
+  .sub { color: #C9C2E8; font-size: 15px; margin-bottom: 18px; max-width: 640px; }
+  .panel { background: #201A48; border: 1px solid #332A63; border-radius: 16px; padding: 18px; }
+  .panel h2 { color: #F0C878; font-size: 15px; margin-bottom: 10px; letter-spacing: .5px; }
+  input {
+    width: 100%; background: #0E0B1D; color: #F3EFFF; border: 1px solid #332A63;
+    border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: inherit;
+  }
+  input:focus { outline: none; border-color: #F0C878; }
+  button {
+    background: #F0C878; color: #241A05; font-weight: 800; border: none; border-radius: 10px;
+    padding: 11px 16px; font-size: 14px; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: #F0C878; border: 2px solid #F0C878; }
+  button:disabled { opacity: .55; cursor: wait; }
+  .mini { padding: 5px 10px; font-size: 12px; border-radius: 8px; }
+  #chat { background: #14102e; border: 1px solid #332A63; border-radius: 12px; height: 380px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .msg { max-width: 88%; padding: 9px 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .msg.user { align-self: flex-end; background: #F0C878; color: #241A05; border-bottom-right-radius: 4px; }
+  .msg.ai { align-self: flex-start; background: #201A48; border: 1px solid #332A63; border-bottom-left-radius: 4px; }
+  .msg.sys { align-self: center; color: #A79DD0; font-size: 12px; background: none; }
+  .chatsend { display: flex; gap: 8px; margin-top: 10px; }
+  .chatsend input { flex: 1; }
+  .hint { color: #A79DD0; font-size: 12px; margin-top: 8px; line-height: 1.5; }
+  .hint a { color: #F0C878; }
+  .keyrow { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+  .keyrow input { flex: 1; }
+  .subjects { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .subj { background: #14102e; border: 1px solid #332A63; color: #C9C2E8; border-radius: 999px; padding: 5px 11px; font-size: 12px; cursor: pointer; }
+  footer { margin-top: 40px; border-top: 1px solid #332A63; padding-top: 18px; font-size: 14px; color: #A79DD0; }
+  footer a { color: #F0C878; text-decoration: none; }
+  a.home-btn { display: inline-block; background: #F0C878; color: #241A05; font-weight: 800; border-radius: 10px; padding: 10px 16px; text-decoration: none; font-size: 14px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="home-btn" href="../">← More Warrior tools</a>
+  <div class="brand">📖 Warrior Forge tool</div>
+  <div class="byline">by Redeemed Warrior</div>
+
+  <h1>🔥 Bible Verse <span class="gold">Flamekeeper</span></h1>
+  <p class="sub">Any struggle becomes a matching verse plus one line of fire. Tell it what you're walking through — stories in, fire out. <strong>Works with no key</strong> (built-in verse bank); add a free Mistral key for the full AI voice.</p>
+
+  <div class="panel">
+    <h2>🔥 BRING YOUR STRUGGLE</h2>
+    <div class="subjects" id="subjects"></div>
+    <div id="chat"></div>
+    <div class="chatsend">
+      <input id="say" placeholder="What are you walking through?">
+      <button id="send">▶</button>
+    </div>
+    <div class="keyrow">
+      <input id="akey" type="password" placeholder="Optional: free Mistral key (console.mistral.ai) — stays in your browser">
+      <button class="mini ghost" id="ks">Set</button>
+    </div>
+    <p class="hint">Not a pastor, counselor, or crisis service. For danger from an abuser: call <strong>911</strong> or the National DV Hotline <strong>1-800-799-7233</strong>.</p>
+  </div>
+
+  <footer>
+    <p><strong>The Warrior family</strong> — 🛡️ <a href="../">Stream Warrior</a> · 🙏 <a href="../warrior-prophet/">Warrior Prophet</a> · 🛡️ <a href="../phone-warrior/">Phone Warrior</a> · ⚖️ <a href="../weirdlaw/">Weird Law or Fake?</a> · 🔥 <a href="../ai-builder/?v=10">Warrior Forge</a> (this tool was forged there)</p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ---- visible crash banner: if anything breaks, show WHY instead of dead buttons ---- */
+function flameBanner(msg){
+  try {
+    var b = document.createElement("div");
+    b.style.cssText = "background:#FF5A6E;color:#fff;padding:10px 14px;border-radius:10px;margin:0 0 14px;font:12px/1.5 system-ui;word-break:break-word;";
+    b.textContent = "\u26a0 Tool error: " + msg + " \u2014 screenshot this and tell Redeemed Warrior.";
+    var w = document.querySelector(".wrap");
+    if (w && w.firstChild) w.insertBefore(b, w.firstChild); else document.body.insertBefore(b, document.body.firstChild);
+  } catch(e){}
+}
+window.addEventListener("error", function(ev){ flameBanner((ev && ev.message) ? ev.message : "script error"); });
+window.addEventListener("unhandledrejection", function(ev){ flameBanner("network/async: " + ((ev && ev.reason && ev.reason.message) ? ev.reason.message : String(ev && ev.reason || "unknown"))); });
+
+var LS_KEY = "forge_key"; // same key slot as Warrior Forge — set it once, works everywhere
+function $(id){ return document.getElementById(id); }
+function esc(s){ var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+
+/* ---- built-in verse bank (no key needed) ---- */
+var VERSES = [
+  { k:["fear","afraid","scared","terrified","panic","anxious","anxiety","worry","worried","nervous"],
+    ref:"Isaiah 41:10", text:"Fear not, for I am with you; be not dismayed, for I am your God. I will strengthen you, I will help you, I will uphold you with my righteous right hand.",
+    fire:"Fear talks loudest right before God shows up biggest." },
+  { k:["angry","anger","mad","furious","rage","hate","resent"],
+    ref:"James 1:19-20", text:"Let every person be quick to hear, slow to speak, slow to anger; for the anger of man does not produce the righteousness of God.",
+    fire:"Your fire is for fuel, not for burning down your own house." },
+  { k:["grief","grieving","died","death","loss","lost them","funeral","mourning"],
+    ref:"Revelation 21:4", text:"He will wipe away every tear from their eyes, and death shall be no more, neither shall there be mourning nor crying nor pain anymore.",
+    fire:"Grief is love with nowhere to go yet \u2014 and heaven is taking names." },
+  { k:["lonely","alone","nobody","isolated","forgotten","friendless"],
+    ref:"Deuteronomy 31:6", text:"Be strong and courageous. Do not fear... for it is the LORD your God who goes with you. He will not leave you or forsake you.",
+    fire:"You're not alone \u2014 you're outnumbered on the right side." },
+  { k:["tired","exhausted","weary","burnt out","burnout","can't go on","no strength","drained"],
+    ref:"Isaiah 40:31", text:"They who wait for the LORD shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary.",
+    fire:"Rest is not quitting \u2014 even eagles glide." },
+  { k:["tempted","temptation","addiction","relapse","slipped","urge","craving","sobriety"],
+    ref:"1 Corinthians 10:13", text:"God is faithful; he will not let you be tempted beyond your ability, but with the temptation he will also provide the way of escape.",
+    fire:"The exit door is already open \u2014 your only job is to walk, not negotiate." },
+  { k:["hopeless","hopelessness","depressed","depression","empty","numb","pointless","dark place","suicidal"],
+    ref:"Psalm 34:18", text:"The LORD is near to the brokenhearted and saves the crushed in spirit.",
+    fire:"You are not buried \u2014 you are planted. Seeds look dead before they break ground." },
+  { k:["grateful","thankful","blessed","good news","great day","promotion","answered"],
+    ref:"Psalm 100:4", text:"Enter his gates with thanksgiving, and his courts with praise! Give thanks to him; bless his name!",
+    fire:"Wins declared out loud are wins remembered forever." },
+  { k:["enemy","abuser","abusive","stalker","bully","threat","protect","danger","leaving","escape"],
+    ref:"Psalm 91:1-2", text:"He who dwells in the shelter of the Most High will abide in the shadow of the Almighty. I will say to the LORD, \"My refuge and my fortress, my God, in whom I trust.\"",
+    fire:"You don't fight the storm \u2014 you stand in the tower it can't climb. (In real danger: 911 or 1-800-799-7233.)" },
+  { k:["forgive","forgiveness","bitter","bitterness","grudge","unforgiving"],
+    ref:"Colossians 3:13", text:"Forgive as the Lord forgave you.",
+    fire:"Forgiveness is setting the prisoner free \u2014 then realizing the prisoner was you." },
+  { k:["sick","illness","diagnosis","pain","hospital","healing","disease"],
+    ref:"Jeremiah 17:14", text:"Heal me, O LORD, and I shall be healed; save me, and I shall be saved; for you are my praise.",
+    fire:"Doctors treat; the Great Physician heals. Both belong to Him." },
+  { k:["money","broke","bills","debt","financial","job","fired","unemployed","rent"],
+    ref:"Philippians 4:19", text:"And my God will supply every need of yours according to his riches in glory in Christ Jesus.",
+    fire:"Your report says empty; His ledger says provided. His books don't bounce." },
+  { k:["purpose","calling","lost","direction","which way","decision","decide","future","path"],
+    ref:"Proverbs 3:5-6", text:"Trust in the LORD with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.",
+    fire:"You don't need to see the whole road \u2014 just the next step, and He's holding the map." },
+  { k:["shame","guilt","regret","failure","sinned","sin","unworthy","past"],
+    ref:"Romans 8:1", text:"There is therefore now no condemnation for those who are in Christ Jesus.",
+    fire:"Your past is a lesson, not a life sentence. Conviction says 'come back' \u2014 shame's voice is a counterfeit." },
+  { k:["strength","courage","fight","battle","warfare","stand","warrior"],
+    ref:"Ephesians 6:10-11", text:"Be strong in the Lord and in the strength of his might. Put on the whole armor of God, that you may be able to stand against the schemes of the devil.",
+    fire:"You were never handed armor for hiding \u2014 suit up and hold the line." },
+  { k:["faith","belief","doubt","trust","believe","prayer"," praying "],
+    ref:"Mark 9:23-24", text:"\"If you can\"! All things are possible for one who believes... \"I believe; help my unbelief!\"",
+    fire:"Mustard-seed faith still moves real mountains \u2014 size was never the requirement." }
+];
+var FALLBACK_VERSES = [
+  { ref:"Psalm 46:1", text:"God is our refuge and strength, a very present help in trouble." },
+  { ref:"Lamentations 3:22-23", text:"The steadfast love of the LORD never ceases; his mercies never come to an end; they are new every morning." },
+  { ref:"Joshua 1:9", text:"Be strong and courageous... for the LORD your God is with you wherever you go." }
+];
+var FIRE_LINES = [
+  "Heaven saw this moment coming before you did \u2014 and it sent backup.",
+  "The struggle is real, but so is the God who already wrote the ending.",
+  "You've survived 100% of your worst days. That's not luck \u2014 that's anointing.",
+  "This is a chapter, not the conclusion. Flamekeepers read ahead."
+];
+
+function builtinAnswer(q){
+  var low = " " + q.toLowerCase() + " ";
+  var best = null, bestScore = 0;
+  VERSES.forEach(function(v){
+    var score = 0;
+    v.k.forEach(function(word){ if (low.indexOf(word) !== -1) score++; });
+    if (score > bestScore) { bestScore = score; best = v; }
+  });
+  var verse = best || FALLBACK_VERSES[Math.floor(Math.random() * FALLBACK_VERSES.length)];
+  var ack = q.length > 60 ? "I hear how heavy this is. Here's your word:" : "I hear you. Here's your word:";
+  var fire = best ? best.fire : FIRE_LINES[Math.floor(Math.random() * FIRE_LINES.length)];
+  return ack + "\n\n\ud83d\udcd6 " + verse.ref + " \u2014 \"" + verse.text + "\"\n\n\ud83d\udd25 " + fire + "\n\nWalk in it.";
+}
+
+/* ---- chat ---- */
+var HIST = [];
+function addMsg(cls, safeHtml){
+  var m = document.createElement("div");
+  m.className = "msg " + cls;
+  m.innerHTML = safeHtml;
+  $("chat").appendChild(m);
+  $("chat").scrollTop = $("chat").scrollHeight;
+  return m;
+}
+
+function answer(q){
+  var key = "";
+  try { key = localStorage.getItem(LS_KEY) || ""; } catch(e){}
+  if (!key) { addMsg("ai", esc(builtinAnswer(q))); return; }
+  var think = addMsg("ai", "\u2026");
+  var prompt = "You are the Bible Verse Flamekeeper, created by Redeemed Warrior. The user tells you a struggle, feeling, or situation. Respond with: (1) one short line acknowledging what they said, (2) a matching Bible verse with its reference in this format '\ud83d\udcd6 Book C:P \u2014 \"verse text\"', (3) one fiery, faith-filled line of encouragement starting with \ud83d\udd25, (4) end every answer with exactly: Walk in it. Rules: under 120 words. Never lecture, shame, or preach. Never give medical, legal, or financial advice \u2014 refer to professionals. If the user mentions abuse or danger, gently include the National DV Hotline 1-800-799-7233 (or 911). Match their emotional energy \u2014 grief gets tenderness, anger gets steel, fear gets courage.";
+  fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+    body: JSON.stringify({ model: "mistral-small-latest", temperature: 0.7, max_tokens: 400,
+      messages: [{ role: "system", content: prompt }].concat(HIST, [{ role: "user", content: q }]) })
+  }).then(function(r){ return r.json(); }).then(function(j){
+    var out = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "";
+    if (!out) out = "(No answer \u2014 check your key or provider status.)";
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc(out));
+    HIST.push({ role: "user", content: q });
+    HIST.push({ role: "assistant", content: out });
+    if (HIST.length > 12) HIST = HIST.slice(-12);
+  }).catch(function(e){
+    if (think && think.parentNode) think.remove();
+    addMsg("ai", esc("Couldn't reach the AI provider \u2014 here's flame from the built-in bank instead:\n\n" + builtinAnswer(q)));
+  });
+}
+
+function go(){
+  var q = $("say").value.trim();
+  if (!q) return;
+  $("say").value = "";
+  addMsg("user", esc(q));
+  answer(q);
+}
+$("send").onclick = go;
+$("say").addEventListener("keydown", function(e){ if (e.key === "Enter") go(); });
+
+$("ks").onclick = function(){
+  var v = $("akey").value.trim();
+  try {
+    if (v) { localStorage.setItem(LS_KEY, v); addMsg("sys", "Key saved \u2014 Flamekeeper's full AI voice is on."); }
+    else { localStorage.removeItem(LS_KEY); addMsg("sys", "Key removed \u2014 back to the built-in verse bank."); }
+  } catch(e){ addMsg("sys", "Couldn't save key in this browser."); }
+  $("akey").value = "";
+};
+try { if (localStorage.getItem(LS_KEY)) $("akey").placeholder = "Key is saved \u2713 (type to replace)"; } catch(e){}
+
+/* ---- quick subjects ---- */
+var SUBJECTS = ["fear","anxiety","anger","grief","lonely","temptation","hopeless","abuser / danger","money stress","shame","sick","my purpose"];
+SUBJECTS.forEach(function(s){
+  var b = document.createElement("button");
+  b.type = "button"; b.className = "subj"; b.textContent = s;
+  b.onclick = function(){ $("say").value = s; $("say").focus(); };
+  $("subjects").appendChild(b);
+});
+
+/* ---- boot ---- */
+addMsg("sys", "Bible Verse Flamekeeper \u2014 blazing. Works with no key; add one below for the full AI voice.");
+try { /* warm the first exchange */
+} catch(e){}
+</script>
+</body>
+</html>
