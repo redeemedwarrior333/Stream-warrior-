@@ -3,7 +3,7 @@ name: Web App Test
 on:
   push:
     branches: ["**"]
-    paths: ["index.html", "css/**", "js/**", "warrior-prophet/**", "test/**", ".github/workflows/web-test.yml"]
+    paths: ["index.html", "css/**", "js/**", "warrior-prophet/**", "den/**", "test/**", ".github/workflows/web-test.yml"]
   workflow_dispatch:
 
 jobs:
