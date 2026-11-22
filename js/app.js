@@ -2,7 +2,7 @@
 "use strict";
 
 const App = {
-  VERSION: "v26",
+  VERSION: "v27",
   modules: {},
   order: ["tarot", "twentyq", "trivia", "soundboard", "madlibs", "jokes", "lines", "facts", "wyr", "laws"],
   meta: {
@@ -28,10 +28,17 @@ const App = {
     this.bindChrome();
     this.updateAIDot();
     this.openModule("home");
+    this.registerSW();
     document.addEventListener("keydown", e => {
       if (e.key === "Escape") { this.closeModal(); }
       if (e.ctrlKey && e.key === "f") { e.preventDefault(); this.toggleFullscreen(); }
     });
+  },
+
+  registerSW() {
+    if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0) {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    }
   },
 
   buildBar() {
@@ -64,6 +71,11 @@ const App = {
     document.getElementById("ai-dot").addEventListener("click", () => this.openSettings());
     document.getElementById("peek-zone").addEventListener("click", () => this.showBar());
     document.getElementById("btn-ai-test").addEventListener("click", () => this.testAI());
+
+    /* model preset chips in Settings */
+    document.querySelectorAll("#model-presets [data-model]").forEach(b => b.addEventListener("click", () => {
+      document.getElementById("set-model").value = b.dataset.model;
+    }));
 
     const nameInput = document.getElementById("set-name");
     nameInput.value = localStorage.getItem("sa_name") || "";
@@ -189,10 +201,10 @@ const App = {
     if (!AI.enabled) { out.textContent = "⚠️ endpoint + key required"; return; }
     out.textContent = "⏳ testing…";
     try {
-      await AI.chat("Reply with exactly: OK", "ping", 10);
+      await AI.chat("Reply with exactly: OK", "ping", 10, { noRetry: true });
       out.textContent = "✅ connected";
       this.updateAIDot();
-    } catch (e) { out.textContent = "❌ " + e.message; }
+    } catch (e) { out.textContent = "❌ " + AI.errText(e); }
   },
 
   updateAIDot() {

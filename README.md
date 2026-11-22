@@ -13,7 +13,7 @@ while you stream. No install for viewers. Works on any device with a browser.
 
 ## Modules (v0)
 - 🔮 **Tarot** — Mystica (Classic) and Love Oracle decks, 22 Major Arcana, upright/reversed, PAST/PRESENT/FUTURE spread, tap a placed card for full meanings. Optional AI readings when connected.
-- ❓ **20 Questions** — Stream Warrior holds a secret; chat asks yes/no questions, you type them in and it answers. Reveal button for the endgame.
+- ❓ **20 Questions** — Stream Warrior holds a secret; chat asks yes/no questions, you type them in and it answers. Reveal button for the endgame. With AI connected, tap **🤖 AI Host** and the AI picks the secret and answers chat.
 - 🧠 **Trivia** — 48-question built-in bank across 8 categories, reveal + next flow.
 - 🔊 **Soundboard** — 14 synthesized sounds (airhorn, drumroll, applause, sad trombone, crickets…) + up to 12 of your own uploaded sounds, saved on-device.
 - 📝 **Mad Libs** — 8 story templates, chip-guided word collection, animated reveal.
@@ -25,6 +25,17 @@ Everything works offline with built-in content. To unlock endless generated
 content (AI tarot readings, infinite trivia/jokes/facts), open **⚙️ Settings →
 AI Connection** and point it at any OpenAI-compatible API (e.g. Mistral).
 Your key is stored only on your device and sent only to the endpoint you choose.
+
+AI features in this build:
+- Streaming AI tarot readings (the reading types itself out live).
+- **🤖 AI Host** mode for 20 Questions: the AI picks a secret and answers chat's questions.
+- One-tap model presets (Mistral Small / Medium / Large).
+- Handful timeout + automatic retry with clear error messages.
+- AI-generated jokes, lines, facts and WYR are cached on-device so they survive a reload.
+
+## Works offline
+A service worker caches the app after the first open, so a dropped connection
+mid-stream never takes your scene down.
 
 ## Run locally
 Any static server works:

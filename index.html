@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b0b14">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Stream Warrior — Streamer Mod Menu</title>
-<link rel="stylesheet" href="css/style.css?v=26">
+<link rel="stylesheet" href="css/style.css?v=27">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -48,6 +48,11 @@
       <label>Model
         <input id="set-model" type="text" placeholder="mistral-small-latest">
       </label>
+      <div class="row" id="model-presets">
+        <button type="button" class="btn tiny ghost" data-model="mistral-small-latest">Small</button>
+        <button type="button" class="btn tiny ghost" data-model="mistral-medium-latest">Medium</button>
+        <button type="button" class="btn tiny ghost" data-model="mistral-large-latest">Large</button>
+      </div>
       <label>API Key
         <input id="set-key" type="password" placeholder="paste key (stored on this device only)">
       </label>
@@ -81,12 +86,12 @@
 
 <div id="toast"></div>
 
-<script src="js/data.js?v=26"></script>
-<script src="js/ai.js?v=26"></script>
-<script src="js/sound.js?v=26"></script>
-<script src="js/tarot.js?v=26"></script>
-<script src="js/games.js?v=26"></script>
-<script src="js/laws.js?v=26"></script>
-<script src="js/app.js?v=26"></script>
+<script src="js/data.js?v=27"></script>
+<script src="js/ai.js?v=27"></script>
+<script src="js/sound.js?v=27"></script>
+<script src="js/tarot.js?v=27"></script>
+<script src="js/games.js?v=27"></script>
+<script src="js/laws.js?v=27"></script>
+<script src="js/app.js?v=27"></script>
 </body>
 </html>

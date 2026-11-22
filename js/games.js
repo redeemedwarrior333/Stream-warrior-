@@ -4,6 +4,7 @@
 /* ---------- 20 QUESTIONS ---------- */
 const TwentyQ = {
   secret: null, count: 0, log: [], over: false,
+  aiHost: false, aiAsking: false,
 
   el() { return document.getElementById("m-twentyq"); },
 
@@ -13,11 +14,26 @@ const TwentyQ = {
     this.render();
   },
 
+  async startAI() {
+    if (!AI.enabled) { App.toast("Connect AI in settings first"); return; }
+    App.toast("🤖 AI is picking a secret…");
+    try {
+      const r = await AI.chat("You host a 20 Questions game on a live stream.",
+        "Think of ONE secret thing: a well-known animal, food, object, place or celebrity. Reply with ONLY its name, 1 to 3 words. No hints, no quotes.", 20);
+      const name = r.replace(/[."*]/g, "").trim();
+      if (!name || name.length > 40 || name.split("\n").length > 1) throw new Error("AI sent a bad format, try again");
+      this.secret = { name: name, sym: "🤖", ai: true };
+      this.count = 0; this.log = []; this.over = false;
+      Sound.play("tada");
+      this.render();
+    } catch (e) { App.toast("AI: " + AI.errText(e)); }
+  },
+
   render() {
     App.scene(`
       <div class="module" id="m-twentyq">
         <div class="module-head"><h2>❓ 20 Questions</h2>
-          <span class="q-count ${this.count >= 15 ? "danger" : ""}">${this.over ? "GAME OVER" : "Question " + (this.count + 1) + "/20"}</span>
+          <span class="q-count ${this.count >= 15 ? "danger" : ""}">${this.over ? "GAME OVER" : "Question " + (this.count + 1) + "/20"}${this.aiHost && AI.enabled ? " · 🤖" : ""}</span>
         </div>
         <p class="hint center">Chat asks questions out loud — you type them in, Stream Warrior answers. Chat guesses the thing; you type the guess to check it.</p>
         <div class="q-log" id="tq-log">${this.log.map(l => `<div class="q-entry"><span class="q-q">${l.q}</span><span class="q-a ${l.a === "YES" ? "yes" : l.a === "NOPE" ? "no" : "maybe"}">${l.a}</span></div>`).join("") || '<div class="hint center">No questions yet.</div>'}</div>
@@ -28,6 +44,7 @@ const TwentyQ = {
         <div class="row center gap">
           <button class="btn small" id="tq-reveal">👁️ Reveal</button>
           <button class="btn small" id="tq-new">↺ New Round</button>
+          <button class="btn small ${this.aiHost ? "" : "ghost"} ${AI.enabled ? "" : "dim"}" id="tq-aihost">🤖 AI Host</button>
         </div>
       </div>
     `, () => {
@@ -37,7 +54,12 @@ const TwentyQ = {
       input.addEventListener("keydown", e => { if (e.key === "Enter") this.ask(); });
       root.querySelector("#tq-ask").addEventListener("click", () => this.ask());
       root.querySelector("#tq-reveal").addEventListener("click", () => this.reveal());
-      root.querySelector("#tq-new").addEventListener("click", () => this.start());
+      root.querySelector("#tq-new").addEventListener("click", () => { if (this.aiHost && AI.enabled) this.startAI(); else this.start(); });
+      const ah = root.querySelector("#tq-aihost");
+      ah.addEventListener("click", async () => {
+        if (this.aiHost) { this.aiHost = false; this.start(); }
+        else { this.aiHost = true; this.over = false; this.count = 0; this.log = []; await this.startAI(); }
+      });
     });
   },
 
@@ -52,6 +74,7 @@ const TwentyQ = {
     const input = this.el().querySelector("#tq-input");
     const text = input.value.trim();
     if (!text) return;
+    if (this.aiHost && AI.enabled) { this.askAI(text, input); return; }
     input.value = "";
     const t = text.toLowerCase();
 
@@ -84,6 +107,42 @@ const TwentyQ = {
     this.render();
   },
 
+  /* AI host answers the question instead of the keyword matcher */
+  async askAI(text, input) {
+    if (this.aiAsking) return;
+    this.aiAsking = true;
+    if (input) input.value = "";
+    this.count++;
+    this.log.push({ q: text, a: "🤔 …" });
+    this.render();
+    const sys = `You host 20 Questions on a live stream. The secret is "${this.secret.name}". The player asks a yes/no question or makes a guess. Reply with ONLY one of: YES, NO, MAYBE (when it is unclear or depends), or GOT IT (only if the guess names the secret). Never reveal the secret or explain.`;
+    try {
+      const r = (await AI.chat(sys, text, 8)).toUpperCase();
+      if (r.indexOf("GOT IT") >= 0) {
+        this.log[this.log.length - 1] = { q: text, a: "🎉 YES!" };
+        this.over = true;
+        Sound.play("tada");
+        this.aiAsking = false;
+        this.render();
+        App.toast(`Chat got it in ${this.count}: ${this.secret.name}`);
+        return;
+      }
+      let a = "MAYBE";
+      if (r.indexOf("YES") >= 0) a = "YES";
+      else if (r.indexOf("NO") >= 0) a = "NOPE";
+      this.log[this.log.length - 1] = { q: text, a: a };
+      if (a === "YES") Sound.play("ding"); else if (a === "NOPE") Sound.play("buzzer"); else Sound.play("boing");
+      if (this.count >= 20) this.over = true;
+      this.aiAsking = false;
+      this.render();
+    } catch (e) {
+      this.aiAsking = false;
+      this.log.pop(); this.count--;
+      this.render();
+      App.toast("AI: " + AI.errText(e));
+    }
+  },
+
   randomAttrHint() {
     const keys = Object.keys(TWENTYQ_ATTRS);
     return TWENTYQ_ATTRS[keys[Math.floor(Math.random() * keys.length)]];
@@ -102,8 +161,10 @@ const Trivia = {
 
   pick() {
     if (!this.pool.length) this.pool = [...TRIVIA];
+    /* clear the used set once everything has been seen, so no early loops */
+    if (this.used.size >= this.pool.length) this.used.clear();
     let i;
-    do { i = Math.floor(Math.random() * this.pool.length); } while (this.used.has(i) && this.used.size < this.pool.length);
+    do { i = Math.floor(Math.random() * this.pool.length); } while (this.used.has(i));
     this.used.add(i);
     this.current = this.pool[i];
     this.revealed = false;
@@ -135,14 +196,15 @@ const Trivia = {
   },
 
   async aiQuestion() {
-    if (!AI.enabled) { App.toast("Connect AI in ⚙️ settings"); return; }
+    if (!AI.enabled) { App.toast("Connect AI in settings"); return; }
     App.toast("✨ Generating…");
     try {
       const arr = await AI.list("trivia", 5, "no repeats, fun categories");
+      if (!arr.length) throw new Error("AI sent a bad format, try again");
       this.pool.push(...arr);
       this.current = arr[0]; this.revealed = false;
       this.render();
-    } catch (e) { App.toast("AI unavailable"); }
+    } catch (e) { App.toast("AI: " + AI.errText(e)); }
   }
 };
 
@@ -217,7 +279,7 @@ const MadLibs = {
 /* ---------- Simple list modules: Jokes, Lines, Facts, WYR ---------- */
 function makeListModule(cfg) {
   return {
-    cfg, idx: -1, aiExtra: [],
+    cfg, idx: -1, aiExtra: [], cacheLoaded: false,
     el() { return document.getElementById("m-" + cfg.id); },
     pool() { return this.aiExtra.length && Math.random() < 0.5 ? this.aiExtra : cfg.data; },
     next() {
@@ -227,13 +289,19 @@ function makeListModule(cfg) {
       this.render();
     },
     render() {
+      /* restore AI content generated in a previous session */
+      if (!this.cacheLoaded) {
+        this.cacheLoaded = true;
+        const saved = AI.cacheGet("list_" + cfg.id);
+        if (saved && saved.length) this.aiExtra = saved;
+      }
       const pool = this.aiExtra.length ? this.aiExtra : cfg.data;
-      if (this.idx < 0) this.idx = Math.floor(Math.random() * pool.length);
+      if (this.idx < 0 || this.idx >= pool.length) this.idx = Math.floor(Math.random() * pool.length);
       const item = pool[this.idx];
       const text = typeof item === "string" ? item : item.text;
       App.scene(`
         <div class="module" id="m-${cfg.id}">
-          <div class="module-head"><h2>${cfg.icon} ${cfg.title}</h2>${item.ai ? '<span class="q-count">✨ AI</span>' : ""}</div>
+          <div class="module-head"><h2>${cfg.icon} ${cfg.title}</h2>${typeof item === "object" && item.ai ? '<span class="q-count">✨ AI</span>' : ""}</div>
           <div class="question-card big-text"><p>${text}</p></div>
           <div class="row center gap">
             <button class="btn" id="lm-next">${cfg.nextLabel || "Next ▶"}</button>
@@ -247,14 +315,16 @@ function makeListModule(cfg) {
       });
     },
     async more() {
-      if (!AI.enabled) { App.toast("Connect AI in ⚙️ settings"); return; }
+      if (!AI.enabled) { App.toast("Connect AI in settings"); return; }
       App.toast("✨ Generating…");
       try {
         const items = await AI.list(cfg.id === "jokes" ? "jokes" : cfg.id === "lines" ? "lines" : cfg.id === "facts" ? "facts" : "wyr", 10);
-        this.aiExtra = items.map(i => i.text || i);
-        this.idx = 0;
+        if (!items.length) throw new Error("AI sent a bad format, try again");
+        this.aiExtra = this.aiExtra.concat(items.map(i => i.text || i)).slice(-60);
+        this.idx = this.aiExtra.length - items.length;
+        AI.cacheSet("list_" + cfg.id, this.aiExtra);
         this.render();
-      } catch (e) { App.toast("AI unavailable"); }
+      } catch (e) { App.toast("AI: " + AI.errText(e)); }
     }
   };
 }

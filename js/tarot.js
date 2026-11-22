@@ -84,17 +84,28 @@ const Tarot = {
   async aiReading() {
     const placed = this.spread.filter(Boolean);
     if (!placed.length) { App.toast("Draw some cards first"); return; }
-    if (!AI.enabled) { App.toast("Connect AI in ⚙️ settings for endless readings"); return; }
+    if (!AI.enabled) { App.toast("Connect AI in settings for endless readings"); return; }
     const box = this.el().querySelector("#tarot-reading");
     box.classList.remove("hidden");
-    box.textContent = "✨ Channeling…";
-    const desc = placed.map(c => `${c.name} (${c.reversed ? "reversed" : "upright"}) in the ${c.slot || ""} position`).join("; ");
+    box.innerHTML = '<div class="reading-text"></div>';
+    const out = box.querySelector(".reading-text");
+    /* include the PAST/PRESENT/FUTURE position in the reading */
+    const desc = this.spread.map((c, i) => c
+      ? `${c.name} (${c.reversed ? "reversed" : "upright"}) in the ${this.slots[i]} position`
+      : "").filter(Boolean).join("; ");
+    let buf = "";
     try {
-      const text = await AI.chat(this.deckVoice(), `Reading for the streamer's viewer. Cards: ${desc}. Give one combined reading.`);
-      box.innerHTML = `<div class="reading-text">${text.replace(/</g, "&lt;")}</div>`;
+      const text = await AI.chat(this.deckVoice(),
+        `Reading for the streamer's viewer. Cards: ${desc}. Give one combined reading.`, 420, {
+          stream: true,
+          onToken: t => { buf += t; out.textContent = buf; box.scrollTop = box.scrollHeight; }
+        });
+      buf = text || buf;
+      out.textContent = buf;
       Sound.play("tada");
     } catch (e) {
-      box.textContent = "AI unavailable — use the built-in meanings below each pull.";
+      out.textContent = "AI unavailable (" + AI.errText(e) + "). Use the built-in meanings below each pull.";
+      Sound.play("buzzer");
     }
   },
 
