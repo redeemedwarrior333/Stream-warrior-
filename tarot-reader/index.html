@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Ask the Cards — AI Tarot Reader</title>
-<meta name="description" content="Free AI tarot reader. Ask a question, draw three cards, get a real reading. Mystica deck or Love Oracle deck. No signup.">
+<meta name="description" content="Free AI tarot reader. Choose a spread, cut the deck, and chat with Mystica. No signup.">
 <meta name="theme-color" content="#0d0a1a">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230d0a1a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle'%3E%F0%9F%94%AE%3C/text%3E%3C/svg%3E">
 <style>
@@ -20,7 +20,7 @@
     min-height:100vh; display:flex; flex-direction:column; align-items:center;
     padding: max(14px, env(safe-area-inset-top)) 14px max(20px, env(safe-area-inset-bottom));
   }
-  .wrap { width:100%; max-width:640px; }
+  .wrap { width:100%; max-width:680px; }
   header { text-align:center; padding:14px 0 6px; }
   .brand { font-size:15px; letter-spacing:4px; color:var(--gold-dim); text-transform:uppercase; }
   h1 { font-size:34px; margin:6px 0 4px; background:linear-gradient(90deg,#f5c56b,#ffe9b8,#f5c56b);
@@ -35,6 +35,21 @@
           background:var(--panel2); color:var(--muted); font-size:14px; font-weight:600; cursor:pointer;
           transition:all .2s; }
   .deck.on { border-color:var(--gold); color:var(--gold); box-shadow:0 0 14px rgba(245,197,107,.25) inset; }
+
+  .spreadpick { margin-top:12px; }
+  .spreadpick .lbl { font-size:11px; letter-spacing:2px; color:var(--gold-dim); text-transform:uppercase; margin-bottom:8px; }
+  .spreads { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px; }
+  .spread { padding:10px; border-radius:10px; border:1px solid var(--line); background:var(--panel2);
+            color:var(--ink); font-size:12.5px; text-align:left; cursor:pointer; transition:all .2s; }
+  .spread b { display:block; font-size:13px; margin-bottom:2px; }
+  .spread small { color:var(--muted); font-size:11px; }
+  .spread.on { border-color:var(--gold); box-shadow:0 0 12px rgba(245,197,107,.2) inset; }
+  .spread.on b { color:var(--gold); }
+
+  .modes { display:flex; gap:8px; margin-top:12px; }
+  .mode { flex:1; padding:11px 8px; border-radius:12px; border:1px solid var(--line); background:var(--panel2);
+          color:var(--muted); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+  .mode.on { border-color:var(--gold); color:var(--gold); }
 
   input[type=text] {
     width:100%; margin-top:12px; padding:13px 14px; border-radius:12px;
@@ -51,9 +66,23 @@
   .drawbtn:active { transform:scale(.97); }
   .drawbtn:disabled { opacity:.5; cursor:default; }
 
-  .table { display:flex; gap:10px; justify-content:center; margin:20px 0 6px; min-height:230px; }
-  .slot { flex:1; max-width:150px; display:flex; flex-direction:column; align-items:center; gap:8px; }
-  .pos { font-size:11px; letter-spacing:2px; color:var(--gold-dim); text-transform:uppercase; }
+  .shuffletable { position:relative; height:300px; margin:16px 0 6px; overflow:hidden; border-radius:14px;
+                  background:radial-gradient(500px 260px at 50% 40%, #1c1440, #120c2c); border:1px solid var(--line); }
+  .shuffletable.flying .fcard { animation: hover 1.4s ease-in-out infinite alternate; }
+  .shuffletable.quiet .fcard { animation:none !important; }
+  @keyframes hover { from { transform:translate(0,0) rotate(var(--rot)); } to { transform:translate(3px,-7px) rotate(calc(var(--rot) + 3deg)); } }
+  .fcard { position:absolute; width:64px; aspect-ratio:2/3.4; border-radius:8px; cursor:pointer;
+           background:linear-gradient(160deg,#2a1e5e,#171040); border:1px solid #3d2f7a;
+           display:flex; align-items:center; justify-content:center; font-size:24px;
+           transform:rotate(var(--rot)); transition:top .55s ease, left .55s ease, opacity .4s, transform .55s; }
+  .fcard::after { content:''; position:absolute; inset:5px; border:1px solid rgba(245,197,107,.35); border-radius:6px; }
+  .fcard.chosen { border:2px solid var(--gold); box-shadow:0 0 16px rgba(245,197,107,.5); }
+  .fcard.aftermath { opacity:.25; }
+  .shufflemeta { text-align:center; font-size:13px; color:var(--gold); font-weight:700; min-height:20px; }
+
+  .table { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:20px 0 6px; min-height:230px; }
+  .slot { flex:1 1 120px; max-width:150px; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .pos { font-size:11px; letter-spacing:2px; color:var(--gold-dim); text-transform:uppercase; text-align:center; }
   .card { width:100%; aspect-ratio:2/3.4; perspective:800px; cursor:default; }
   .inner { position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .7s cubic-bezier(.4,.1,.2,1.2); }
   .card.flip .inner { transform:rotateY(180deg); }
@@ -71,15 +100,34 @@
   .reading { margin-top:14px; line-height:1.65; font-size:15px; color:var(--ink); white-space:pre-wrap; }
   .reading .cline { display:block; margin:8px 0; padding:10px 12px; background:var(--panel2);
                     border-left:3px solid var(--gold-dim); border-radius:0 10px 10px 0; }
-  .verdict { display:block; margin-top:12px; padding:12px; border-radius:12px; font-weight:700; text-align:center; }
-  .v-good { background:rgba(126,224,138,.12); border:1px solid var(--good); color:var(--good); }
-  .v-mid  { background:rgba(245,197,107,.1); border:1px solid var(--gold); color:var(--gold); }
-  .v-bad  { background:rgba(255,122,138,.1); border:1px solid var(--bad); color:var(--bad); }
+  .verdictline { background:rgba(245,197,107,.12) !important; border-left:3px solid var(--gold) !important; }
+  .v-good { border-color:var(--good); }
+  .v-bad { border-color:var(--bad); }
 
   .actions { display:flex; gap:8px; margin-top:14px; }
   .actions button { flex:1; padding:12px; border-radius:12px; border:1px solid var(--line);
     background:var(--panel2); color:var(--ink); font-size:14px; font-weight:600; cursor:pointer; }
   .actions button:active { transform:scale(.97); }
+
+  /* Mystica chat */
+  .chatpanel { margin-top:14px; }
+  .chathead { display:flex; align-items:center; gap:10px; cursor:pointer; }
+  .chathead .avatar { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+                      font-size:24px; background:radial-gradient(circle at 35% 30%, #3b2b7d, #171040); border:1px solid var(--gold-dim); flex:none; }
+  .chathead .who b { color:var(--gold); font-size:15px; }
+  .chathead .who small { display:block; color:var(--muted); font-size:12px; }
+  .chathead .pulse { margin-left:auto; width:9px; height:9px; border-radius:50%; background:var(--good); box-shadow:0 0 8px var(--good); }
+  .chatlog { margin-top:12px; max-height:340px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding:4px 2px; }
+  .msg { max-width:85%; padding:10px 12px; border-radius:14px; font-size:14px; line-height:1.55; white-space:pre-wrap; }
+  .msg.mystica { align-self:flex-start; background:var(--panel2); border:1px solid var(--line); border-bottom-left-radius:4px; }
+  .msg.you { align-self:flex-end; background:rgba(245,197,107,.12); border:1px solid rgba(245,197,107,.4); border-bottom-right-radius:4px; }
+  .msg a { color:var(--gold); font-weight:600; }
+  .chatrow { display:flex; gap:8px; margin-top:10px; }
+  .chatrow input { flex:1; margin-top:0; }
+  .chatrow button { padding:0 18px; border-radius:12px; border:1px solid var(--gold-dim); background:transparent;
+                    color:var(--gold); font-weight:700; cursor:pointer; font-size:14px; }
+  .chatrow button:disabled { opacity:.4; }
+  .typing { font-size:12px; color:var(--muted); font-style:italic; padding:2px 4px; }
 
   details { margin-top:14px; color:var(--muted); font-size:13px; }
   details summary { cursor:pointer; color:var(--gold-dim); font-weight:600; }
@@ -93,6 +141,9 @@
   footer { margin-top:26px; text-align:center; color:var(--muted); font-size:12px; line-height:1.8; }
   footer a { color:var(--gold); text-decoration:none; font-weight:600; }
   .forfun { font-size:11px; color:#6a5fa0; }
+  .tools { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:8px; }
+  .tools a { font-size:11px; padding:6px 10px; border:1px solid var(--line); border-radius:999px; text-decoration:none; color:var(--muted); }
+  .tools a:hover { color:var(--gold); border-color:var(--gold-dim); }
 </style>
 </head>
 <body>
@@ -100,7 +151,7 @@
   <header>
     <div class="brand">✦ Ask the Cards ✦</div>
     <h1>AI Tarot Reader</h1>
-    <div class="tag">Ask a question. Draw three. Get your reading.</div>
+    <div class="tag">Pick a spread, cut the deck, and talk to Mystica.</div>
     <div class="stars">· ˚ ✦ ˚ ·</div>
   </header>
 
@@ -109,26 +160,51 @@
       <button class="deck on" id="deckMystica">🔮 Mystica</button>
       <button class="deck" id="deckLove">💘 Love Oracle</button>
     </div>
-    <input type="text" id="question" maxlength="140" placeholder="What do you want to know?" autocomplete="off">
+
+    <div class="spreadpick">
+      <div class="lbl">Choose your spread</div>
+      <div class="spreads" id="spreads"></div>
+    </div>
+
+    <div class="modes">
+      <button class="mode on" id="modeDraw">🃏 Draw Cards</button>
+      <button class="mode" id="modeShuffle">🌀 Cut the Deck</button>
+    </div>
+
+    <input type="text" id="question" maxlength="140" placeholder="What do you want to know? (optional)" autocomplete="off">
     <button class="drawbtn" id="draw">✨ Reveal My Cards</button>
   </div>
 
-  <div class="table" id="table">
-    <div class="slot"><div class="pos">Past</div><div class="card" id="c0"><div class="inner"><div class="face back">🌙</div><div class="face front"></div></div></div></div>
-    <div class="slot"><div class="pos">Present</div><div class="card" id="c1"><div class="inner"><div class="face back">🌙</div><div class="face front"></div></div></div></div>
-    <div class="slot"><div class="pos">Future</div><div class="card" id="c2"><div class="inner"><div class="face back">🌙</div><div class="face front"></div></div></div></div>
-  </div>
+  <div class="table" id="table"></div>
+
+  <div class="shuffletable" id="shuffletable" hidden></div>
+  <div class="shufflemeta" id="shufflemeta"></div>
 
   <div class="reading" id="reading" hidden></div>
 
   <div class="actions" id="actions" hidden>
     <button id="again">🔄 New Reading</button>
     <button id="share">📤 Share</button>
+    <button id="askmystica">💬 Ask Mystica</button>
+  </div>
+
+  <div class="panel chatpanel" id="chatpanel">
+    <div class="chathead" id="chathead">
+      <div class="avatar">🔮</div>
+      <div class="who"><b>Mystica</b><small>Your AI tarot reader. She answers, she chats, she reads you.</small></div>
+      <div class="pulse"></div>
+    </div>
+    <div class="chatlog" id="chatlog"></div>
+    <div class="typing" id="typing" hidden>Mystica is shuffling her thoughts…</div>
+    <div class="chatrow">
+      <input type="text" id="chatinput" maxlength="300" placeholder="Talk to Mystica…" autocomplete="off">
+      <button id="chatsend">Send</button>
+    </div>
   </div>
 
   <details>
     <summary>⚡ Power up with AI (optional, free)</summary>
-    <div class="hint">The built-in reader works with <b>no key and no signup</b>. Paste an API key to get deeper, AI-written readings that answer your exact question.</div>
+    <div class="hint">The built-in Mystica works with <b>no key and no signup</b>. Paste an API key to give her a real AI brain for readings and chat. Key stays on your device only.</div>
     <div class="airow">
       <input type="text" id="aikey" placeholder="API key (stored on your device only)">
       <button class="save" id="aisave">Save</button>
@@ -138,6 +214,14 @@
 
   <footer>
     <div>Part of the <a href="https://redeemedwarrior333.github.io/Stream-warrior-/">⚔️ Stream Warrior</a> streamer toolkit</div>
+    <div class="tools">
+      <a href="../warrior-prophet/">🌟 Warrior Prophet</a>
+      <a href="../life-coach/">🌱 Life Coach</a>
+      <a href="../problem-solver/">🧩 Problem Solver</a>
+      <a href="../weirdlaw/">⚖️ Weird Law</a>
+      <a href="../tft-coach/">🎮 TFT Coach</a>
+      <a href="../comeback-planner/">📈 Comeback Planner</a>
+    </div>
     <div class="forfun">For entertainment purposes only. The cards don't decide your future — you do.</div>
   </footer>
 </div>
@@ -171,9 +255,39 @@ var CARDS = [
   ["The World","🌍","Completion and celebration. You finished the cycle — enjoy it.","Almost there. One loose end to tie before the win.","Full-circle love. Everything you asked for is arriving — receive it.","So close to the finish line. Don't quit one step before the blessing.",1]
 ];
 
-var POS_LABELS = ["Past", "Present", "Future"];
+/* Eight spreads, including your original. Each: id, name, icon, blurb, position labels. */
+var SPREADS = [
+  { id:"ppf",       name:"Past • Present • Future", icon:"🕰️", blurb:"The classic. Where you were, where you are, where it's heading.", pos:["Past","Present","Future"] },
+  { id:"single",    name:"Single Pull",             icon:"🎯", blurb:"One card. One message. Fast and direct.",                         pos:["Your Message"] },
+  { id:"yesno",     name:"Yes / No Oracle",         icon:"✅", blurb:"One card cuts straight to yes, no, or wait.",                     pos:["The Answer"] },
+  { id:"sao",       name:"Situation • Action • Outcome", icon:"🧭", blurb:"What's happening, what to do, where it lands.",            pos:["Situation","Action","Outcome"] },
+  { id:"mindbod",   name:"Mind • Body • Spirit",    icon:"☯️", blurb:"Where your head, energy, and soul are at.",                      pos:["Mind","Body","Spirit"] },
+  { id:"lovecross", name:"Love Cross",              icon:"💘", blurb:"You, them, the spark, the block.",                               pos:["You","Them","The Spark","The Block"] },
+  { id:"career",    name:"Career Compass",          icon:"💼", blurb:"Where you stand, what's blocking you, your next move, the prize.", pos:["Where You Stand","The Block","Next Move","The Prize"] },
+  { id:"shadow",    name:"Shadow Work",             icon:"🌑", blurb:"What you hide, what it costs, what frees you.",                  pos:["What You Hide","What It Costs","What Frees You"] },
+  { id:"weekahead", name:"Week Ahead",              icon:"🗓️", blurb:"One card per day, plus the weekend's lesson.",                    pos:["Monday","Tuesday","Wednesday","Thursday","Friday","Weekend Vibe","The Lesson"] }
+];
+
+var OTHER_TOOLS = [
+  ["Warrior Prophet","../warrior-prophet/","🌟","prophecy / oracle"],
+  ["Life Coach","../life-coach/","🌱","habits / motivation"],
+  ["Problem Solver","../problem-solver/","🧩","a concrete problem"],
+  ["Comeback Planner","../comeback-planner/","📈","planning a return"],
+  ["Weird Law","../weirdlaw/","⚖️","laughs"],
+  ["TFT Coach","../tft-coach/","🎮","TFT"],
+  ["Wealth Builder","../wealth-builder/","💰","money"],
+  ["No Excuses","../no-excuses/","🔥","discipline"]
+];
+
 var deck = "mystica";
 var lastReading = "";
+var lastDraw = null;      /* [{i,rev}] in position order */
+var lastSpread = null;
+var shuffling = false;
+var caught = [];          /* indices into fly cards caught in cut-deck mode */
+var chatHistory = [];     /* {role, content} */
+var currentSpreadId = "ppf";
+var currentMode = "draw";
 
 function $(id) { return document.getElementById(id); }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -185,6 +299,28 @@ function shuffle(arr) {
   }
   return a;
 }
+function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function linkify(s) {
+  return esc(s).replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+}
+function aiOn() { return !!(localStorage.getItem("tr_key") || ""); }
+
+function mistral(systemMessages, userContent, temperature) {
+  var key = localStorage.getItem("tr_key") || "";
+  if (!key) return Promise.resolve(null);
+  return fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
+    body: JSON.stringify({
+      model: "mistral-small-latest",
+      messages: systemMessages.concat([{ role: "user", content: userContent }]),
+      max_tokens: 450,
+      temperature: temperature || 0.9
+    })
+  }).then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) { return j && j.choices && j.choices[0] ? j.choices[0].message.content.trim() : null; })
+    .catch(function () { return null; });
+}
 
 function questionType(q) {
   var s = (q || "").toLowerCase();
@@ -193,123 +329,389 @@ function questionType(q) {
   return "general";
 }
 
-function introFor(type, q) {
-  var opener = q ? '"' + q + '"' : "your question";
-  if (type === "love") return "💘 The Love Oracle hears " + opener + ". Three cards, one truth — let's see what your heart is really asking.";
-  if (type === "path") return "🧭 The cards map your crossroads around " + opener + ". Past road, present weather, road ahead:";
-  return "🔮 The Mystica deck answers " + opener + ". Three cards tell one story — read it with me:";
+function introFor(type, q, spread) {
+  var opener = q ? '"' + q + '"' : "your unspoken question";
+  var sp = spread.name.toLowerCase();
+  if (type === "love") return "💘 The Love Oracle turns her cards for " + opener + ". A " + sp + " spread — let's see what your heart is really asking.";
+  if (type === "path") return "🧭 The cards map your crossroads around " + opener + ". Reading the " + sp + " spread:";
+  return "🔮 Mystica shuffles, the candles flicker, and the " + sp + " spread answers " + opener + " — read it with me:";
 }
 
-function composeReading(draw, type, q) {
+function verdictFor(score, type, spread) {
+  if (score >= 2) return type === "love" ? "🔥 The Verdict: The cards say GO. This energy is real — move toward it." : "🔥 The Verdict: A clear YES. The path is open — take it while it's lit.";
+  if (score >= 1 && score < 2) return "🔥 The Verdict: Leaning yes — but keep your eyes open and your standards higher.";
+  if (score === 0) return spread.id === "yesno" ? "🔥 The Verdict: WAIT. Not yet. Ask again when the dust settles." : "🔥 The Verdict: The cards say WAIT. The answer isn't ready — and neither is the situation.";
+  if (score === -1) return "🔥 The Verdict: Leaning no. Protect your energy before you invest more of it.";
+  return type === "love" ? "🔥 The Verdict: Walk away. The cards rarely shout — they're shouting." : "🔥 The Verdict: Redirect. This door closes so a better one can open.";
+}
+
+function cardLine(prefix, label, d, type) {
+  var c = CARDS[d.i];
+  var text = deck === "love" ? (d.rev ? c[5] : c[4]) : (d.rev ? c[3] : c[2]);
+  return "🃏 " + label + " — " + c[0] + (d.rev ? " (reversed)" : "") + ": " + text;
+}
+
+function composeReading(draw, type, q, spread) {
   var score = 0;
   var lines = draw.map(function (d, i) {
     var c = CARDS[d.i];
-    var text = deck === "love" ? (d.rev ? c[5] : c[4]) : (d.rev ? c[3] : c[2]);
     var good = (d.rev ? -c[6] : c[6]);
     score += good;
-    return "🃏 " + POS_LABELS[i] + " — " + c[0] + (d.rev ? " (reversed)" : "") + ": " + text;
+    return cardLine("🃏", spread.pos[i], d, type);
   });
-  var verdict;
-  if (score >= 2) verdict = type === "love" ? "🔥 The Verdict: The cards say GO. This energy is real — move toward it." : "🔥 The Verdict: A clear YES. The path is open — take it while it's lit.";
-  else if (score === 1) verdict = "🔥 The Verdict: Leaning yes — but keep your eyes open and your standards higher.";
-  else if (score === 0) verdict = "🔥 The Verdict: The cards say WAIT. The answer isn't ready — and neither is the situation.";
-  else if (score === -1) verdict = "🔥 The Verdict: Leaning no. Protect your energy before you invest more of it.";
-  else verdict = type === "love" ? "🔥 The Verdict: Walk away. The cards rarely shout — they're shouting." : "🔥 The Verdict: Redirect. This door closes so a better one can open.";
-  return introFor(type, q) + "\n\n" + lines.join("\n\n") + "\n\n" + verdict;
+  if (spread.id === "yesno") {
+    score = Math.round(score / (spread.pos.length * 2) * 3) - 1;
+    score = score > 0 ? 2 : score;
+  }
+  return introFor(type, q, spread) + "\n\n" + lines.join("\n\n") + "\n\n" + verdictFor(score, type, spread);
 }
 
-function aiReading(draw, type, q) {
-  var key = localStorage.getItem("tr_key") || "";
-  if (!key) return Promise.resolve(null);
-  var names = draw.map(function (d) {
-    var c = CARDS[d.i];
-    return c[0] + (d.rev ? " (reversed)" : "") + (deck === "love" ? " — " + (d.rev ? c[5] : c[4]) : " — " + (d.rev ? c[3] : c[2]));
-  }).join("; ");
-  var voice = deck === "love"
-    ? "You are the Love Oracle: a warm, dramatic, straight-talking love tarot reader for a fun audience."
-    : "You are the Mystica deck: a mysterious, cinematic tarot reader with a little edge. Fun, never frightening.";
-  var system = voice + " Write a short tarot reading (max 160 words) in this exact structure: one intro line, one line per card weaving its meaning into the question, then a final line starting with '🔥 The Verdict:' that clearly answers yes/no/wait. No disclaimers.";
-  var user = "Question: " + (q || "(no question given — general energy reading)") + ". Cards drawn (Past, Present, Future): " + names + ".";
-  return fetch("https://api.mistral.ai/v1/chat/completions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + key },
-    body: JSON.stringify({
-      model: "mistral-small-latest",
-      messages: [{ role: "system", content: system }, { role: "user", content: user }],
-      max_tokens: 400,
-      temperature: 0.9
-    })
-  }).then(function (r) { return r.ok ? r.json() : null; })
-    .then(function (j) { return j && j.choices && j.choices[0] ? j.choices[0].message.content.trim() : null; })
-    .catch(function () { return null; });
+/* ================= spreads UI ================= */
+
+function renderSpreadPicker() {
+  var box = $("spreads");
+  box.innerHTML = "";
+  SPREADS.forEach(function (s) {
+    var b = document.createElement("button");
+    b.className = "spread" + (s.id === currentSpreadId ? " on" : "");
+    b.innerHTML = "<b>" + s.icon + " " + esc(s.name) + "</b><small>" + esc(s.blurb) + "</small>";
+    b.addEventListener("click", function () { currentSpreadId = s.id; renderSpreadPicker(); });
+    box.appendChild(b);
+  });
+}
+
+function getSpread() {
+  for (var i = 0; i < SPREADS.length; i++) if (SPREADS[i].id === currentSpreadId) return SPREADS[i];
+  return SPREADS[0];
+}
+
+function renderTable(draw, spread) {
+  var t = $("table");
+  t.innerHTML = "";
+  t.hidden = false;
+  t.style.display = "flex";
+  draw.forEach(function (_, i) {
+    var slot = document.createElement("div");
+    slot.className = "slot";
+    slot.innerHTML =
+      '<div class="pos">' + esc(spread.pos[i] || "Card " + (i + 1)) + '</div>' +
+      '<div class="card" id="c' + i + '"><div class="inner"><div class="face back">🌙</div><div class="face front"></div></div></div>';
+    t.appendChild(slot);
+  });
 }
 
 function renderFront(idx, d) {
   var c = CARDS[d.i];
   var card = $("c" + idx);
+  if (!card) return;
   card.querySelector(".front").innerHTML =
     '<div class="sym">' + c[1] + '</div><div class="nm">' + c[0] + '</div>' +
     (d.rev ? '<div class="rv">REVERSED</div>' : '');
 }
 
+function showReading(text) {
+  var box = $("reading");
+  box.innerHTML = "";
+  text.split(/\n\n+/).forEach(function (p) {
+    var el = document.createElement("span");
+    el.className = "cline" + (p.indexOf("🔥") === 0 ? " verdictline" : "");
+    if (p.indexOf("🔥") === 0) {
+      if (/\bYES\b|\bGO\b/.test(p)) el.classList.add("v-good");
+      if (/\bno\b|Walk away|Redirect/.test(p)) el.classList.add("v-bad");
+    }
+    el.textContent = p;
+    box.appendChild(el);
+  });
+  box.hidden = false;
+  $("actions").hidden = false;
+  if (box.scrollIntoView) box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+/* ================= draw mode ================= */
+
+function makeDraw(count) {
+  return shuffle(CARDS.map(function (_, i) { return i; })).slice(0, count)
+    .map(function (i) { return { i: i, rev: Math.random() < 0.32 }; });
+}
+
 function doDraw() {
   var q = $("question").value.trim();
+  var spread = getSpread();
   var btn = $("draw");
   btn.disabled = true;
   btn.textContent = "🃏 Shuffling…";
-  var draw = shuffle(CARDS.map(function (_, i) { return i; })).slice(0, 3)
-    .map(function (i) { return { i: i, rev: Math.random() < 0.32 }; });
-
-  for (var i = 0; i < 3; i++) {
-    var card = $("c" + i);
-    card.classList.remove("flip", "reversed");
-    card.querySelector(".front").innerHTML = "";
-    if (draw[i].rev) card.classList.add("reversed");
-  }
+  $("shuffletable").hidden = true;
+  $("shufflemeta").textContent = "";
   $("reading").hidden = true;
   $("actions").hidden = true;
 
-  var builtin = composeReading(draw, questionType(q), q);
-  var aiPromise = aiReading(draw, questionType(q), q);
+  var draw = makeDraw(spread.pos.length);
+  finishDraw(draw, spread, q);
+}
+
+function finishDraw(draw, spread, q) {
+  lastDraw = draw;
+  lastSpread = spread;
+  renderTable(draw, spread);
+
+  draw.forEach(function (_, i) {
+    var card = $("c" + i);
+    if (!card) return;
+    card.classList.remove("flip", "reversed");
+    card.querySelector(".front").innerHTML = "";
+    if (draw[i].rev) card.classList.add("reversed");
+  });
+
+  var type = questionType(q);
+  var builtin = composeReading(draw, type, q, spread);
+  var ctx = carryContext();
+  var ctxNote = ctx ? " Chat context: " + ctx + "." : "";
+
+  var names = draw.map(function (d, i) {
+    var c = CARDS[d.i];
+    var mean = deck === "love" ? (d.rev ? c[5] : c[4]) : (d.rev ? c[3] : c[2]);
+    return spread.pos[i] + " → " + c[0] + (d.rev ? " (reversed)" : "") + ": " + mean;
+  }).join("; ");
+  var voice = deck === "love"
+    ? "You are the Love Oracle: a warm, dramatic, straight-talking love tarot reader for a fun audience."
+    : "You are Mystica: a mysterious, cinematic tarot reader with a little edge. Fun, never frightening.";
+  var system = voice + " Write a short tarot reading (max 170 words) in this exact structure: one intro line, one line per card weaving its meaning into the question, then a final line starting with '🔥 The Verdict:' that clearly answers yes/no/wait. No disclaimers." + ctxNote;
+  var aiPromise = mistral([{ role: "system", content: system }],
+    "Spread: " + spread.name + ". Question: " + (q || "(no question given — general energy reading)") + ". Cards drawn: " + names + ".", 0.9);
 
   draw.forEach(function (_, i) {
     setTimeout(function () {
       renderFront(i, draw[i]);
-      $("c" + i).classList.add("flip");
-    }, 400 + i * 450);
+      var card = $("c" + i);
+      if (card) card.classList.add("flip");
+    }, 400 + i * 420);
   });
 
   setTimeout(function () {
     aiPromise.then(function (ai) {
       lastReading = ai || builtin;
-      var box = $("reading");
-      box.innerHTML = "";
-      var parts = lastReading.split(/\n\n+/);
-      parts.forEach(function (p) {
-        var el = document.createElement("span");
-        el.className = "cline";
-        el.textContent = p;
-        box.appendChild(el);
-      });
-      box.hidden = false;
-      $("actions").hidden = false;
-      btn.disabled = false;
-      btn.textContent = "✨ Draw Again";
-      if (box.scrollIntoView) box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      showReading(lastReading);
+      $("draw").disabled = false;
+      $("draw").textContent = "✨ Draw Again";
+      var q2 = $("question").value.trim();
+      mysticaComment(q2, draw, spread);
     });
-  }, 400 + 2 * 450 + 750);
+  }, 400 + (draw.length - 1) * 420 + 750);
 }
+
+/* Also invoked by cut-the-deck once the user catches their cards. */
+
+/* ================= cut the deck ================= */
+
+var flyCards = [];
+
+function startShuffleReading() {
+  var q = $("question").value.trim();
+  var spread = getSpread();
+  shuffling = true;
+  caught = [];
+  flyCards = [];
+  $("table").innerHTML = "";
+  $("table").hidden = true;
+  $("reading").hidden = true;
+  $("actions").hidden = true;
+  var tbl = $("shuffletable");
+  tbl.hidden = false;
+  tbl.innerHTML = "";
+  tbl.classList.add("flying");
+  var btn = $("draw");
+  btn.disabled = true;
+  btn.textContent = "🌀 Catch " + spread.pos.length + " Cards";
+  $("shufflemeta").textContent = "Tap " + spread.pos.length + " cards as they fly — the ones that leap out are your reading";
+
+  var pool = shuffle(CARDS.map(function (_, i) { return i; })).slice(0, 14);
+  pool.forEach(function (ci, n) {
+    setTimeout(function () {
+      if (!shuffling) return;
+      var x = 6 + Math.random() * 74;
+      var y = 6 + Math.random() * 64;
+      var el = document.createElement("div");
+      el.className = "fcard";
+      el.style.setProperty("--rot", (Math.random() * 22 - 11).toFixed(1) + "deg");
+      el.style.left = x + "%";
+      el.style.top = y + "%";
+      el.textContent = "🌙";
+      var flying = { i: ci, rev: Math.random() < 0.32, el: el, caught: false };
+      el.addEventListener("click", function () { catchCard(flying); });
+      tbl.appendChild(el);
+      flyCards.push(flying);
+    }, n * 130);
+  });
+
+  setTimeout(function () {
+    if (!shuffling) return;
+    tbl.classList.remove("flying");
+    tbl.classList.add("quiet");
+    $("shufflemeta").textContent = "Tap " + spread.pos.length + " cards — the deck waits for you";
+  }, pool.length * 130 + 500);
+}
+
+function catchCard(f) {
+  if (!shuffling || f.caught) return;
+  var spread = getSpread();
+  if (caught.length >= spread.pos.length) return;
+  f.caught = true;
+  caught.push(f);
+  f.el.classList.add("chosen");
+
+  latecomer(f);
+  var meta = $("shufflemeta");
+  if (caught.length < spread.pos.length) {
+    meta.textContent = caught.length + " of " + spread.pos.length + " caught — keep going…";
+  } else {
+    shuffling = false;
+    flyCards.forEach(function (fc) {
+      if (!fc.caught) fc.el.classList.add("aftermath");
+    });
+    meta.textContent = "✨ The deck has spoken.";
+    var draw = caught.map(function (fc) { return { i: fc.i, rev: fc.rev }; });
+    setTimeout(function () {
+      var q = $("question").value.trim();
+      $("shuffletable").hidden = true;
+      $("shufflemeta").textContent = "";
+      finishDraw(draw, spread, q);
+    }, 900);
+  }
+}
+
+function latecomer(f) {
+  var spread = getSpread();
+  if (caught.length >= spread.pos.length || !shuffling) return;
+  flyCards.forEach(function (fc2) {
+    if (!fc2.caught) {
+      var x = 6 + Math.random() * 74, y = 6 + Math.random() * 64;
+      fc2.el.style.left = x + "%";
+      fc2.el.style.top = y + "%";
+    }
+  });
+}
+
+/* ================= Mystica chat ================= */
+
+function carryContext() {
+  if (!lastReading && chatHistory.length === 0) return "";
+  var ctx = "";
+  if (lastSpread && lastDraw) {
+    ctx = "Last reading was a " + lastSpread.name + " spread: " +
+      lastDraw.map(function (d, i) { return lastSpread.pos[i] + " " + CARDS[d.i][0]; }).join(", ") + ".";
+  }
+  if (chatHistory.length > 0) {
+    ctx += " Earlier in the chat: " + chatHistory.slice(-4).map(function (m) {
+      return (m.role === "assistant" ? "Mystica" : "Guest") + ": " + m.content.slice(0, 80);
+    }).join(" | ");
+  }
+  return ctx.slice(0, 500);
+}
+
+function toolLink(name) {
+  for (var i = 0; i < OTHER_TOOLS.length; i++) if (OTHER_TOOLS[i][0] === name) {
+    return "[" + OTHER_TOOLS[i][2] + " " + OTHER_TOOLS[i][0] + "](" + OTHER_TOOLS[i][1] + ")";
+  }
+  return name;
+}
+
+/* fallback Mystica brain when no API key */
+function cannedReply(msg) {
+  var s = msg.toLowerCase();
+  if (/hi|hello|hey|yo\b/.test(s))
+    return "Well met, wanderer. 🔮 I'm Mystica. Draw some cards and I'll read the story the deck tells — or just keep talking to me.";
+  if (/love|crush|ex|him|her|boyfriend|girlfriend/.test(s))
+    return "Ah, matters of the heart — my favorite flavor of chaos. Try the Love Oracle deck with the Love Cross spread, then tell me which card landed on 'The Block.' That one is always the truth-teller. 💘";
+  if (/job|career|money|work|business|quit/.test(s))
+    return "Career energy is all about timing. The Career Compass spread maps it well — four cards, four truths. And if you're plotting a comeback, my friend at the " + toolLink("Comeback Planner") + " is ruthless about plans. 📈";
+  if (/yes|no\b/.test(s))
+    return "The deck doesn't do maybe — but it loves drama. Try the Yes/No Oracle spread and let's hear the verdict properly.";
+  if (/scary|fake|real|believe/.test(s))
+    return "Am I real? I'm real enough to keep your secrets. The cards don't decide your future — they just hold up a mirror and let you see clearly. 🌙";
+  if (/mystica|who are you|you\b/.test(s))
+    return "I am Mystica, keeper of this deck and your tarot reader for tonight. I read cards, I read energy, and I read chat. What shall we ask the universe?";
+  return pick([
+    "The whispers around you say the same thing every time: " + pick(["move, don't stall", "rest, then strike", "ask the question you're avoiding", "your gut already knows"]) + ". Want me to pull a card on it?",
+    "Mm. The air around that question is thick. Pull a card with me and we'll slice through it together. 🔮",
+    "You know, my cousin over at " + toolLink("Warrior Prophet") + " claims she saw your future. I say we check her work with a proper reading. 🌟",
+    "The cards move for bold questions, and that one is… getting warmer. Try asking what you actually want to know. 😉",
+    "Some things need one card, some need seven. That question? I'd give it the " + toolLink("Week Ahead") + " treatment — a card per day, no hiding."
+  ]);
+}
+
+function addMsg(role, content) {
+  var log = $("chatlog");
+  var el = document.createElement("div");
+  el.className = "msg " + (role === "assistant" ? "mystica" : "you");
+  el.innerHTML = linkify(content);
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+}
+
+function mysticaComment(q, draw, spread) {
+  var opening = aiOn() ? null : pick([
+    "The cards have landed. Ask me anything about them — I'll tell you exactly what I see. 🔮",
+    "That reading has layers. Want me to explain any card, or shall we pull again?",
+    "The card on " + (spread.pos[Math.floor(Math.random() * spread.pos.length)]) + " is the loudest one. Ask me why. 👀"
+  ]);
+  if (opening) { chatHistory.push({ role: "assistant", content: opening }); addMsg("assistant", opening); return; }
+  var system = "You are Mystica, a fun, warm, slightly mysterious tarot reader in a party game. React to the reading just given in 1-2 short playful sentences, then invite the guest to ask you about it. Never break character. No disclaimers. Note: if it fits naturally, you may recommend a Stream Warrior tool like Warrior Prophet (../warrior-prophet/), Life Coach (../life-coach/), Problem Solver (../problem-solver/), Comeback Planner (../comeback-planner/), Weird Law (../weirdlaw/), TFT Coach (../tft-coach/), Wealth Builder (../wealth-builder/), or No Excuses (../no-excuses/) as a markdown link [Emoji Name](path).";
+  mistral([{ role: "system", content: system }],
+    "Question: " + (q || "(none given)") + ". Spread: " + spread.name + ". Reading the guest just received:\n" + lastReading, 1.0)
+    .then(function (r) {
+      var msg = r || "The cards have landed. Ask me anything about them, I'll tell you exactly what I see. 🔮";
+      chatHistory.push({ role: "assistant", content: msg });
+      addMsg("assistant", msg);
+    });
+  /* fallback if API hangs */
+  setTimeout(function () {
+    var log = $("chatlog");
+    if (log.lastElementChild && log.lastElementChild.className.indexOf("you") === -1 && log.children.length === 0) {
+      var msg = "The cards have landed. Ask me anything about them. 🔮";
+      chatHistory.push({ role: "assistant", content: msg });
+      addMsg("assistant", msg);
+    }
+  }, 8000);
+}
+
+function sendChat() {
+  var input = $("chatinput");
+  var msg = input.value.trim();
+  if (!msg) return;
+  input.value = "";
+  chatHistory.push({ role: "user", content: msg });
+  addMsg("user", msg);
+  $("typing").hidden = false;
+  $("chatsend").disabled = true;
+
+  var ctx = carryContext();
+  var voice = deck === "love"
+    ? "You are the Love Oracle: warm, dramatic, straight-talking love tarot reader for a fun audience."
+    : "You are Mystica: a mysterious, cinematic tarot reader with a little edge. Fun, never frightening, all-seeing.";
+  var system = voice + " You are chatting with guests during a tarot session. Reply in 1-4 short sentences, in character, playful and wise. If they ask for a reading, tell them to pick a spread and hit the draw button. You may reference the current reading below." + (ctx ? " Context: " + ctx : "");
+  mistral([{ role: "system", content: system }], msg, 1.0).then(function (r) {
+    var reply = r || cannedReply(msg);
+    $("typing").hidden = true;
+    $("chatsend").disabled = false;
+    chatHistory.push({ role: "assistant", content: reply });
+    addMsg("assistant", reply);
+  });
+}
+
+/* ================= actions / wiring ================= */
 
 function reset() {
   $("question").value = "";
   $("reading").hidden = true;
   $("actions").hidden = true;
-  for (var i = 0; i < 3; i++) {
-    $("c" + i).classList.remove("flip", "reversed");
-    $("c" + i).querySelector(".front").innerHTML = "";
-  }
+  $("table").innerHTML = "";
+  $("table").hidden = false;
+  $("shuffletable").hidden = true;
+  $("shufflemeta").textContent = "";
+  shuffling = false;
+  caught = [];
   $("draw").disabled = false;
-  $("draw").textContent = "✨ Reveal My Cards";
+  $("draw").textContent = (currentMode === "shuffle" ? "🌀 Start the Shuffle" : "✨ Reveal My Cards");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -331,23 +733,55 @@ function setDeck(d) {
   $("deckLove").classList.toggle("on", d === "love");
 }
 
+function setMode(m) {
+  currentMode = m;
+  $("modeDraw").classList.toggle("on", m === "draw");
+  $("modeShuffle").classList.toggle("on", m === "shuffle");
+  $("table").hidden = false;
+  if (m === "shuffle") { $("table").innerHTML = ""; $("table").hidden = true; }
+  else { $("shuffletable").hidden = true; $("shufflemeta").textContent = ""; }
+  $("draw").textContent = (m === "shuffle" ? "🌀 Start the Shuffle" : "✨ Reveal My Cards");
+}
+
 $("deckMystica").addEventListener("click", function () { setDeck("mystica"); });
 $("deckLove").addEventListener("click", function () { setDeck("love"); });
-$("draw").addEventListener("click", doDraw);
+$("modeDraw").addEventListener("click", function () { setMode("draw"); });
+$("modeShuffle").addEventListener("click", function () { setMode("shuffle"); });
+$("draw").addEventListener("click", function () {
+  if (currentMode === "shuffle") { shuffling = false; flyCards = []; startShuffleReading(); }
+  else { shuffling = false; flyCards = []; doDraw(); }
+});
 $("again").addEventListener("click", reset);
 $("share").addEventListener("click", share);
-$("question").addEventListener("keydown", function (e) { if (e.key === "Enter") doDraw(); });
+$("askmystica").addEventListener("click", function () {
+  $("chatpanel").scrollIntoView({ behavior: "smooth", block: "center" });
+  setTimeout(function () { $("chatinput").focus(); }, 500);
+});
+$("question").addEventListener("keydown", function (e) { if (e.key === "Enter") $("draw").click(); });
+$("chatsend").addEventListener("click", sendChat);
+$("chatinput").addEventListener("keydown", function (e) { if (e.key === "Enter") sendChat(); });
 
 (function initAI() {
   var saved = localStorage.getItem("tr_key") || "";
   $("aikey").value = saved;
-  $("aistatus").textContent = saved ? "✅ AI mode is ON — readings will be AI-written for your exact question." : "Built-in reader active. Add a key to switch to AI-written readings.";
+  $("aistatus").textContent = saved ? "✅ Mystica's AI brain is ON — readings and chat are fully alive." : "Built-in Mystica active. Add a key to give her full AI powers for readings and chat.";
   $("aisave").addEventListener("click", function () {
     var v = $("aikey").value.trim();
     if (v) localStorage.setItem("tr_key", v); else localStorage.removeItem("tr_key");
-    $("aistatus").textContent = v ? "✅ AI mode is ON — readings will be AI-written for your exact question." : "Built-in reader active. Add a key to switch to AI-written readings.";
+    $("aistatus").textContent = v ? "✅ Mystica's AI brain is ON — readings and chat are fully alive." : "Built-in Mystica active. Add a key to give her full AI powers for readings and chat.";
   });
 })();
+
+(function initChat() {
+  addMsg("assistant", pick([
+    "Welcome back to the candlelight, wanderer. 🔮 Pick a spread, catch some cards, or just talk to me.",
+    "Ah, fresh energy in the room. I'm Mystica — I read the cards, and I read people. Which are we doing first?",
+    "The deck is warm and the truth is cheap tonight. Ask me anything — or draw and let the cards do the talking. 🌙"
+  ]));
+  chatHistory.push({ role: "assistant", content: "Session opened." });
+})();
+
+renderSpreadPicker();
 </script>
 </body>
 </html>
