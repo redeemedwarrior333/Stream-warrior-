@@ -308,7 +308,8 @@ const Tarot = {
         </div>
       </div>`;
     table.appendChild(el);
-    el.addEventListener("animationend", () => {
+    el.addEventListener("animationend", (e) => {
+      if (e.animationName !== "tp-drop") return; /* ignore the inner flip animation's end */
       Sound.play("ding");
       this.caught.push(card);
       const meta = this.el().querySelector("#tp-chase-meta");
@@ -325,7 +326,7 @@ const Tarot = {
           this.reading(true);
         }, 1100);
       }
-    }, { once: true });
+    }, false);
   },
 
   /* ---------- reading ---------- */
