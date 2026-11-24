@@ -109,6 +109,40 @@
     background:var(--panel2); color:var(--ink); font-size:14px; font-weight:600; cursor:pointer; }
   .actions button:active { transform:scale(.97); }
 
+  /* dealer hand + falling cards */
+  .shuffletable { perspective: 700px; }
+  .tp-dealer-note { position: absolute; left: 10px; top: 8px; font-size: 11px; color: var(--muted); }
+  .tp-dealer-hand { position: absolute; left: 50%; bottom: 4px; transform: translateX(-50%); width: 110px; height: 140px; z-index: 2; }
+  .tp-dealer-hand.wobble { animation: tpwobble .45s ease; }
+  @keyframes tpwobble { 0%,100%{ transform: translateX(-50%) rotate(0);} 30%{ transform: translateX(-50%) rotate(-7deg);} 65%{ transform: translateX(-50%) rotate(6deg);} }
+  .tp-dealer-deck { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); width: 66px; height: 100px; }
+  .tp-dealer-deck i { position: absolute; inset: 0; border-radius: 6px;
+    background: linear-gradient(160deg, #2a1e5e, #171040); border: 1px solid #3d2f7a; box-shadow: 0 3px 0 rgba(0,0,0,.4); }
+  .tp-dealer-deck i:nth-child(2){ transform: rotate(-2.5deg) translateY(-3px); }
+  .tp-dealer-deck i:nth-child(3){ transform: rotate(2deg) translateY(-6px); }
+  .tp-dealer-deck i:nth-child(4){ transform: rotate(-1deg) translateY(-9px); }
+  .tp-dealer-deck i:nth-child(5){ transform: rotate(3deg) translateY(-12px); }
+  .tp-dealer-fingers { position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%); font-size: 58px; line-height: 1; }
+  .tp-drop { position: absolute; left: 50%; top: 52%; width: 58px; aspect-ratio: 2/3.4; margin-left: -29px; z-index: 3;
+    animation: tpdrop var(--dur,1.15s) cubic-bezier(.25,.6,.55,1) forwards; pointer-events: none; }
+  @keyframes tpdrop {
+    0%   { transform: translate(0,0) rotate(0deg); }
+    18%  { transform: translate(calc(var(--dx)*.15), -26px) rotate(-9deg); }
+    100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); }
+  }
+  .tp-flip { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: tpflip var(--dur,1.15s) ease forwards; }
+  @keyframes tpflip { 0%,38% { transform: rotateY(0deg); } 100% { transform: rotateY(180deg); } }
+  .tp-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 7px; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+  .tp-face.b { background: linear-gradient(160deg, #2a1e5e, #171040); border: 1px solid #3d2f7a; font-size: 20px; color: rgba(239,233,255,.55); }
+  .tp-face.b::after { content: ''; position: absolute; inset: 4px; border: 1px solid rgba(245,197,107,.3); border-radius: 5px; }
+  .tp-face.f { transform: rotateY(180deg); background: linear-gradient(170deg, #241a52, #171040);
+    border: 1px solid var(--gold); padding: 3px; }
+  .tp-face.f .fs { font-size: 19px; line-height: 1.1; }
+  .tp-face.f .fn { font-size: 8px; font-weight: 700; text-align: center; line-height: 1.15; margin-top: 2px; color: var(--gold); }
+  .tp-face.f.fr { border-color: var(--bad); }
+  .tp-face.f.fr .fn { color: var(--bad); }
+
   /* Mystica chat */
   .chatpanel { margin-top:14px; }
   .chathead { display:flex; align-items:center; gap:10px; cursor:pointer; }
@@ -503,92 +537,67 @@ function finishDraw(draw, spread, q) {
 
 /* ================= cut the deck ================= */
 
-var flyCards = [];
+var fallen = [];
 
 function startShuffleReading() {
   var q = $("question").value.trim();
   var spread = getSpread();
-  shuffling = true;
+  shuffling = false;
   caught = [];
-  flyCards = [];
+  fallen = [];
   $("table").innerHTML = "";
   $("table").hidden = true;
   $("reading").hidden = true;
   $("actions").hidden = true;
   var tbl = $("shuffletable");
   tbl.hidden = false;
-  tbl.innerHTML = "";
-  tbl.classList.add("flying");
-  var btn = $("draw");
-  btn.disabled = true;
-  btn.textContent = "🌀 Catch " + spread.pos.length + " Cards";
-  $("shufflemeta").textContent = "Tap " + spread.pos.length + " cards as they fly — the ones that leap out are your reading";
-
-  var pool = shuffle(CARDS.map(function (_, i) { return i; })).slice(0, 14);
-  pool.forEach(function (ci, n) {
-    setTimeout(function () {
-      if (!shuffling) return;
-      var x = 6 + Math.random() * 74;
-      var y = 6 + Math.random() * 64;
-      var el = document.createElement("div");
-      el.className = "fcard";
-      el.style.setProperty("--rot", (Math.random() * 22 - 11).toFixed(1) + "deg");
-      el.style.left = x + "%";
-      el.style.top = y + "%";
-      el.textContent = "🌙";
-      var flying = { i: ci, rev: Math.random() < 0.32, el: el, caught: false };
-      el.addEventListener("click", function () { catchCard(flying); });
-      tbl.appendChild(el);
-      flyCards.push(flying);
-    }, n * 130);
-  });
-
-  setTimeout(function () {
-    if (!shuffling) return;
-    tbl.classList.remove("flying");
-    tbl.classList.add("quiet");
-    $("shufflemeta").textContent = "Tap " + spread.pos.length + " cards — the deck waits for you";
-  }, pool.length * 130 + 500);
-}
-
-function catchCard(f) {
-  if (!shuffling || f.caught) return;
-  var spread = getSpread();
-  if (caught.length >= spread.pos.length) return;
-  f.caught = true;
-  caught.push(f);
-  f.el.classList.add("chosen");
-
-  latecomer(f);
-  var meta = $("shufflemeta");
-  if (caught.length < spread.pos.length) {
-    meta.textContent = caught.length + " of " + spread.pos.length + " caught — keep going…";
-  } else {
-    shuffling = false;
-    flyCards.forEach(function (fc) {
-      if (!fc.caught) fc.el.classList.add("aftermath");
-    });
-    meta.textContent = "✨ The deck has spoken.";
-    var draw = caught.map(function (fc) { return { i: fc.i, rev: fc.rev }; });
-    setTimeout(function () {
-      var q = $("question").value.trim();
-      $("shuffletable").hidden = true;
-      $("shufflemeta").textContent = "";
-      finishDraw(draw, spread, q);
-    }, 900);
+  tbl.classList.remove("flying", "quiet");
+  tbl.innerHTML =
+    '<div class="tp-dealer-note">the cards that slip out become your reading</div>' +
+    '<div class="tp-dealer-hand" id="tpdealerhand">' +
+      '<div class="tp-dealer-deck"><i></i><i></i><i></i><i></i><i></i></div>' +
+      '<div class="tp-dealer-fingers">🤚</div>' +
+    '</div>';
+  $("draw").disabled = true;
+  $("draw").textContent = "🌀 The Deck Is Deciding…";
+  $("shufflemeta").textContent = "Hold still… a hand is holding the deck over the table.";
+  var pool = shuffle(CARDS.map(function (_, i) { return i; }));
+  for (var n = 0; n < spread.pos.length; n++) {
+    (function (n) {
+      setTimeout(function () { dropCard(pool[n], n, spread.pos.length, tbl); }, 650 + n * 1150);
+    })(n);
   }
 }
 
-function latecomer(f) {
-  var spread = getSpread();
-  if (caught.length >= spread.pos.length || !shuffling) return;
-  flyCards.forEach(function (fc2) {
-    if (!fc2.caught) {
-      var x = 6 + Math.random() * 74, y = 6 + Math.random() * 64;
-      fc2.el.style.left = x + "%";
-      fc2.el.style.top = y + "%";
+function dropCard(ci, n, total, tbl) {
+  var hand = document.getElementById("tpdealerhand");
+  if (hand) { hand.classList.add("wobble"); setTimeout(function () { hand.classList.remove("wobble"); }, 460); }
+  var card = { i: ci, rev: Math.random() < 0.32 };
+  var dir = n % 2 === 0 ? -1 : 1;
+  var el = document.createElement("div");
+  el.className = "tp-drop";
+  el.style.setProperty("--dx", (dir * (80 + Math.random() * 140)).toFixed(0) + "px");
+  el.style.setProperty("--dy", (140 + Math.random() * 70).toFixed(0) + "px");
+  el.style.setProperty("--rot", (dir * (14 + Math.random() * 22)).toFixed(0) + "deg");
+  var c = CARDS[ci];
+  el.innerHTML = '<div class="tp-flip"><div class="tp-face b">🌙</div>' +
+    '<div class="tp-face f' + (card.rev ? ' fr' : '') + '" style="transform: rotateY(180deg)' + (card.rev ? ' rotate(180deg)' : '') + '">' +
+    '<div class="fs">' + c[1] + '</div><div class="fn">' + c[0] + '</div></div></div>';
+  tbl.appendChild(el);
+  el.addEventListener("animationend", function (e) {
+    if (e.animationName !== "tpdrop") return; /* ignore the inner flip */
+    fallen.push(card);
+    $("shufflemeta").textContent = (n + 1) < total
+      ? ((n + 1) + " of " + total + " fell — the deck keeps deciding…")
+      : "✨ The deck has spoken.";
+    if (n + 1 >= total) {
+      setTimeout(function () {
+        $("shuffletable").hidden = true;
+        $("shufflemeta").textContent = "";
+        finishDraw(fallen.slice(), getSpread(), $("question").value.trim());
+      }, 1100);
     }
-  });
+  }, false);
 }
 
 /* ================= Mystica chat ================= */
