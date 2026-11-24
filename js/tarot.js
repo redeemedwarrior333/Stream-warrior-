@@ -1,4 +1,4 @@
-/* ============ Tarot module — v2: 9 spreads, Cut the Deck, Mystica chat ============ */
+/* ============ Tarot module — v2: 9 spreads, dealer-hand shuffle, Mystica chat ============ */
 "use strict";
 
 const Tarot = {
@@ -9,7 +9,6 @@ const Tarot = {
   drawn: [],
   question: "",
   caught: [],
-  chaseBuilt: false,
   chat: [],                     /* Mystica chat history [{role, text}] */
   lastReading: "",
 
@@ -51,15 +50,43 @@ const Tarot = {
       .tp-modes { display:flex; gap:8px; margin:8px 0; }
       .tp-modes .btn { flex:1; }
       .tp-q { width:100%; margin:6px 0; }
-      .tp-chase { position:relative; height:280px; border-radius:14px; overflow:hidden; margin:10px 0;
+      .tp-chase { position:relative; height:300px; border-radius:14px; overflow:hidden; margin:10px 0;
+        perspective:700px;
         background:radial-gradient(420px 220px at 50% 40%, rgba(255,255,255,.06), rgba(0,0,0,.25));
         border:1px solid rgba(255,255,255,.12); }
-      .tp-fly { position:absolute; width:56px; aspect-ratio:2/3.4; border-radius:8px; cursor:pointer;
-        background:linear-gradient(160deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
-        border:1px solid rgba(255,255,255,.25); display:flex; align-items:center; justify-content:center;
-        font-size:22px; transform:rotate(var(--r)); transition:left .5s ease, top .5s ease, opacity .4s, border-color .3s; }
-      .tp-fly.caught { border-color:var(--accent, #f5c56b); box-shadow:0 0 12px rgba(245,197,107,.5); }
-      .tp-fly.aftermath { opacity:.22; }
+      /* --- dealer hand + falling cards --- */
+      .tp-hand { position:absolute; left:50%; bottom:4px; transform:translateX(-50%); width:110px; height:140px; z-index:2; }
+      .tp-hand.wobble { animation:tp-wobble .45s ease; }
+      @keyframes tp-wobble { 0%,100%{ transform:translateX(-50%) rotate(0);} 30%{ transform:translateX(-50%) rotate(-7deg);} 65%{ transform:translateX(-50%) rotate(6deg);} }
+      .tp-deck { position:absolute; bottom:34px; left:50%; transform:translateX(-50%); width:66px; height:100px; }
+      .tp-deck i { position:absolute; inset:0; border-radius:6px;
+        background:linear-gradient(160deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
+        border:1px solid rgba(255,255,255,.35); box-shadow:0 3px 0 rgba(0,0,0,.35); }
+      .tp-deck i:nth-child(2){ transform:rotate(-2.5deg) translateY(-3px); }
+      .tp-deck i:nth-child(3){ transform:rotate(2deg) translateY(-6px); }
+      .tp-deck i:nth-child(4){ transform:rotate(-1deg) translateY(-9px); }
+      .tp-deck i:nth-child(5){ transform:rotate(3deg) translateY(-12px); }
+      .tp-fingers { position:absolute; bottom:-2px; left:50%; transform:translateX(-50%); font-size:58px; line-height:1; }
+      .tp-drop { position:absolute; left:50%; top:52%; width:58px; aspect-ratio:2/3.4; margin-left:-29px; z-index:3;
+        animation:tp-drop var(--dur,1.15s) cubic-bezier(.25,.6,.55,1) forwards; pointer-events:none; }
+      @keyframes tp-drop {
+        0%   { transform:translate(0,0) rotate(0deg); }
+        18%  { transform:translate(calc(var(--dx)*.15), -26px) rotate(-9deg); }
+        100% { transform:translate(var(--dx), var(--dy)) rotate(var(--rot)); }
+      }
+      .tp-flip { position:relative; width:100%; height:100%; transform-style:preserve-3d; animation:tp-flip var(--dur,1.15s) ease forwards; }
+      @keyframes tp-flip { 0%,38% { transform:rotateY(0deg); } 100% { transform:rotateY(180deg); } }
+      .tp-face { position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+        border-radius:7px; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; }
+      .tp-face.b { background:linear-gradient(160deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
+        border:1px solid rgba(255,255,255,.35); font-size:20px; color:rgba(255,255,255,.55); }
+      .tp-face.b::after { content:''; position:absolute; inset:4px; border:1px solid rgba(255,255,255,.25); border-radius:5px; }
+      .tp-face.f { transform:rotateY(180deg); background:linear-gradient(170deg, rgba(255,255,255,.14), rgba(255,255,255,.04));
+        border:1px solid var(--accent, #f5c56b); padding:3px; }
+      .tp-face.f .fs { font-size:19px; line-height:1.1; }
+      .tp-face.f .fn { font-size:8px; font-weight:700; text-align:center; line-height:1.15; margin-top:2px; opacity:.9; }
+      .tp-face.f.fr { border-color:var(--bad, #ff7a8a); }
+      .tp-fallen-note { position:absolute; left:10px; top:8px; font-size:11px; opacity:.6; }
       .tp-meta { text-align:center; font-size:13px; font-weight:700; min-height:20px; }
       .tp-actions { display:flex; gap:8px; margin:8px 0; flex-wrap:wrap; }
       .tp-actions .btn { flex:1 1 auto; }
@@ -144,7 +171,13 @@ const Tarot = {
   },
 
   chaseHTML() {
-    return `<div class="tp-chase" id="tp-chase"></div>`;
+    return `<div class="tp-chase" id="tp-chase">
+      <div class="tp-fallen-note">the cards that slip out become your reading</div>
+      <div class="tp-hand" id="tp-hand">
+        <div class="tp-deck" id="tp-deck"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="tp-fingers">🤚</div>
+      </div>
+    </div>`;
   },
 
   cardHTML(card, idx) {
@@ -184,7 +217,7 @@ const Tarot = {
   /* ---------- drawing ---------- */
   draw(slotIdx) {
     if (this.spread[slotIdx]) return;
-    const pool = TAROT_CARDS.map((c, idx) => ({ ...c, idx })).filter(c => !this.drawn.includes(c.idx));
+    const pool = TAROT_CARDS.map((c, i) => ({ ...c, idx: i })).filter(c => !this.drawn.includes(c.idx));
     if (!pool.length) return;
     const card = pool[Math.floor(Math.random() * pool.length)];
     card.reversed = Math.random() < 0.35;
@@ -217,70 +250,6 @@ const Tarot = {
     setTimeout(() => this.reading(true), 500);
   },
 
-  /* ---------- cut the deck ---------- */
-  startChase() {
-    const s = this.spreadObj;
-    const table = this.el().querySelector("#tp-chase");
-    const meta = this.el().querySelector("#tp-chase-meta");
-    if (!table) return;
-    table.innerHTML = "";
-    meta.textContent = `Tap ${s.slots.length} card${s.slots.length > 1 ? "s" : ""} as the deck flies — the ones that leap out are the reading`;
-    this.caught = [];
-    const els = [];
-    const pool = [];
-    TAROT_CARDS.forEach((c, idx) => pool.push(idx));
-    for (let i = pool.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [pool[i], pool[j]] = [pool[j], pool[i]];
-    }
-    const flying = pool.slice(0, 14);
-    flying.forEach((idx, n) => {
-      setTimeout(() => {
-        const card = { ...TAROT_CARDS[idx], idx };
-        card.reversed = Math.random() < 0.35;
-        const el = document.createElement("div");
-        el.className = "tp-fly";
-        el.style.setProperty("--r", ((Math.random() * 22 - 11)).toFixed(1) + "deg");
-        el.style.left = (4 + Math.random() * 80) + "%";
-        el.style.top = (4 + Math.random() * 68) + "%";
-        el.textContent = "🌙";
-        const fc = { card, el };
-        el.addEventListener("click", () => this.catchCard(fc, els, table, meta));
-        table.appendChild(el);
-        els.push(fc);
-      }, n * 130);
-    });
-    Sound.play("whoosh");
-  },
-
-  catchCard(fc, els, table, meta) {
-    const s = this.spreadObj;
-    if (!fc || fc.caught || this.caught.length >= s.slots.length) return;
-    fc.caught = true;
-    fc.el.classList.add("caught");
-    this.caught.push(fc);
-    Sound.play("ding");
-    /* scatter the rest */
-    els.forEach(other => {
-      if (!other.caught) {
-        other.el.style.left = (4 + Math.random() * 80) + "%";
-        other.el.style.top = (4 + Math.random() * 68) + "%";
-      }
-    });
-    if (this.caught.length < s.slots.length) {
-      meta.textContent = `${this.caught.length} of ${s.slots.length} caught — keep going…`;
-      return;
-    }
-    meta.textContent = "✨ The deck has spoken.";
-    els.forEach(o => { if (!o.caught) o.el.classList.add("aftermath"); });
-    setTimeout(() => {
-      this.spread = this.caught.map(fc => fc.card);
-      this.drawn = this.spread.map(c => c.idx);
-      this.render();
-      this.reading(true);
-    }, 800);
-  },
-
   showCard(idx) {
     const card = TAROT_CARDS[idx];
     if (!card) return;
@@ -297,10 +266,72 @@ const Tarot = {
     `);
   },
 
+  /* ---------- cut the deck: dealer hand, cards slip out & flip as they fall ---------- */
+  startChase() {
+    const s = this.spreadObj;
+    const table = this.el().querySelector("#tp-chase");
+    const meta = this.el().querySelector("#tp-chase-meta");
+    if (!table) return;
+    table.innerHTML = this.chaseHTML();
+    if (meta) meta.textContent = "Hold still… the deck is deciding what falls out";
+    this.caught = [];
+    const pool = [];
+    TAROT_CARDS.forEach((c, idx) => pool.push(idx));
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    Sound.play("whoosh");
+    for (let n = 0; n < s.slots.length; n++) {
+      setTimeout(() => this.dropCard(pool[n], n, s.slots.length), 650 + n * 1150);
+    }
+  },
+
+  dropCard(idx, n, total) {
+    const table = this.el().querySelector("#tp-chase");
+    if (!table) return;
+    const hand = table.querySelector("#tp-hand");
+    if (hand) { hand.classList.add("wobble"); setTimeout(() => hand.classList.remove("wobble"), 460); }
+    Sound.play("whoosh");
+    const card = { ...TAROT_CARDS[idx], idx };
+    card.reversed = Math.random() < 0.35;
+    const el = document.createElement("div");
+    el.className = "tp-drop";
+    const dir = n % 2 === 0 ? -1 : 1;
+    el.style.setProperty("--dx", (dir * (70 + Math.random() * 130)).toFixed(0) + "px");
+    el.style.setProperty("--dy", (120 + Math.random() * 80).toFixed(0) + "px");
+    el.style.setProperty("--rot", (dir * (14 + Math.random() * 22)).toFixed(0) + "deg");
+    el.innerHTML = `<div class="tp-flip">
+        <div class="tp-face b">🌙</div>
+        <div class="tp-face f ${card.reversed ? "fr" : ""}" style="transform:rotateY(180deg) ${card.reversed ? "rotate(180deg)" : ""}">
+          <div class="fs">${card.sym}</div><div class="fn">${card.name}</div>
+        </div>
+      </div>`;
+    table.appendChild(el);
+    el.addEventListener("animationend", () => {
+      Sound.play("ding");
+      this.caught.push(card);
+      const meta = this.el().querySelector("#tp-chase-meta");
+      if (meta) {
+        meta.textContent = n + 1 < total
+          ? `${n + 1} of ${total} card${total > 1 ? "s" : ""} fell — the deck keeps deciding…`
+          : "✨ The deck has spoken.";
+      }
+      if (n + 1 >= total) {
+        setTimeout(() => {
+          this.spread = this.caught.slice();
+          this.drawn = this.spread.map(c => c.idx);
+          this.render();
+          this.reading(true);
+        }, 1100);
+      }
+    }, { once: true });
+  },
+
   /* ---------- reading ---------- */
   builtInReading() {
     const s = this.spreadObj;
-    const lines = this.spread.map((c, i) => {
+    const lines = this.spread.filter(Boolean).map((c, i) => {
       const love = this.deck === "love";
       const text = c.reversed ? (love ? c.loveRev : c.rev) : (love ? c.loveUp : c.up);
       return `${c.name} (${c.reversed ? "reversed" : "upright"}) in the ${s.slots[i]} position: ${text}`;
@@ -411,8 +442,7 @@ const Tarot = {
     if (/yes|no answer|should i/.test(s)) return "The deck doesn't do maybe — tap ✨ Reveal with the Yes/No Oracle spread and let's hear the verdict properly.";
     if (/another game|bored|someth(ing)? else/.test(s)) {
       const go = this.suggest();
-      const meta = App.meta[go];
-      return `Ooh, the cards say variety. Try ${meta ? meta.icon : "✨"} ${meta ? meta.label : go} on the mod bar — Mystica's orders.`;
+      return "Ooh, the cards say variety. Try another game on the mod bar — Mystica's orders.";
     }
     return "The air around that question is thick. Pull a card with me and we'll slice through it together. 🔮";
   },
