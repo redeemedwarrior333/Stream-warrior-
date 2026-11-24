@@ -757,8 +757,8 @@ $("deckLove").addEventListener("click", function () { setDeck("love"); });
 $("modeDraw").addEventListener("click", function () { setMode("draw"); });
 $("modeShuffle").addEventListener("click", function () { setMode("shuffle"); });
 $("draw").addEventListener("click", function () {
-  if (currentMode === "shuffle") { shuffling = false; flyCards = []; startShuffleReading(); }
-  else { shuffling = false; flyCards = []; doDraw(); }
+  if (currentMode === "shuffle") { startShuffleReading(); }
+  else { doDraw(); }
 });
 $("again").addEventListener("click", reset);
 $("share").addEventListener("click", share);
