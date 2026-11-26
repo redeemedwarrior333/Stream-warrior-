@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Stream Warrior</string>
+    <string name="brand_tagline">Livestream Entertainment Suite</string>
+    <string name="ai_status_builtin">Gemini AI Live</string>
+    <string name="ai_status_live">Custom AI Connected</string>
+    <string name="help_title">How to use on stream</string>
+    <string name="settings_title">Stream Warrior Settings</string>
+    <string name="hide_bars_label">Hide</string>
+    <string name="show_bars_hint">Show Controls</string>
+    <string name="cd_help_button">Open stream setup help</string>
+    <string name="cd_settings_button">Open settings</string>
+    <string name="cd_close_dialog">Close dialog</string>
+    <string name="cd_hero_banner">Cosmic tarot constellation banner</string>
+    <string name="cd_wheel_canvas">Spinning Wheel of Chaos</string>
+    <string name="cd_send_message">Send message</string>
+    <string name="cd_back_button">Navigate back</string>
+    <string name="cd_copy_text">Copy text to clipboard</string>
+    <string name="cd_delete_item">Delete item</string>
+    <string name="cd_stop_sound">Stop sound</string>
+    <string name="cd_voice_mic_button">Toggle live voice AI microphone</string>
+    <string name="cd_stop_voice">Stop voice AI</string>
+    <string name="cd_clear_chat">Reset voice conversation</string>
+    <string name="crisis_banner_text">In danger now: call 911. Emotional crisis: 988. Domestic abuse: 1-800-799-7233 or text START to 88788. Not a substitute for professional care.</string>
+    <string name="wealth_disclaimer">Educational financial literacy only — not personalized investment, tax, or legal advice.</string>
+    <string name="mic_disclosure">Volume-only calm meter: reads live decibel level in memory and discards immediately. Never records, stores, or transmits voice audio.</string>
+    <string name="voice_mic_disclosure">Voice Co-Host transcribes your speech via Android Speech Recognition when active and sends the text prompt to Gemini AI Logic to speak back live.</string>
+</resources>

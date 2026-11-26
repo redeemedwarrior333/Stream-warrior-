@@ -1,55 +1,25 @@
-# ⚡ Stream Warrior — Streamer Mod Menu (v0)
+# Stream Warrior (Android)
 
-A mobile-first web app that gives phone live-streamers a production toolkit.
-Open it, share your screen (or full screen) in any live app — MeetMe, TikTok Live,
-Instagram, Bigo, Twitch — and run games, tarot readings, sound effects and more
-while you stream. No install for viewers. Works on any device with a browser.
+Native Kotlin & Jetpack Compose rewrite of **Stream Warrior** — an all-in-one interactive livestream companion, game deck, audio soundboard, and Warrior Family suite.
 
-## How to use it on stream
-1. Open Stream Warrior in your phone or desktop browser.
-2. Start your live in any app that supports screen sharing.
-3. Share your screen (Android can also share just the browser tab — viewers then see only the scene, not the controls).
-4. Drive everything from the floating mod bar at the bottom. Tap **Hide** to tuck the bar away; tap the very top edge of the screen to bring it back.
+## Modules & Features
 
-## Modules (v0)
-- 🔮 **Tarot** — Mystica (Classic) and Love Oracle decks, 22 Major Arcana, upright/reversed, PAST/PRESENT/FUTURE spread, tap a placed card for full meanings. Optional AI readings when connected.
-- ❓ **20 Questions** — Stream Warrior holds a secret; chat asks yes/no questions, you type them in and it answers. Reveal button for the endgame. With AI connected, tap **🤖 AI Host** and the AI picks the secret and answers chat.
-- 🧠 **Trivia** — 48-question built-in bank across 8 categories, reveal + next flow.
-- 🔊 **Soundboard** — 14 synthesized sounds (airhorn, drumroll, applause, sad trombone, crickets…) + up to 12 of your own uploaded sounds, saved on-device.
-- 📝 **Mad Libs** — 8 story templates, chip-guided word collection, animated reveal.
-- 😂 **Jokes** / 💘 **Pickup Lines** / 💡 **Fun Facts** / ⚔️ **Would You Rather** — endless built-in packs.
-- 🎡 **Wheel of Chaos** — spins to a random module for dead-air moments.
+- **Wheel of Chaos**: Animated 10-slice custom `Canvas` wheel with drumroll/ta-da SFX and one-tap module launch.
+- **Tarot & Mystica**: Classic Mystica & Love Oracle decks, 9 spreads, Draw & Cut-the-Deck modes, full reading generator, and Mystica chat.
+- **20 Questions**: 40 built-in secret entities, attribute hint chips, Q&A log, reveal option, and optional AI host.
+- **Trivia Showdown**: 48 built-in questions across 9 categories with score/streak tracking and optional AI question generator.
+- **Soundboard**: 14 real-time synthesized SFX (`AudioTrack` PCM) + up to 12 custom audio clips via Android's document picker.
+- **Mad Libs Live**: 8 multi-slot stream stories with chip tracker and highlighted story reveal.
+- **Jokes, Pickup Lines, Fun Facts & Would You Rather**: Interactive card decks with SFX and audience split choices.
+- **Weird Laws & Weird Law or Fake?**: 50-state weird law browser plus a 54-card Real-or-Fake quiz with persisted score & streak.
+- **Warrior Prophet**: Daily seeded blessing & prayer, 3 spiritual message decks, Angel Numbers lookup, and Ask the Prophet.
+- **Warrior's Den Studio**: Live overlay & scrolling ticker preview, alert box simulator (`Follow`, `Sub`, `Tip`, `Raid`), and tip-link manager.
+- **Warrior Coaches & Forge**: 15 built-in coaches (including Survival AI with BIFF reply drafter and volume-only Calm Meter, Ads Manager with 15s script builder, Bible Flamekeeper, Wealth Builder, Academy, Family Center, and TFT Coach) plus a custom tool builder.
+- **Clean Scene Mode**: Toggle `"Hide"` in the bottom/side bar to clear controls for filming or screen-mirroring, and tap `"Show Controls"` to restore.
 
-## Optional AI
-Everything works offline with built-in content. To unlock endless generated
-content (AI tarot readings, infinite trivia/jokes/facts), open **⚙️ Settings →
-AI Connection** and point it at any OpenAI-compatible API (e.g. Mistral).
-Your key is stored only on your device and sent only to the endpoint you choose.
+## Architecture & Tech Stack
 
-AI features in this build:
-- Streaming AI tarot readings (the reading types itself out live).
-- **🤖 AI Host** mode for 20 Questions: the AI picks a secret and answers chat's questions.
-- One-tap model presets (Mistral Small / Medium / Large).
-- Handful timeout + automatic retry with clear error messages.
-- AI-generated jokes, lines, facts and WYR are cached on-device so they survive a reload.
-
-## Works offline
-A service worker caches the app after the first open, so a dropped connection
-mid-stream never takes your scene down.
-
-## Run locally
-Any static server works:
-```bash
-python3 -m http.server 8080
-# open http://localhost:8080
-```
-
-## Roadmap
-- v1: AI music mode (owner's catalog), more tarot decks, seasonal decks
-- v2: native Android app (overlay control bar outside the browser)
-- v3: deep mode inside the companion streaming platform (AI faces, gift reactions, chat-reading AI)
-
-## Notes
-- iOS blocks direct audio capture during screen share — soundboard audio plays
-  through the speaker and is picked up by the mic. Android can capture it directly.
-- This app never modifies another app's stream; it is a scene canvas you share.
+- **UI**: Kotlin, Jetpack Compose, Material Design 3, edge-to-edge layout, adaptive navigation (`NavigationBar` / `NavigationRail`), local typography (`Cinzel`, `Space Grotesk`, `Plus Jakarta Sans`).
+- **Navigation**: Type-safe Navigation Compose (`@Serializable` `AppRoute`).
+- **State & Storage**: `ViewModel` + `StateFlow`, `DataStore Preferences`, app-private audio storage, optional BYO-key OpenAI-compatible HTTP client.
+- **Build**: Gradle Kotlin DSL, AGP 9.1.1, Kotlin 2.2.21, Java 21, `compileSdk` / `targetSdk` 36, `minSdk` 26.

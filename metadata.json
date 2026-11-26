@@ -1,0 +1,6 @@
+{
+  "name": "Stream Warrior",
+  "description": "All-in-one interactive livestream companion: Tarot & Mystica Oracle, Wheel of Chaos, 20 Questions, Trivia, Synthesized Soundboard, Mad Libs, Weird Laws & Weird Law or Fake quiz, Warrior Prophet, Warrior's Den stream toolkit, and Warrior Forge AI coaches.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
